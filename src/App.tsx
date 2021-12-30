@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <Menu onTabChange={(t) => setTab(t)} />
-      <WinterGames />
+      {tab === 0 && <WinterGames />}
     </div>
   );
 }

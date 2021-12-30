@@ -8,7 +8,7 @@ const Menu = ({ onTabChange }: Props) => {
   return (
     <Wrapper>
       <Title onClick={() => onTabChange(0)}>BOSS WinterGames</Title>
-      <Selection>Menu</Selection>
+      {/* <Selection>Menu</Selection> */}
     </Wrapper>
   );
 };
@@ -25,6 +25,6 @@ const Wrapper = styled.div`
 const Title = styled.h1`
   margin: 0;
 `;
-const Selection = styled.div``;
+// const Selection = styled.div``;
 
 export default Menu;
