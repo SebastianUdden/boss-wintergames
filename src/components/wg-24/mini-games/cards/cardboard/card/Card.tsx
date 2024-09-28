@@ -1,15 +1,8 @@
 import React from "react";
 import { ICard, IPlayer, Phase } from "../../types";
-import { CardFrame } from "./CardFrame";
-import { CardHeader } from "./CardHeader";
-import { CardImage } from "./CardImage";
-import { CardTypeLine } from "./CardTypeLine";
-import { CardTextBox } from "./CardTextBox";
-import { CardPowerToughness } from "./CardPowerToughness";
 import { CardActions } from "./CardActions";
-import { CardFlavorText } from "./CardFlavorText";
-import { CardFooter } from "./CardFooter";
 import { CardView } from "./CardView";
+import { CommonProps } from "../Cardboard";
 
 interface CardComponentProps {
   card: ICard;
@@ -17,8 +10,8 @@ interface CardComponentProps {
   player: IPlayer;
   currentPlayer: string;
   phase: Phase;
-  commonProps: any;
-  playCard: (props: any) => void;
+  commonProps: CommonProps;
+  playCard: (props: CommonProps) => void;
   discardCard: (player: string, cardIndex: number) => void;
   playerOne: IPlayer;
   playerTwo: IPlayer;

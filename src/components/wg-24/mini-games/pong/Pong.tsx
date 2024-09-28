@@ -16,7 +16,7 @@ interface IPong {
 
 export const Pong = ({ players, onGameComplete }: IPong) => {
   const [gameState, setGameState] = useState<GameState>("ready");
-  const [showScore, setShowScore] = useState<string | undefined>();
+  const [showScore] = useState<string | undefined>();
   const [scores, setScores] = useState([0, 0, 0, 0]);
   const [message, setMessage] = useState("Get ready for a new Pong challenge!");
 

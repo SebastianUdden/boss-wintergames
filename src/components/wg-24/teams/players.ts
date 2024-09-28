@@ -1,8 +1,8 @@
 export interface IPlayer {
   name: string;
   image?: string;
-  wins: number;
-  losses: number;
+  wins?: number;
+  losses?: number;
   score?: number;
   showScore?: number;
 }

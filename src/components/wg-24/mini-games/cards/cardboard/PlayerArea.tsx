@@ -1,7 +1,7 @@
 // PlayerArea.tsx
 
 import React from "react";
-import { IPlayer, Phase } from "../types";
+import { ICard, IPlayer, Phase } from "../types";
 import { Hand } from "./Hand";
 import { cn } from "@/lib/utils";
 
@@ -9,8 +9,8 @@ interface PlayerAreaProps {
   player: IPlayer;
   currentPlayer: "Player One" | "Player Two";
   phase: Phase;
-  commonProps: any;
-  playCard: (props: any) => void;
+  commonProps: ICard;
+  playCard: (props: ICard) => void;
   discardCard: (player: "Player One" | "Player Two", cardIndex: number) => void;
   playerOne: IPlayer;
   playerTwo: IPlayer;

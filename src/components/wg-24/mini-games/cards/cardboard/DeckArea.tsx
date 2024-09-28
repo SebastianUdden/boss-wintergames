@@ -1,15 +1,14 @@
-// DeckArea.tsx
-
 import React from "react";
 import { ICard, Phase } from "../types";
+import { CommonProps } from "./Cardboard";
 
 interface DeckAreaProps {
   deck: ICard[];
   discardPile: ICard[];
   currentPlayer: "Player One" | "Player Two";
   phase: Phase;
-  drawCard: (props: any) => void;
-  commonProps: any;
+  drawCard: (props: CommonProps) => void;
+  commonProps: CommonProps;
 }
 
 export const DeckArea: React.FC<DeckAreaProps> = ({

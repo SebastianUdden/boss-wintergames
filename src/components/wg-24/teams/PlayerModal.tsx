@@ -30,7 +30,7 @@ export const PlayerModal = ({ modal, onClose }: IModal) => {
 
   if (!modal) return null;
 
-  const { name, description, score } = modal;
+  const { name, score } = modal;
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -40,18 +40,11 @@ export const PlayerModal = ({ modal, onClose }: IModal) => {
             <div className="flex flex-wrap gap-2">
               Poäng{" "}
               <Badge className="text-black bg-white hover:bg-white">
-                {score.toLocaleString("se-SE", {
+                {score?.toLocaleString("se-SE", {
                   useGrouping: true,
                 })}
               </Badge>
             </div>
-            {description && (
-              <ul>
-                {description?.map((d) => (
-                  <li>{d}</li>
-                ))}
-              </ul>
-            )}
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

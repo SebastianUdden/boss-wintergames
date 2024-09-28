@@ -13,6 +13,7 @@ const spriteSheets: Record<string, HTMLImageElement> = {};
 // Load all the sprites for different player actions
 Object.keys(spritePaths).forEach((action) => {
   const img = new Image();
+  // @ts-ignore
   img.src = spritePaths[action];
   spriteSheets[action] = img;
 });

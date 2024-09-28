@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
 import { Phase } from "./Layout";
 import { miniGames } from "./mini-games/miniGames";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { ConfirmModal } from "./ConfirmModal";
+import { IMiniGame } from "./mini-games/MiniGame";
 
-const sortByName = (a, b) => {
+const sortByName = (a: IMiniGame, b: IMiniGame) => {
   if (a.name > b.name) return 1;
   if (a.name < b.name) return -1;
   return 0;
@@ -98,7 +98,7 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
           </Button>
           <select
             className="header"
-            onChange={(e) => onSelectGame(e.target.value)}
+            onChange={(e) => onSelectGame(Number(e.target.value))}
           >
             <option key="wheel" value="wheel">
               Wheel

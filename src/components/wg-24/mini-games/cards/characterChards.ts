@@ -1,3 +1,5 @@
+import { ICard } from "./types";
+
 const sebbeCards: Omit<ICard, "id">[] = [
   {
     name: "The Slam Dunker",

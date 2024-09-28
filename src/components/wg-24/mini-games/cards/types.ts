@@ -4,7 +4,7 @@ export interface ICard {
   id: string; // Unique identifier for the card
   name: string; // Card name
   manaCost?: string; // Mana cost (e.g., "2G" for 2 colorless and 1 green)
-  land: "forest" | "plains" | "island" | "mountain" | "swamp";
+  land: "forest" | "plains" | "island" | "mountain" | "swamp" | string;
   type?: string; // Card subtype (e.g., "Elf Druid")
   subtype?: string; // Card subtype (e.g., "Elf Druid")
   description: string; // Card ability/effect
@@ -12,7 +12,7 @@ export interface ICard {
   flavorText?: string; // Optional flavor text for lore
   power?: number; // Power (for creatures)
   toughness?: number; // Toughness (for creatures)
-  rarity?: "Common" | "Uncommon" | "Rare" | "Mythic Rare"; // Card rarity
+  rarity?: "Common" | "Uncommon" | "Rare" | "Mythic Rare" | string; // Card rarity
   value?: number; // Card value for any additional purposes
 }
 

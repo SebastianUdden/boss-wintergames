@@ -1,17 +1,8 @@
 import { useMemo } from "react";
-import { IPlayer } from "../teams/PlayerCard";
-import { ITeam } from "../teams/Team-backup";
-import { CardsGame } from "./cards/CardsGame";
 import { GameRules } from "./game-rules/GameRules";
-import MazeRunner from "./maze-runner/MazeRunner";
-import { MemoryBoard } from "./memory/MemoryBoard";
-import { miniGames } from "./miniGames";
-import { Pong } from "./pong/Pong";
-import { QuickDraw } from "./quick-draw/QuickDraw";
 import { IScore } from "./Score";
-import SideScroller from "./side-scroller/SideScroller";
-import { TheClicker } from "./the-clicker/TheClicker";
-import { TheFloor } from "./the-floor/TheFloor";
+import { ITeam } from "../teams/teams";
+import { IPlayer } from "../teams/players";
 
 export interface IPlayerSetup {
   p1: string;
@@ -27,8 +18,8 @@ export interface IPlayerSetup {
 }
 
 const replacePlaceholders = (
-  miniGame: IMiniGame,
-  playerSetup: IPlayerSetup
+  playerSetup: IPlayerSetup,
+  miniGame?: IMiniGame
 ) => {
   if (!miniGame) return "";
   let objString = JSON.stringify(miniGame);
@@ -57,18 +48,21 @@ export const getPlayerSetup = (
 ): IPlayerSetup => {
   const otherTeam = teamsTurn === 0 ? 1 : 0;
   const firstInSameTeam =
-    teams[teamsTurn].players.length > 1 &&
-    getRandomPlayer(
-      teams[teamsTurn].players.filter((p) => p.name !== challenger)
-    ).name;
+    teams[teamsTurn].players.length > 1
+      ? getRandomPlayer(
+          teams[teamsTurn].players.filter((p) => p.name !== challenger)
+        ).name
+      : "";
   const firstInOtherTeam =
-    teams[otherTeam].players.length > 0 &&
-    getRandomPlayer(teams[otherTeam].players).name;
+    teams[otherTeam].players.length > 0
+      ? getRandomPlayer(teams[otherTeam].players).name
+      : "";
   const secondInOtherTeam =
-    teams[otherTeam].players.length > 1 &&
-    getRandomPlayer(
-      teams[otherTeam].players.filter((p) => p.name !== firstInOtherTeam)
-    ).name;
+    teams[otherTeam].players.length > 1
+      ? getRandomPlayer(
+          teams[otherTeam].players.filter((p) => p.name !== firstInOtherTeam)
+        ).name
+      : "";
 
   const playerSetup = {
     p1: challenger,
@@ -101,7 +95,7 @@ export interface IMiniGame {
 
 export interface MiniGameProps {
   teams: ITeam[];
-  miniGame: IMiniGame;
+  miniGame?: IMiniGame;
   playerSetup: IPlayerSetup;
   onGameComplete: (playerScores: IScore[], loserIndex: number) => void;
 }
@@ -113,7 +107,7 @@ export const MiniGame = ({
   onGameComplete,
 }: MiniGameProps) => {
   const parsedMiniGame = useMemo(
-    () => replacePlaceholders(miniGame, playerSetup),
+    () => replacePlaceholders(playerSetup, miniGame),
     [playerSetup]
   );
   // const { name } = parsedMiniGame;

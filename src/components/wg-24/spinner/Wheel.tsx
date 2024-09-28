@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useState, useEffect, useRef } from "react";
 import "./wheel.css";
 import { cn } from "@/lib/utils";

@@ -4,8 +4,7 @@ import { Label } from "@/components/wg-24/ui/label";
 import { IScore } from "../Score";
 import { Description } from "./Description";
 import { IPlayer, players } from "@/components/wg-24/teams/players";
-import { initialTeams } from "@/components/wg-24/teams/teams";
-import { ITeam } from "@/components/wg-24/teams/Team-backup";
+import { initialTeams, ITeam } from "@/components/wg-24/teams/teams";
 import { useCallback } from "react";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +27,6 @@ export const GameRules = ({
   description,
   criteria,
   song,
-  isAnalog,
   onGameComplete,
 }: IGameRules) => {
   // Utility function to map team players with score

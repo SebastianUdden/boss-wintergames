@@ -2,8 +2,10 @@ import { PlayerCard } from "./PlayerCard";
 import { cn } from "@/lib/utils";
 import { ITeam } from "./teams";
 import { useEffect, useState } from "react";
+import { IPlayer } from "./players";
 
-const sortByScore = (a, b) => {
+const sortByScore = (a: IPlayer, b: IPlayer) => {
+  if (!a.wins || !b.wins) return 0;
   if (a.wins > b.wins) return -1;
   if (a.wins < b.wins) return 1;
   return 0;

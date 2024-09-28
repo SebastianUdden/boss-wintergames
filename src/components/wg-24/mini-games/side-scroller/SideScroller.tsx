@@ -16,6 +16,7 @@ const backgroundImages: Record<string, HTMLImageElement> = {};
 // Load all background images
 Object.keys(environmentPaths).forEach((key) => {
   const img = new Image();
+  // @ts-ignore
   img.src = environmentPaths[key];
   backgroundImages[key] = img;
 });

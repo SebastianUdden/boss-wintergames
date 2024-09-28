@@ -26,7 +26,7 @@ interface IQuickDraw {
   onGameComplete: (playerScores: IScore[]) => void;
 }
 export const QuickDraw = ({ players, onGameComplete }: IQuickDraw) => {
-  const [winner, setWinner] = useState();
+  const [winner, setWinner] = useState<string | undefined>();
   const [gameState, setGameState] = useState<GameState>("ready");
   const [message, setMessage] = useState("");
 
@@ -348,7 +348,7 @@ export const QuickDraw = ({ players, onGameComplete }: IQuickDraw) => {
               className="bg-green-700 hover:bg-green-500"
               onClick={() => {
                 const scores = [0, 0, 0].map((s, i) => ({
-                  score: players[i] === winner ? 10000 : 0,
+                  score: players[i] === winner ? 10000 : s,
                   player: players[i],
                 }));
                 onGameComplete(scores);

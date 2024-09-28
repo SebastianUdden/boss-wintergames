@@ -33,7 +33,7 @@ const Layout = () => {
   const [losingTeamIndex, setLosingTeamIndex] = useState(0);
   const [turn, setTurn] = useState<string | undefined>();
   const [highlightedPlayer, setHighlightedPlayer] = useState<string>("");
-  const [openGame, setOpenGame] = useState<IMiniGame>(miniGames[8]);
+  const [openGame, setOpenGame] = useState<IMiniGame | undefined>(miniGames[8]);
   const [previousTurns, setPreviousTurns] = useState<string[]>([]);
 
   const handleOpenGame = (name: string) => {
@@ -266,9 +266,9 @@ const Layout = () => {
 
                           filteredPlayerScores.forEach((ps) => {
                             if (p.name === ps.player && ps.score > 0) {
-                              wins = p.wins + ps.score;
+                              wins = (p.wins ?? 0) + ps.score;
                             } else if (p.name === ps.player && ps.score < 0) {
-                              losses = p.losses - ps.score;
+                              losses = (p.losses ?? 0) - ps.score;
                             }
                           });
                           return {

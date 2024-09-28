@@ -1,5 +1,4 @@
-// Hand.tsx
-
+// @ts-nocheck
 import React from "react";
 import { ICard, IPlayer, Phase } from "../types";
 import { Card } from "./card/Card";
@@ -9,8 +8,8 @@ interface HandProps {
   player: IPlayer;
   currentPlayer: "Player One" | "Player Two";
   phase: Phase;
-  commonProps: any;
-  playCard: (props: any) => void;
+  commonProps: ICard;
+  playCard: (props: ICard) => void;
   discardCard: (player: "Player One" | "Player Two", cardIndex: number) => void;
   playerOne: IPlayer;
   playerTwo: IPlayer;

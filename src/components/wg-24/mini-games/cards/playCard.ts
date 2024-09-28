@@ -43,13 +43,13 @@ export const playCard = (props: PlayCardProps) => {
   if (card.type === "Attack") {
     if (player === "Player One") {
       setPlayerTwo((prev) => {
-        const newHealth = prev.health - card.value;
+        const newHealth = prev.health - (card.value ?? 0);
         if (newHealth <= 0) setGameOver(true);
         return { ...prev, health: newHealth > 0 ? newHealth : 0 };
       });
     } else {
       setPlayerOne((prev) => {
-        const newHealth = prev.health - card.value;
+        const newHealth = prev.health - (card.value ?? 0);
         if (newHealth <= 0) setGameOver(true);
         return { ...prev, health: newHealth > 0 ? newHealth : 0 };
       });
@@ -58,12 +58,12 @@ export const playCard = (props: PlayCardProps) => {
     if (player === "Player One") {
       setPlayerOne((prev) => ({
         ...prev,
-        health: prev.health + card.value,
+        health: prev.health + (card.value ?? 0),
       }));
     } else {
       setPlayerTwo((prev) => ({
         ...prev,
-        health: prev.health + card.value,
+        health: prev.health + (card.value ?? 0),
       }));
     }
   }
