@@ -35,7 +35,7 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             <span className="line-through opacity-20">Winter</span>
             Games 2024
           </h1>
-          <span className="absolute text-[2.7vh] text-white left-[6.5vh] -top-[1.5vh] -rotate-12 font-pirata pirate">
+          <span className="absolute text-[2vh] md:text-[2.7vh] text-white left-[5.5vh] md:left-[6.5vh] -top-[1.5vh] -rotate-12 font-pirata pirate">
             Pirate
           </span>
         </div>
@@ -45,56 +45,56 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             onClick={() => onSetPhase("ready")}
             disabled={phase === "ready"}
           >
-            Ready
+            R<span className="hidden md:inline">eady</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("selecting-player")}
             disabled={phase === "selecting-player"}
           >
-            Selecting player
+            S<span className="hidden md:inline">electing player</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("waiting-for-spin")}
             disabled={phase === "waiting-for-spin"}
           >
-            Waiting for spin
+            W<span className="hidden md:inline">aiting for spin</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("spinning-wheel")}
             disabled={phase === "spinning-wheel"}
           >
-            Spinning wheel
+            S<span className="hidden md:inline">pinning wheel</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("playing-game")}
             disabled={phase === "playing-game"}
           >
-            Playing game
+            P<span className="hidden md:inline">laying game</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("calculating-score")}
             disabled={phase === "calculating-score"}
           >
-            Calculating score
+            C<span className="hidden md:inline">alculating score</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("selecting-captive")}
             disabled={phase === "selecting-captive"}
           >
-            Selecting captive
+            S<span className="hidden md:inline">electing captive</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("transitioning-captive")}
             disabled={phase === "transitioning-captive"}
           >
-            Transitioning captive
+            T<span className="hidden md:inline">ransitioning captive</span>
           </Button>
           <select
             className="header"
