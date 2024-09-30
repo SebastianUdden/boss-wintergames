@@ -35,7 +35,7 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             <span className="line-through opacity-20">Winter</span>
             Games 2024
           </h1>
-          <span className="absolute text-[2vh] md:text-[2.7vh] text-white left-[5.5vh] md:left-[6.5vh] -top-[1.5vh] -rotate-12 font-pirata pirate">
+          <span className="absolute text-[2vh] 2xl:text-[2.7vh] text-white left-[5.5vh] 2xl:left-[6.5vh] -top-[1.5vh] -rotate-12 font-pirata pirate">
             Pirate
           </span>
         </div>
@@ -45,56 +45,56 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             onClick={() => onSetPhase("ready")}
             disabled={phase === "ready"}
           >
-            R<span className="hidden md:inline">eady</span>
+            R<span className="hidden 2xl:inline">eady</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("selecting-player")}
             disabled={phase === "selecting-player"}
           >
-            S<span className="hidden md:inline">electing player</span>
+            S<span className="hidden 2xl:inline">electing player</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("waiting-for-spin")}
             disabled={phase === "waiting-for-spin"}
           >
-            W<span className="hidden md:inline">aiting for spin</span>
+            W<span className="hidden 2xl:inline">aiting for spin</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("spinning-wheel")}
             disabled={phase === "spinning-wheel"}
           >
-            S<span className="hidden md:inline">pinning wheel</span>
+            S<span className="hidden 2xl:inline">pinning wheel</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("playing-game")}
             disabled={phase === "playing-game"}
           >
-            P<span className="hidden md:inline">laying game</span>
+            P<span className="hidden 2xl:inline">laying game</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("calculating-score")}
             disabled={phase === "calculating-score"}
           >
-            C<span className="hidden md:inline">alculating score</span>
+            C<span className="hidden 2xl:inline">alculating score</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("selecting-captive")}
             disabled={phase === "selecting-captive"}
           >
-            S<span className="hidden md:inline">electing captive</span>
+            S<span className="hidden 2xl:inline">electing captive</span>
           </Button>
           <Button
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("transitioning-captive")}
             disabled={phase === "transitioning-captive"}
           >
-            T<span className="hidden md:inline">ransitioning captive</span>
+            T<span className="hidden 2xl:inline">ransitioning captive</span>
           </Button>
           <select
             className="header"
