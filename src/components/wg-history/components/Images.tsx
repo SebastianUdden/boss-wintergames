@@ -4,14 +4,12 @@ interface IImages {
 
 export const Images = ({ images }: IImages) => (
   <div>
-    {images.length !== 0 && (
-      <h2 className="mt-[15px] mb-[10px] text-[30px]">Bilder</h2>
-    )}
-    <div className="flex flex-wrap max-h-[80vh] overflow-scroll rounded-xl">
+    <h2 className="mb-2 text-2xl">Bilder</h2>
+    <div className="grid grid-cols-2 max-h-[80vh] overflow-y-scroll rounded-xl bg-gray-700 p-2">
       {images.map((a) => (
         <img
           key={a}
-          className="my-[5px] mr-[10px] rounded-xl border border-black shadow-lg"
+          className="object-cover w-full h-auto border border-black shadow-lg aspect-square"
           src={a}
           alt={a}
         />

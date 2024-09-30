@@ -21,14 +21,14 @@ export const WinterGame = ({
 }: Props) => {
   const t = title || "BOSS WinterGames";
   return (
-    <div className="bg-gray-800 text-white rounded-xl p-[30px] bp-[50px] m-[10px] shadow-md">
-      <h2 className="mb-0 text-[30px]">{`${t} ${occurred}`}</h2>
-      <p className="mb-[10px] ml-1 italic opacity-50">
-        by {coordinators.join(", ")}
-      </p>
+    <div className="flex flex-col gap-4 p-2 text-white bg-gray-800 shadow-md rounded-xl">
+      <div>
+        <h2 className="mb-0 text-3xl">{`${t} ${occurred}`}</h2>
+        <p className="ml-1 italic opacity-50">by {coordinators.join(", ")}</p>
+      </div>
       <Teams teams={teams} />
       <Activities activities={activities} />
-      <Images images={images} />
+      {images.length !== 0 && <Images images={images} />}
     </div>
   );
 };

@@ -8,13 +8,13 @@ interface ITeams {
 }
 
 export const Teams = ({ teams }: ITeams) => (
-  <div className="flex flex-wrap gap-2">
+  <div className="grid grid-cols-2 gap-2">
     {teams.map((t) => (
       <div
         key={t.title}
-        className="rounded-lg bg-gray-700 p-[20px] w-[48%] box-border shadow-md"
+        className="box-border p-4 bg-gray-700 rounded-lg shadow-md"
       >
-        <h3 className="mb-[5px] text-yellow-500 text-[22px]">{t.title}</h3>
+        <h3 className="mb-1 text-2xl text-yellow-500">{t.title}</h3>
         <ul className="p-0 m-0 list-none">
           {t.members.map((p) => (
             <li key={p}>{p}</li>

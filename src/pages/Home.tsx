@@ -23,12 +23,12 @@ export const Home = () => (
           key={label}
           to={to}
           className={cn(
-            "relative text-4xl text-white bg-black rounded-xl hover:text-white p-44 aspect-square flex items-center group",
-            `bg-${image}`
+            "relative text-4xl text-white bg-black rounded-xl hover:text-white aspect-square flex items-center justify-center group w-full max-w-[50vh]",
+            `bg-${image} bg-cover`
           )}
         >
-          {label}
-          <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-black opacity-50 group-hover:opacity-0">
+          <div className="w-full text-center">{label}</div>
+          <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-black opacity-70 group-hover:opacity-0 group-active:opacity-0 max-w-[50vh]">
             {label}
           </div>
         </Link>
