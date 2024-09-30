@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Team } from "./teams/Team";
 import { initialTeams } from "./teams/teams";
 import { Header } from "./Header";
+import { Footer } from "./Footer";
 
 export type Phase =
   | "ready"
@@ -201,7 +202,7 @@ const Layout = () => {
         onSetPhase={(p) => setPhase(p)}
       />
       <main className="z-10" style={{ overflow: "hidden" }}>
-        <div className="bg-center bg-cover bg-pirate-village">
+        <div className="overflow-hidden bg-center bg-cover bg-pirate-village">
           {/* Background tint overlay */}
           <div className="absolute inset-0 z-0 bg-black bg-opacity-50 pointer-events-none top-[5vh]"></div>
 
@@ -287,7 +288,7 @@ const Layout = () => {
             </div>
             <div
               className={cn(
-                "flex h-[80vh] w-[80vh] translate-y-[100vh] transition-all duration-1000 bg-center bg-cover bg-wheel-of-fortune",
+                "flex -translate-x-[10%] 2xl:-translate-x-0 h-[80vh] w-[80vh] translate-y-[100vh] transition-all duration-1000 bg-center bg-cover bg-wheel-of-fortune",
                 phase === "spinning-wheel" ? "translate-y-[17vh]" : "",
                 phase === "waiting-for-spin" ||
                   phase === "spinning-wheel" ||
@@ -312,32 +313,12 @@ const Layout = () => {
               />
             )}
           </div>
-          <div
-            className={cn(
-              "absolute bottom-0 justify-center mt-10 -translate-x-1/2 left-1/2 transition-all duration-1000 translate-y-[11vh] z-20",
-              phase === "ready" || phase === "waiting-for-spin"
-                ? "translate-y-0"
-                : ""
-            )}
-          >
-            <button
-              onClick={() => {
-                if (phase === "ready") {
-                  handleSelectNextPlayer();
-                }
-                if (phase === "waiting-for-spin") {
-                  setPhase("spinning-wheel");
-                }
-              }}
-              disabled={phase === "selecting-player"}
-              className="treasure bottom-button"
-            >
-              {(phase === "ready" || phase === "selecting-player") &&
-                "Who's the brave soul?"}
-              {(phase === "waiting-for-spin" || phase === "spinning-wheel") &&
-                `Spin it ${highlightedPlayer}!`}
-            </button>
-          </div>
+          <Footer
+            phase={phase}
+            highlightedPlayer={highlightedPlayer}
+            handleSelectNextPlayer={handleSelectNextPlayer}
+            setPhase={setPhase}
+          />
         </div>
       </main>
     </div>

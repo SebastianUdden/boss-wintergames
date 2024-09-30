@@ -119,7 +119,7 @@ export const MiniGame = ({
           alt="Pirate Map"
           className="flex flex-grow base-image"
         />
-        <div className="content-overlay p-[12vh]">
+        <div className="content-overlay p-[14vw] py-[10vh] 2xl:p-[12vh]">
           <GameRules
             teams={teams}
             playerSetup={playerSetup}

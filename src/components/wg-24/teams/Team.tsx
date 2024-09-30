@@ -41,24 +41,27 @@ export const Team = ({
     }
   }, [minimized]);
 
+  const calculateWidth = () => {
+    if (minimized) return `calc(${cardSize}vh + 1px)`;
+    if (isUnOpposed) return "98vw";
+    return "calc(50vw - 2rem)";
+  };
+
   return (
     <div
       className={cn(
-        "flex flex-col h-[94vh] shadow-md z-20 transition-all duration-500"
+        "!w-fit 2xl:!w-full flex flex-col h-[94vh] shadow-md z-20 transition-all duration-500",
+        minimized ? "hidden 2xl:block" : "block"
       )}
       style={{
         maxWidth: minimized ? "20vh" : "100%",
         minWidth: "9.5vh",
-        width: minimized
-          ? `calc(${cardSize}vh + 1px)` // Adjusting width dynamically
-          : isUnOpposed
-          ? "98vw"
-          : "calc(50vw - 2rem)", // Slight padding adjustment
+        width: calculateWidth(),
       }}
     >
       <h3
         className={cn(
-          "flex px-4 py-4 text-black text-[4vh] border-2 border-black",
+          "flex p-2 2xl:py-8 2xl:px-4 text-black text-lg 2xl:text-[4vh] border-2 border-black",
           color === "red" ? "rusty-red" : "stormy-seas-accent",
           minimized && justifyStartApplied
             ? "justify-start"
@@ -69,7 +72,7 @@ export const Team = ({
         <strong>{name}</strong>
         <strong
           className={cn(
-            "transition-opacity duration-500",
+            "hidden 2xl:inline transition-opacity duration-500",
             minimized ? "opacity-0" : "opacity-100"
           )}
         >

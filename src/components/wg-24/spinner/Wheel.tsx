@@ -259,7 +259,6 @@ export const Wheel = ({
     <div className="flex flex-col after:items-center">
       {/* Outer container */}
       <div
-        className="wheel-container"
         style={{
           width: wheelSize, // Dynamic width based on prop
           height: wheelSize, // Maintain height equal to width for 1:1 aspect ratio

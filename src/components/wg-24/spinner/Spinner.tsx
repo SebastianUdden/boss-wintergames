@@ -92,24 +92,22 @@ export const Spinner = ({
   const game = selectedSlice?.name ?? "";
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-center flex-grow ml-[2.5vh]">
-        <Wheel
-          phase={phase}
-          wheelSize={wheelSize}
-          slices={slices.reverse()}
-          selectedIndex={selectedIndex}
-          spins={spins}
-          multiplier={multiplier}
-          onSliceClick={(slice) => {
-            onGameSelected(slice.name);
-          }}
-          onSpinComplete={() => {
-            onPhaseChange("transition-from-spinning");
-            onGameSelected(game);
-          }}
-        />
-      </div>
-    </>
+    <div className="flex flex-col items-center justify-center flex-grow ml-[2.5vh]">
+      <Wheel
+        phase={phase}
+        wheelSize={wheelSize}
+        slices={slices.reverse()}
+        selectedIndex={selectedIndex}
+        spins={spins}
+        multiplier={multiplier}
+        onSliceClick={(slice) => {
+          onGameSelected(slice.name);
+        }}
+        onSpinComplete={() => {
+          onPhaseChange("transition-from-spinning");
+          onGameSelected(game);
+        }}
+      />
+    </div>
   );
 };

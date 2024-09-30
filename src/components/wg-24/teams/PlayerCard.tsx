@@ -55,17 +55,18 @@ export const PlayerCard = ({
           ? "translate-x-[0.7vh]"
           : "",
         !minimized && rightAligned ? "pl-[1vh]" : "",
-        !minimized && !rightAligned ? "pr-[1vh]" : ""
+        !minimized && !rightAligned ? "pr-[1vh]" : "",
+        "!max-w-[10vh] 2xl:!max-w-full"
       )}
       style={{
         backgroundColor: highlighted ? "#1e1e1eff" : "#1e1e1ebb",
-        height: `${size}vh`, // Make sure size is properly calculated based on player count
+        height: `${size}vh`,
         maxHeight: "20vh",
       }}
     >
       <div
         className={cn(
-          "flex items-center justify-center gap-6",
+          "relative flex items-center justify-center gap-6",
           highlighted ? "scale-110" : "",
           rightAligned ? "flex-row-reverse" : ""
         )}
@@ -79,17 +80,26 @@ export const PlayerCard = ({
         />
         <p
           className={cn(
-            "text-[4vh] font-bold transition-all duration-500",
+            "absolute top-1 text-white bg-black rounded-full p-2 2xl:bg-inherit 2xl:static text-md 2xl:text-[4vh] font-bold transition-all duration-500",
             minimized ? "opacity-0" : "opacity-100",
-            minimized && justifyStartApplied ? "hidden" : ""
+            minimized && justifyStartApplied ? "hidden" : "",
+            rightAligned ? "left-1" : "right-1"
           )}
         >
           {name}
         </p>
+        <span
+          className={cn(
+            "absolute inline p-2 italic text-white bg-black rounded-full bottom-2 2xl:hidden",
+            rightAligned ? "right-1" : "left-1"
+          )}
+        >
+          {wins} / {losses}
+        </span>
       </div>
       <p
         className={cn(
-          "flex items-center gap-6 text-[4vh] italic text-orange-400 transition-all duration-500",
+          "hidden 2xl:flex  items-center gap-6 text-md 2xl:text-[4vh] italic text-orange-400 transition-all duration-500",
           minimized ? "opacity-0" : "opacity-100",
           minimized && justifyStartApplied ? "hidden" : "",
           rightAligned ? "" : "flex-row-reverse"
@@ -98,7 +108,7 @@ export const PlayerCard = ({
         {wins} / {losses}
         <span
           className={cn(
-            "text-[3vh] opacity-0 font-pirata transition-all duration-300",
+            "text-md 2xl:text-[3vh] opacity-0 font-pirata transition-all duration-300",
             rightAligned ? "translate-x-40" : "-translate-x-40",
             showScoreIsPositive ? "text-green-700" : "",
             showScoreIsNegative ? "text-red-700" : "",
@@ -113,34 +123,6 @@ export const PlayerCard = ({
           })}
         </span>
       </p>
-      {/* <p
-        className={cn(
-          "flex items-center gap-6 text-[4vh] italic text-orange-400 transition-all duration-500",
-          minimized ? "opacity-0" : "opacity-100",
-          minimized && justifyStartApplied ? "hidden" : "",
-          rightAligned ? "" : "flex-row-reverse"
-        )}
-      >
-        {score.toLocaleString("se-SE", {
-          useGrouping: true,
-        })}{" "}
-        <span
-          className={cn(
-            "text-[3vh] opacity-0 font-pirata transition-all duration-300",
-            rightAligned ? "translate-x-40" : "-translate-x-40",
-            showScoreIsPositive ? "text-green-700" : "",
-            showScoreIsNegative ? "text-red-700" : "",
-            showScoreIsPositive || showScoreIsNegative
-              ? "opacity-100 translate-x-0"
-              : ""
-          )}
-        >
-          {showScoreIsPositive && "+"}
-          {showScore?.toLocaleString("se-SE", {
-            useGrouping: true,
-          })}
-        </span>
-      </p> */}
     </div>
   );
 };
