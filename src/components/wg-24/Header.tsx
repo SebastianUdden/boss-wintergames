@@ -25,19 +25,23 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
       <ConfirmModal isOpen={showModal} onClose={() => setShowModal(false)} />
       <header className="z-20 flex items-center justify-between w-full h-[5vh] px-4 font-bold text-center black-sails-bg black-sails-text">
         <div className="relative inline-block">
-          <h1 className="font-bold font-fell text-[2vh]">
+          <h1 className="font-bold font-fell text-sm sm:text-[2vh]">
             <button
               className="p-0 m-0 border-none shadow-none outline-none bg-none text-inherit hover:text-white/50 focus:outline-none"
               onClick={() => setShowModal(true)}
             >
               BOSS
             </button>{" "}
-            <span className="line-through opacity-20">Winter</span>
-            Games 2024
+            <span className="relative">
+              <span className="line-through opacity-20 text-sm sm:text-[2vh]">
+                Winter
+              </span>
+              <span className="absolute text-sm sm:text-[2vh] text-white left-[0.5vh] -top-[0.5vh] 2xl:-top-[0.5vh] -rotate-12 font-pirata pirate">
+                Pirate
+              </span>
+            </span>
+            Games <span className="hidden xs:inline">2024</span>
           </h1>
-          <span className="absolute text-[2vh] 2xl:text-[2.7vh] text-white left-[5.5vh] 2xl:left-[6.5vh] -top-[1.5vh] -rotate-12 font-pirata pirate">
-            Pirate
-          </span>
         </div>
         <div className="flex h-full m-0 font-fell">
           <Button
@@ -103,14 +107,11 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             <option key="wheel" value="wheel">
               Wheel
             </option>
-            {miniGames
-              .slice()
-              .sort(sortByName)
-              .map((miniGame) => (
-                <option key={miniGame.id} value={miniGame.id}>
-                  {miniGame.name}
-                </option>
-              ))}
+            {miniGames.slice().map((miniGame) => (
+              <option key={miniGame.id} value={miniGame.id}>
+                {miniGame.name}
+              </option>
+            ))}
           </select>
         </div>
       </header>

@@ -34,7 +34,7 @@ const Layout = () => {
   const [losingTeamIndex, setLosingTeamIndex] = useState(0);
   const [turn, setTurn] = useState<string | undefined>();
   const [highlightedPlayer, setHighlightedPlayer] = useState<string>("");
-  const [openGame, setOpenGame] = useState<IMiniGame | undefined>(miniGames[8]);
+  const [openGame, setOpenGame] = useState<IMiniGame | undefined>(undefined);
   const [previousTurns, setPreviousTurns] = useState<string[]>([]);
 
   const handleOpenGame = (name: string) => {
@@ -198,15 +198,19 @@ const Layout = () => {
     <div className="min-w-full min-h-screen shipwrecked h-[100vh]">
       <Header
         phase={phase}
-        onSelectGame={(index) => setOpenGame(miniGames[index])}
+        onSelectGame={(index) => {
+          console.log(miniGames);
+          setOpenGame(miniGames.slice()[index]);
+          setPhase("playing-game");
+        }}
         onSetPhase={(p) => setPhase(p)}
       />
       <main className="z-10" style={{ overflow: "hidden" }}>
-        <div className="overflow-hidden bg-center bg-cover bg-pirate-village">
+        <div className="overflow-y-hidden bg-center bg-cover bg-pirate-village h-[100vh]">
           {/* Background tint overlay */}
           <div className="absolute inset-0 z-0 bg-black bg-opacity-50 pointer-events-none top-[5vh]"></div>
 
-          <div className="z-10 flex justify-between w-full gap-2 p-2">
+          <div className="z-10 flex justify-between w-full gap-2">
             {teams[0].players.length > 0 && (
               <Team
                 {...teams[0]}
@@ -288,7 +292,7 @@ const Layout = () => {
             </div>
             <div
               className={cn(
-                "flex -translate-x-[10%] 2xl:-translate-x-0 h-[80vh] w-[80vh] translate-y-[100vh] transition-all duration-1000 bg-center bg-cover bg-wheel-of-fortune",
+                "flex -translate-x-[5%] sm:-translate-x-0 h-[80vh] w-[80vh] translate-y-[100vh] transition-all duration-1000 bg-center bg-cover bg-wheel-of-fortune",
                 phase === "spinning-wheel" ? "translate-y-[17vh]" : "",
                 phase === "waiting-for-spin" ||
                   phase === "spinning-wheel" ||

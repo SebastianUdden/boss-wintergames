@@ -138,18 +138,22 @@ export const miniGames: IMiniGame[] = [
   //   weight: 1,
   // },
   {
-    id: 8,
+    id: 7,
     color: "#007FFF",
     name: "Sea shanty",
     category: "Lagkamp",
     song: "The White Stripes - Seven Nation Army",
-    description: ["Kom på en kampsång för erat lag", "Ni har 15 minuter på er"],
+    description: [
+      "Kom på en kampsång för erat lag",
+      "Ni har 15 minuter på er",
+      "Det får inte vara mer än 5 meningar",
+    ],
     criteria: ["Rim", "Hyllning", "Diss", "Trallvänlighet"],
     isAnalog: true,
     weight: 1,
   },
   {
-    id: 9,
+    id: 8,
     color: "#00FFFF",
     name: "Monuments",
     category: "Lagkamp",
@@ -163,7 +167,7 @@ export const miniGames: IMiniGame[] = [
     weight: 1,
   },
   {
-    id: 10,
+    id: 9,
     color: "#00FF7F",
     name: "Rope",
     category: "Lagkamp",
@@ -177,7 +181,7 @@ export const miniGames: IMiniGame[] = [
     weight: 1,
   },
   {
-    id: 11,
+    id: 10,
     color: "#00FF00",
     name: "Shipwreck",
     category: "Lagkamp",
@@ -191,7 +195,7 @@ export const miniGames: IMiniGame[] = [
     weight: 1,
   },
   {
-    id: 12,
+    id: 11,
     color: "#7FFF00",
     name: "Killerball",
     category: "2v2",
@@ -206,7 +210,7 @@ export const miniGames: IMiniGame[] = [
     weight: 1,
   },
   {
-    id: 13,
+    id: 12,
     color: "#000000",
     name: "Darkshot",
     category: "2v2",
@@ -234,7 +238,7 @@ export const miniGames: IMiniGame[] = [
   //   weight: 1,
   // },
   {
-    id: 14,
+    id: 13,
     color: "#FF7F00",
     name: "Cards",
     category: "Duell",
@@ -247,7 +251,7 @@ export const miniGames: IMiniGame[] = [
     weight: 1,
   },
   {
-    id: 15,
+    id: 14,
     color: "#FF0000",
     name: "Little Stereo",
     category: "Duell",

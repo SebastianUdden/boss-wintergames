@@ -50,8 +50,9 @@ export const Team = ({
   return (
     <div
       className={cn(
-        "!w-fit 2xl:!w-full flex flex-col h-[94vh] shadow-md z-20 transition-all duration-500",
-        minimized ? "hidden 2xl:block" : "block"
+        "mt-2 !w-fit 2xl:!w-full flex flex-col h-[94vh] shadow-md z-20 transition-all duration-500",
+        minimized ? "hidden 2xl:block" : "block",
+        rightAligned ? "mr-2" : "ml-2"
       )}
       style={{
         maxWidth: minimized ? "20vh" : "100%",

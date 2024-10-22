@@ -12,6 +12,11 @@ const links = [
     label: "Pirate games",
     image: "pirate-village",
   },
+  {
+    to: "/mini-game-ideas",
+    label: "Mini-game ideas",
+    image: "pirate-village",
+  },
 ];
 
 export const Home = () => (

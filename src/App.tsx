@@ -4,6 +4,7 @@ import { NotFound } from "./pages/NotFound";
 import "./App.css";
 import { Wintergames24 } from "./pages/Wintergames24";
 import { WintergamesHistory } from "./pages/WintergamesHistory";
+import { MiniGameIdeas } from "./pages/MiniGameIdeas";
 
 const App = () => {
   return (
@@ -12,8 +13,8 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/history" element={<WintergamesHistory />} />
         <Route path="/boss-pirate-games" element={<Wintergames24 />} />
-        <Route path="*" element={<NotFound />} />{" "}
-        {/* Catch-all route for 404 */}
+        <Route path="/mini-game-ideas" element={<MiniGameIdeas />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

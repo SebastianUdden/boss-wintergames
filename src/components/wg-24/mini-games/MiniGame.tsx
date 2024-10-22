@@ -3,6 +3,7 @@ import { GameRules } from "./game-rules/GameRules";
 import { IScore } from "./Score";
 import { ITeam } from "../teams/teams";
 import { IPlayer } from "../teams/players";
+import { ShipwreckGame } from "./shipwreck/components/ShipwreckGame";
 
 export interface IPlayerSetup {
   p1: string;
@@ -110,25 +111,27 @@ export const MiniGame = ({
     () => replacePlaceholders(playerSetup, miniGame),
     [playerSetup]
   );
-  // const { name } = parsedMiniGame;
+  const { name } = parsedMiniGame;
   return (
     <div className="relative flex flex-grow">
-      <div className="relative flex flex-grow">
-        <img
-          src="/backgrounds/maps/pirate-map-background.png"
-          alt="Pirate Map"
-          className="flex flex-grow base-image"
-        />
-        <div className="content-overlay p-[14vw] py-[10vh] 2xl:p-[12vh]">
-          <GameRules
-            teams={teams}
-            playerSetup={playerSetup}
-            {...parsedMiniGame}
-            onGameComplete={onGameComplete}
+      {name !== "Shipwreck" && (
+        <div className="relative flex flex-grow">
+          <img
+            src="/backgrounds/maps/pirate-map-background.png"
+            alt="Pirate Map"
+            className="flex flex-grow base-image"
           />
+          <div className="content-overlay p-[14vw] py-[10vh] 2xl:p-[12vh]">
+            <GameRules
+              teams={teams}
+              playerSetup={playerSetup}
+              {...parsedMiniGame}
+              onGameComplete={onGameComplete}
+            />
+          </div>
+          <div className="overlay"></div>
         </div>
-        <div className="overlay"></div>
-      </div>
+      )}
 
       {/* <div className="flex flex-grow p-[10vh] bg-center bg-cover">
         <div className="z-10">
@@ -168,6 +171,17 @@ export const MiniGame = ({
       {name === "Cards" && (
         <CardsGame player={playerSetup.solo} onGameComplete={onGameComplete} />
       )} */}
+      {name === "Shipwreck" && (
+        <ShipwreckGame
+          players={[
+            playerSetup.p1,
+            playerSetup.p2,
+            playerSetup.p3,
+            playerSetup.p4,
+          ]}
+          onGameComplete={onGameComplete}
+        />
+      )}
     </div>
   );
 };

@@ -336,7 +336,7 @@ export const Wheel = ({
 
                 const isSelected =
                   selectedIndex !== undefined
-                    ? index === 15 - selectedIndex
+                    ? index === 14 - selectedIndex
                     : false;
                 const showPulse = isSelected && showSelected;
                 const othersAfter = !isSelected && showSelected && !isSpinning;
@@ -392,7 +392,7 @@ export const Wheel = ({
                     <text
                       x={textX + (sliceTranslations[index]?.x || 0)}
                       y={textY + (sliceTranslations[index]?.y || 0)}
-                      fill="#fff" // Main text color
+                      fill={showPulse ? "#ff0000" : "#fff"} // Main text color
                       fontSize={sliceRadius * 0.08}
                       fontWeight="bold"
                       textAnchor="middle"
@@ -402,6 +402,9 @@ export const Wheel = ({
                         (sliceTranslations[index].rotate || 0)
                       } ${textX} ${textY})`}
                       filter="url(#carved-in-shadow)"
+                      style={{
+                        transition: "fill 3s ease", // Adding transition to fill property
+                      }}
                     >
                       {slice.name}
                     </text>

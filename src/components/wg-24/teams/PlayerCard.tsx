@@ -67,7 +67,7 @@ export const PlayerCard = ({
       <div
         className={cn(
           "relative flex items-center justify-center gap-6",
-          highlighted ? "scale-110" : "",
+          highlighted ? "scale-110 z-10" : "z-0",
           rightAligned ? "flex-row-reverse" : ""
         )}
       >
@@ -80,18 +80,18 @@ export const PlayerCard = ({
         />
         <p
           className={cn(
-            "absolute top-1 text-white bg-black rounded-full p-2 2xl:bg-inherit 2xl:static text-md 2xl:text-[4vh] font-bold transition-all duration-500",
+            "absolute top-0 text-white bg-black/70 p-2 2xl:bg-inherit 2xl:static text-sm 2xl:text-[4vh] font-bold transition-all duration-500",
             minimized ? "opacity-0" : "opacity-100",
             minimized && justifyStartApplied ? "hidden" : "",
-            rightAligned ? "left-1" : "right-1"
+            rightAligned ? "left-0" : "right-0"
           )}
         >
           {name}
         </p>
         <span
           className={cn(
-            "absolute inline p-2 italic text-white bg-black rounded-full bottom-2 2xl:hidden",
-            rightAligned ? "right-1" : "left-1"
+            "absolute inline p-2 italic text-white bg-black/70 text-sm bottom-0 2xl:hidden",
+            rightAligned ? "right-0" : "left-0"
           )}
         >
           {wins} / {losses}
