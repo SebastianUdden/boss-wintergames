@@ -4,20 +4,15 @@ import { Phase } from "./Layout";
 
 interface IFooter {
   phase: string;
-  highlightedPlayer: string;
-  handleSelectNextPlayer: () => void;
   setPhase: Dispatch<SetStateAction<Phase>>;
 }
-export const Footer = ({
-  phase,
-  highlightedPlayer,
-  handleSelectNextPlayer,
-  setPhase,
-}: IFooter) => (
+export const Footer = ({ phase, setPhase }: IFooter) => (
   <div
     className={cn(
       "fixed bottom-0 left-1/2 -translate-x-1/2 z-20 transition-transform duration-1000", // Fixed positioning relative to the viewport
-      phase === "ready" || phase === "waiting-for-spin"
+      phase === "ready" ||
+        phase === "waiting-for-spin" ||
+        phase === "explaining-game"
         ? "translate-y-0"
         : "translate-y-full" // Move footer out of view when not in the correct phase
     )}
@@ -25,19 +20,23 @@ export const Footer = ({
     <button
       onClick={() => {
         if (phase === "ready") {
-          handleSelectNextPlayer();
+          setPhase("waiting-for-spin");
         }
         if (phase === "waiting-for-spin") {
           setPhase("spinning-wheel");
         }
+        if (phase === "explaining-game") {
+          setPhase("selecting-players");
+        }
       }}
-      disabled={phase === "selecting-player"}
+      disabled={phase === "selecting-players"}
       className="!text-lg 2xl:!text-4xl treasure bottom-button"
     >
-      {(phase === "ready" || phase === "selecting-player") &&
-        "Who's the brave soul?"}
+      {phase === "ready" && "Hoist the sails, adventure calls!"}
       {(phase === "waiting-for-spin" || phase === "spinning-wheel") &&
-        `Spin it ${highlightedPlayer}!`}
+        "Dare ye spin for a game?"}
+      {phase === "selecting-players" && "Who's the brave soul?"}
+      {phase === "explaining-game" && "Find the brave souls!"}
     </button>
   </div>
 );

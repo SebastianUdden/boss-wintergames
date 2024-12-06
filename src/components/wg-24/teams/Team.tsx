@@ -13,7 +13,7 @@ const sortByScore = (a: IPlayer, b: IPlayer) => {
 
 interface TeamProps extends ITeam {
   isUnOpposed: boolean;
-  highlightedPlayer: string;
+  highlightedPlayers: string[];
 }
 
 export const Team = ({
@@ -22,9 +22,10 @@ export const Team = ({
   players,
   minimized,
   rightAligned,
-  highlightedPlayer,
+  highlightedPlayers,
   isUnOpposed,
 }: TeamProps) => {
+  // console.log({ highlightedPlayers });
   const [justifyStartApplied, setJustifyStartApplied] = useState(false);
   const sortedPlayers = players.sort(sortByScore);
   const cardSize = 100 / players.length - 6;
@@ -49,6 +50,7 @@ export const Team = ({
 
   return (
     <div
+      data-testid={name}
       className={cn(
         "mt-2 !w-fit 2xl:!w-full flex flex-col h-[94vh] shadow-md z-20 transition-all duration-500",
         minimized ? "hidden 2xl:block" : "block",
@@ -86,7 +88,7 @@ export const Team = ({
           {...player}
           minimized={minimized}
           rightAligned={rightAligned}
-          highlighted={player.name === highlightedPlayer}
+          highlighted={highlightedPlayers.some((hp) => hp === player.name)}
           playerCount={players.length}
           justifyStartApplied={justifyStartApplied}
         />

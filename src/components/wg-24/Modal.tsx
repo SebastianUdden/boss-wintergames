@@ -41,7 +41,7 @@ export const Modal = ({
 
   if (!modal) return null;
 
-  const { name, category, song, description, criteria, isSelected, isAnalog } =
+  const { name, gametype, song, description, criteria, isSelected, isAnalog } =
     modal;
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -52,7 +52,7 @@ export const Modal = ({
         <DialogDescription className="flex flex-col gap-6 text-xl text-left">
           <div className="flex flex-wrap gap-2">
             <Badge className="text-xl text-black bg-white hover:bg-white">
-              {category}
+              {gametype}
             </Badge>
             <Badge className="text-xl text-white bg-pink-700 hover:bg-pink-700">
               {song}

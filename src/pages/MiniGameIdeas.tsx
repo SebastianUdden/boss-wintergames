@@ -31,7 +31,7 @@ export const MiniGameIdeas = () => {
             <p>{miniGame.concept}</p>
             <hr />
             <p>
-              {miniGame.category}:{" "}
+              {miniGame.gameType}:{" "}
               <span className="opacity-50">
                 {miniGame.isAnalog ? "Analog" : "Digital"}
               </span>

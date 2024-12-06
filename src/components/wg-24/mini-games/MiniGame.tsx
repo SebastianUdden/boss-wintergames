@@ -3,7 +3,8 @@ import { GameRules } from "./game-rules/GameRules";
 import { IScore } from "./Score";
 import { ITeam } from "../teams/teams";
 import { IPlayer } from "../teams/players";
-import { ShipwreckGame } from "./shipwreck/components/ShipwreckGame";
+// import { ShipwreckGame } from "./shipwreck/components/ShipwreckGame";
+import { Phase } from "../Layout";
 
 export interface IPlayerSetup {
   p1: string;
@@ -80,7 +81,7 @@ export interface IMiniGame {
   id: number;
   color: string;
   name: string;
-  category: string;
+  gameType: "solo" | "duell" | "2v2" | "lagkamp";
   concept?: string;
   instructions?: string[];
   description?: string[];
@@ -98,6 +99,8 @@ export interface MiniGameProps {
   teams: ITeam[];
   miniGame?: IMiniGame;
   playerSetup: IPlayerSetup;
+  chosenPlayers: string[][];
+  phase: Phase;
   onGameComplete: (playerScores: IScore[], loserIndex: number) => void;
 }
 
@@ -105,6 +108,8 @@ export const MiniGame = ({
   teams,
   miniGame,
   playerSetup,
+  chosenPlayers,
+  phase,
   onGameComplete,
 }: MiniGameProps) => {
   const parsedMiniGame = useMemo(
@@ -124,8 +129,10 @@ export const MiniGame = ({
           <div className="content-overlay p-[14vw] py-[10vh] 2xl:p-[12vh]">
             <GameRules
               teams={teams}
+              chosenPlayers={chosenPlayers}
               playerSetup={playerSetup}
               {...parsedMiniGame}
+              phase={phase}
               onGameComplete={onGameComplete}
             />
           </div>
@@ -171,7 +178,7 @@ export const MiniGame = ({
       {name === "Cards" && (
         <CardsGame player={playerSetup.solo} onGameComplete={onGameComplete} />
       )} */}
-      {name === "Shipwreck" && (
+      {/* {name === "Shipwreck" && (
         <ShipwreckGame
           players={[
             playerSetup.p1,
@@ -181,7 +188,7 @@ export const MiniGame = ({
           ]}
           onGameComplete={onGameComplete}
         />
-      )}
+      )} */}
     </div>
   );
 };

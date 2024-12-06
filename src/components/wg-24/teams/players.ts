@@ -10,24 +10,24 @@ export interface IPlayer {
 export const players = [
   {
     name: "Ante",
-    image: "/games/cards/hero-sales-slammer.webp",
-    wins: 4,
-    losses: 1,
+    image: "/games/cards/hero-hype-hero.webp",
+    wins: 0,
+    losses: 0,
   },
   {
     name: "Dennan",
     image: "/games/cards/hero-red-beard-raider.webp",
-    wins: 3,
-    losses: 2,
-  },
-  {
-    name: "Fredde",
-    image: "/games/cards/hero-the-salmon-dancer.webp",
     wins: 0,
-    losses: 10,
+    losses: 0,
   },
   {
     name: "Ivar",
+    image: "/games/cards/hero-number-cruncher.webp",
+    wins: 0,
+    losses: 0,
+  },
+  {
+    name: "Joel",
     image: "/games/cards/awesome-possum.webp",
     wins: 0,
     losses: 0,
@@ -45,14 +45,14 @@ export const players = [
     losses: 0,
   },
   {
-    name: "Nemer",
-    image: "/games/cards/hero-tattooed-titan.webp",
+    name: "Palmen",
+    image: "/games/cards/hero-excel-erator.webp",
     wins: 0,
     losses: 0,
   },
   {
-    name: "Palmen",
-    image: "/games/cards/hero-excel-erator.webp",
+    name: "Robban",
+    image: "/games/cards/hero-red-hot-striker.webp",
     wins: 0,
     losses: 0,
   },
@@ -65,6 +65,12 @@ export const players = [
   {
     name: "Sebbe",
     image: "/games/cards/hero-tall-coder.webp",
+    wins: 0,
+    losses: 0,
+  },
+  {
+    name: "Virre",
+    image: "/games/cards/hero-aloof-entrepeneur.webp",
     wins: 0,
     losses: 0,
   },

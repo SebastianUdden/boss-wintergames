@@ -42,6 +42,7 @@ export const PlayerCard = ({
 
   return (
     <div
+      data-testId={name}
       className={cn(
         "flex black-sails p-0 transition-all",
         minimized && justifyStartApplied

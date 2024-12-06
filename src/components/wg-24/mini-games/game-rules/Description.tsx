@@ -31,7 +31,7 @@ export const Description = ({ description, wordsToReplace }: IDescription) => {
   };
 
   return (
-    <ul>
+    <ul className="p-4 bg-black bg-opacity-50 rounded-xl">
       {description?.map((d, index) => (
         <li key={index} className="my-2 text-[1.5vh]">
           {replaceWordsWithBadges(d)}

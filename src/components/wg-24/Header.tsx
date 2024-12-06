@@ -3,13 +3,6 @@ import { miniGames } from "./mini-games/miniGames";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { ConfirmModal } from "./ConfirmModal";
-import { IMiniGame } from "./mini-games/MiniGame";
-
-const sortByName = (a: IMiniGame, b: IMiniGame) => {
-  if (a.name > b.name) return 1;
-  if (a.name < b.name) return -1;
-  return 0;
-};
 
 interface IHeader {
   onSelectGame: (index: number) => void;
@@ -45,6 +38,7 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
         </div>
         <div className="flex h-full m-0 font-fell">
           <Button
+            data-testid="ready-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("ready")}
             disabled={phase === "ready"}
@@ -52,13 +46,7 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             R<span className="hidden 2xl:inline">eady</span>
           </Button>
           <Button
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("selecting-player")}
-            disabled={phase === "selecting-player"}
-          >
-            S<span className="hidden 2xl:inline">electing player</span>
-          </Button>
-          <Button
+            data-testid="waiting-for-spin-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("waiting-for-spin")}
             disabled={phase === "waiting-for-spin"}
@@ -66,6 +54,7 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             W<span className="hidden 2xl:inline">aiting for spin</span>
           </Button>
           <Button
+            data-testid="spinning-wheel-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("spinning-wheel")}
             disabled={phase === "spinning-wheel"}
@@ -73,6 +62,23 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             S<span className="hidden 2xl:inline">pinning wheel</span>
           </Button>
           <Button
+            data-testid="explaining-game-state"
+            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+            onClick={() => onSetPhase("playing-game")}
+            disabled={phase === "explaining-game"}
+          >
+            E<span className="hidden 2xl:inline">xplaining game</span>
+          </Button>
+          <Button
+            data-testid="selecting-players-state"
+            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+            onClick={() => onSetPhase("selecting-players")}
+            disabled={phase === "selecting-players"}
+          >
+            S<span className="hidden 2xl:inline">electing players</span>
+          </Button>
+          <Button
+            data-testid="playing-game-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("playing-game")}
             disabled={phase === "playing-game"}
@@ -80,6 +86,7 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             P<span className="hidden 2xl:inline">laying game</span>
           </Button>
           <Button
+            data-testid="calculating-score-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("calculating-score")}
             disabled={phase === "calculating-score"}
@@ -87,6 +94,7 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             C<span className="hidden 2xl:inline">alculating score</span>
           </Button>
           <Button
+            data-testid="selecting-captive-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("selecting-captive")}
             disabled={phase === "selecting-captive"}
@@ -94,6 +102,7 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             S<span className="hidden 2xl:inline">electing captive</span>
           </Button>
           <Button
+            data-testid="transitioning-captive-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("transitioning-captive")}
             disabled={phase === "transitioning-captive"}

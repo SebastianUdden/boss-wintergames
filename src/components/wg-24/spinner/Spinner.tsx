@@ -23,7 +23,7 @@ export const Spinner = ({
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(
     null
   );
-  const spins = 5;
+  const spins = 1;
   const multiplier = 1;
 
   // Function to get a random slice based on weights, excluding the last selected index

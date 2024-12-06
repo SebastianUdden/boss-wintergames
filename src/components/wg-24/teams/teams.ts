@@ -1,6 +1,6 @@
 import { IPlayer, players } from "./players";
 
-const skewTeamSize = 4;
+const skewTeamSize = 5;
 
 export interface ITeam {
   id: number;
@@ -18,7 +18,7 @@ export const initialTeams: ITeam[] = [
     color: "blue",
     minimized: true,
     rightAligned: false,
-    players: players.slice(skewTeamSize, players.length),
+    players: players.slice(0, skewTeamSize),
   },
   {
     id: 1,
@@ -26,6 +26,6 @@ export const initialTeams: ITeam[] = [
     color: "red",
     minimized: true,
     rightAligned: true,
-    players: players.slice(0, skewTeamSize),
+    players: players.slice(skewTeamSize, players.length),
   },
 ];
