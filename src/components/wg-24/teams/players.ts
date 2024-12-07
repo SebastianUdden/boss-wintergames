@@ -5,6 +5,8 @@ export interface IPlayer {
   losses?: number;
   score?: number;
   showScore?: number;
+  isCaptive?: boolean;
+  isCaptain?: boolean;
 }
 
 export const players = [
@@ -13,6 +15,7 @@ export const players = [
     image: "/games/cards/hero-hype-hero.webp",
     wins: 0,
     losses: 0,
+    isCaptive: true,
   },
   {
     name: "Dennan",
@@ -25,6 +28,7 @@ export const players = [
     image: "/games/cards/hero-number-cruncher.webp",
     wins: 0,
     losses: 0,
+    isCaptain: true,
   },
   {
     name: "Joel",
@@ -73,5 +77,6 @@ export const players = [
     image: "/games/cards/hero-aloof-entrepeneur.webp",
     wins: 0,
     losses: 0,
+    isCaptain: true,
   },
 ];

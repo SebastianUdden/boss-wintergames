@@ -403,7 +403,7 @@ export const Wheel = ({
                       } ${textX} ${textY})`}
                       filter="url(#carved-in-shadow)"
                       style={{
-                        transition: "fill 3s ease", // Adding transition to fill property
+                        transition: "fill 2s ease", // Adding transition to fill property
                       }}
                     >
                       {slice.name}

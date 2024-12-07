@@ -1,6 +1,6 @@
 import { IPlayer, players } from "./players";
 
-const skewTeamSize = 5;
+const skewTeamSize = 9;
 
 export interface ITeam {
   id: number;

@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { ITeam } from "./teams";
 import { useEffect, useState } from "react";
 import { IPlayer } from "./players";
+import { Phase } from "../Layout";
 
 const sortByScore = (a: IPlayer, b: IPlayer) => {
   if (!a.wins || !b.wins) return 0;
@@ -14,6 +15,8 @@ const sortByScore = (a: IPlayer, b: IPlayer) => {
 interface TeamProps extends ITeam {
   isUnOpposed: boolean;
   highlightedPlayers: string[];
+  phase: Phase;
+  onMovePlayer: (name: string) => void;
 }
 
 export const Team = ({
@@ -23,7 +26,9 @@ export const Team = ({
   minimized,
   rightAligned,
   highlightedPlayers,
+  phase,
   isUnOpposed,
+  onMovePlayer,
 }: TeamProps) => {
   // console.log({ highlightedPlayers });
   const [justifyStartApplied, setJustifyStartApplied] = useState(false);
@@ -89,8 +94,10 @@ export const Team = ({
           minimized={minimized}
           rightAligned={rightAligned}
           highlighted={highlightedPlayers.some((hp) => hp === player.name)}
+          phase={phase}
           playerCount={players.length}
           justifyStartApplied={justifyStartApplied}
+          onMovePlayer={onMovePlayer}
         />
       ))}
     </div>

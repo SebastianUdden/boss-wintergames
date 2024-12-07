@@ -2,13 +2,16 @@ import { cn } from "@/lib/utils";
 import { Avatar } from "./Avatar";
 import { IPlayer } from "./players";
 import { useEffect, useState } from "react";
+import { Phase } from "../Layout";
 
 interface IPlayerCard extends IPlayer {
   highlighted: boolean;
+  phase: Phase;
   rightAligned: boolean;
   minimized: boolean;
   playerCount: number;
   justifyStartApplied: boolean;
+  onMovePlayer: (name: string) => void;
 }
 
 export const PlayerCard = ({
@@ -17,11 +20,15 @@ export const PlayerCard = ({
   rightAligned,
   minimized = true,
   highlighted,
+  isCaptive,
+  isCaptain,
+  phase,
   playerCount,
   wins,
   losses,
   showScore,
   justifyStartApplied,
+  onMovePlayer,
 }: IPlayerCard) => {
   const size = 75 / playerCount;
 
@@ -43,6 +50,11 @@ export const PlayerCard = ({
   return (
     <div
       data-testId={name}
+      onClick={() => {
+        if (phase === "captains-choice" && !isCaptain) {
+          onMovePlayer(name);
+        }
+      }}
       className={cn(
         "flex black-sails p-0 transition-all",
         minimized && justifyStartApplied
@@ -57,6 +69,14 @@ export const PlayerCard = ({
           : "",
         !minimized && rightAligned ? "pl-[1vh]" : "",
         !minimized && !rightAligned ? "pr-[1vh]" : "",
+        phase === "captains-choice" &&
+          !isCaptain &&
+          rightAligned &&
+          "cursor-pointer hover:border-r-white hover:border-r-8",
+        phase === "captains-choice" &&
+          !isCaptain &&
+          !rightAligned &&
+          "cursor-pointer hover:border-l-white hover:border-l-8",
         "!max-w-[10vh] 2xl:!max-w-full"
       )}
       style={{
@@ -89,6 +109,79 @@ export const PlayerCard = ({
         >
           {name}
         </p>
+        {highlighted &&
+          (phase === "selecting-players" || phase === "playing-game") && (
+            <div className="relative w-[10vh] h-[10vh]">
+              {isCaptive && (
+                <img
+                  className={cn(
+                    "absolute top-10 left-5",
+                    rightAligned ? "scale-y-[-1]" : ""
+                  )}
+                  style={{
+                    height: `${size}vh`,
+                    maxHeight: "6vh",
+                    maxWidth: "6vh",
+                  }}
+                  src="/leaderboard/ball-chain.png"
+                />
+              )}
+              {isCaptain && (
+                <img
+                  className={cn(
+                    "absolute top-10 left-5",
+                    rightAligned ? "scale-x-[-1]" : ""
+                  )}
+                  style={{
+                    height: `${size}vh`,
+                    maxHeight: "6vh",
+                    maxWidth: "6vh",
+                  }}
+                  src="/leaderboard/captain.png"
+                />
+              )}
+              <img
+                className={cn(
+                  "absolute top-0 left-0 object-cover -rotate-90 aspect-square",
+                  rightAligned ? "scale-y-[-1]" : ""
+                )}
+                style={{
+                  height: `${size}vh`,
+                  maxHeight: "10vh",
+                  maxWidth: "10vh",
+                }}
+                src="/leaderboard/cutlass.png"
+              />
+            </div>
+          )}
+        {isCaptive && !highlighted && phase !== "playing-game" && (
+          <img
+            className={cn(
+              "w-[10vh] h-[10vh]",
+              rightAligned ? "scale-x-[-1]" : ""
+            )}
+            style={{
+              height: `${size}vh`,
+              maxHeight: "6vh",
+              maxWidth: "6vh",
+            }}
+            src="/leaderboard/ball-chain.png"
+          />
+        )}
+        {isCaptain && !highlighted && phase !== "playing-game" && (
+          <img
+            className={cn(
+              "w-[10vh] h-[10vh]",
+              rightAligned ? "scale-x-[-1]" : ""
+            )}
+            style={{
+              height: `${size}vh`,
+              maxHeight: "6vh",
+              maxWidth: "6vh",
+            }}
+            src="/leaderboard/captain.png"
+          />
+        )}
         <span
           className={cn(
             "absolute inline p-2 italic text-white bg-black/70 text-sm bottom-0 2xl:hidden",

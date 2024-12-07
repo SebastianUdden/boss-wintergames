@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { IPlayer } from "./players";
-
 interface IAvatar extends IPlayer {
   size: number;
   highlighted: boolean;

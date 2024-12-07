@@ -14,6 +14,8 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 
 const interleaveChosen = (chosenPlayers: string[][]) => {
+  if (chosenPlayers.flat().flat().length < 2)
+    return chosenPlayers.flat().flat();
   const [teamA, teamB] =
     chosenPlayers[0].length >= chosenPlayers[1].length
       ? chosenPlayers
@@ -77,6 +79,7 @@ export type Phase =
   | "playing-game"
   | "calculating-score"
   | "selecting-captive"
+  | "captains-choice"
   | "transitioning-captive";
 
 const Layout = () => {
@@ -100,6 +103,7 @@ const Layout = () => {
 
   const handleSelectNextLoser = useCallback(() => {
     if (losers.length === 0) {
+      setPhase("captains-choice");
       return;
     }
 
@@ -201,7 +205,6 @@ const Layout = () => {
   const handleMovePlayer = useCallback(() => {
     setTeams((prevTeams) => {
       if (playerMoved.current) return prevTeams; // Prevent re-running
-
       const updatedTeams = [...prevTeams];
 
       // Use the losingTeamIndex to identify the losing team
@@ -226,7 +229,7 @@ const Layout = () => {
       // Add the player to the opposing team
       updatedTeams[opposingTeamIndex].players = [
         ...updatedTeams[opposingTeamIndex].players,
-        playerToMove,
+        { ...playerToMove, isCaptive: true },
       ];
 
       // Mark player as moved
@@ -289,6 +292,8 @@ const Layout = () => {
           setPhase("explaining-game");
         }}
         onSetPhase={(p) => setPhase(p)}
+        teams={teams}
+        setTeams={setTeams}
       />
       {JSON.stringify(chosenPlayers)}
       <main className="z-10" style={{ overflow: "hidden" }}>
@@ -301,7 +306,12 @@ const Layout = () => {
               <Team
                 {...teams[0]}
                 highlightedPlayers={highlightedPlayers}
+                phase={phase}
                 isUnOpposed={teams[1].players.length === 0}
+                onMovePlayer={(player) => {
+                  setHighlightedPlayers([player]);
+                  handleMovePlayer();
+                }}
               />
             )}
             <div
@@ -328,7 +338,15 @@ const Layout = () => {
                     (ps) => ps.score !== 0
                   );
                   const newLosers = playerScores
-                    .filter((ps) => ps.score < 0)
+                    .filter(
+                      (ps) =>
+                        ps.score < 0 &&
+                        !teams.some((team) =>
+                          team.players.some(
+                            (p) => p.isCaptain && p.name === ps.player
+                          )
+                        )
+                    )
                     .map((p) => p.player);
                   setPhase("calculating-score");
                   const newTeams = teams.map((team) => ({
@@ -405,7 +423,12 @@ const Layout = () => {
               <Team
                 {...teams[1]}
                 highlightedPlayers={highlightedPlayers}
+                phase={phase}
                 isUnOpposed={teams[0].players.length === 0}
+                onMovePlayer={(player) => {
+                  setHighlightedPlayers([player]);
+                  setPhase("transitioning-captive");
+                }}
               />
             )}
           </div>

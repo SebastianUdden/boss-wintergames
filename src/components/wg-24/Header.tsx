@@ -1,21 +1,39 @@
 import { Phase } from "./Layout";
-import { miniGames } from "./mini-games/miniGames";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { ConfirmModal } from "./ConfirmModal";
+import { AdminModal } from "./AdminModal";
+import { ITeam } from "./teams/teams";
 
 interface IHeader {
   onSelectGame: (index: number) => void;
   onSetPhase: (p: Phase) => void;
   phase: Phase;
+  teams: ITeam[];
+  setTeams: Dispatch<SetStateAction<ITeam[]>>;
 }
 
-export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
+export const Header = ({
+  phase,
+  onSelectGame,
+  onSetPhase,
+  teams,
+  setTeams,
+}: IHeader) => {
   const [showModal, setShowModal] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
 
   return (
     <>
       <ConfirmModal isOpen={showModal} onClose={() => setShowModal(false)} />
+      <AdminModal
+        isOpen={showAdmin}
+        onClose={() => setShowAdmin(false)}
+        teams={teams}
+        setTeams={setTeams}
+        onSetPhase={onSetPhase}
+        onSelectGame={onSelectGame}
+      />
       <header className="z-20 flex items-center justify-between w-full h-[5vh] px-4 font-bold text-center black-sails-bg black-sails-text">
         <div className="relative inline-block">
           <h1 className="font-bold font-fell text-sm sm:text-[2vh]">
@@ -37,6 +55,13 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
           </h1>
         </div>
         <div className="flex h-full m-0 font-fell">
+          <Button
+            data-testid="ready-state"
+            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+            onClick={() => setShowAdmin(!showAdmin)}
+          >
+            D<span className="hidden 2xl:inline">eus</span>
+          </Button>
           <Button
             data-testid="ready-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
@@ -102,6 +127,14 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
             S<span className="hidden 2xl:inline">electing captive</span>
           </Button>
           <Button
+            data-testid="captains-choice-state"
+            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+            onClick={() => onSetPhase("captains-choice")}
+            disabled={phase === "captains-choice"}
+          >
+            C<span className="hidden 2xl:inline">aptains choice</span>
+          </Button>
+          <Button
             data-testid="transitioning-captive-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => onSetPhase("transitioning-captive")}
@@ -109,19 +142,6 @@ export const Header = ({ phase, onSelectGame, onSetPhase }: IHeader) => {
           >
             T<span className="hidden 2xl:inline">ransitioning captive</span>
           </Button>
-          <select
-            className="header"
-            onChange={(e) => onSelectGame(Number(e.target.value))}
-          >
-            <option key="wheel" value="wheel">
-              Wheel
-            </option>
-            {miniGames.slice().map((miniGame) => (
-              <option key={miniGame.id} value={miniGame.id}>
-                {miniGame.name}
-              </option>
-            ))}
-          </select>
         </div>
       </header>
     </>

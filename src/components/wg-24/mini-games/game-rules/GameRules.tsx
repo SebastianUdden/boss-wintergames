@@ -219,7 +219,6 @@ export const GameRules = ({
         ...mapPlayersToScore(chosenPlayers[losingTeamIndex], -1), // Losing team players
       ];
 
-      console.log({ playerScores });
       onGameComplete(playerScores, losingTeamIndex);
     },
     [onGameComplete, chosenPlayers, teams]
