@@ -14,13 +14,17 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 
 const interleaveChosen = (chosenPlayers: string[][]) => {
-  const [blueTeam, redTeam] = chosenPlayers; // Destructure the two teams
-  const maxLength = Math.max(blueTeam.length, redTeam.length); // Handle cases where team sizes differ
+  const [teamA, teamB] =
+    chosenPlayers[0].length >= chosenPlayers[1].length
+      ? chosenPlayers
+      : [chosenPlayers[1], chosenPlayers[0]]; // Start with the larger team
+
+  const maxLength = Math.max(teamA.length, teamB.length); // Handle cases where team sizes differ
   const interleaved = [];
 
   for (let i = 0; i < maxLength; i++) {
-    if (i < blueTeam.length) interleaved.push(blueTeam[i]); // Add from blue team if exists
-    if (i < redTeam.length) interleaved.push(redTeam[i]); // Add from red team if exists
+    if (i < teamA.length) interleaved.push(teamA[i]); // Add from the larger team first
+    if (i < teamB.length) interleaved.push(teamB[i]); // Add from the smaller team next
   }
 
   return interleaved;
