@@ -4,21 +4,37 @@ interface ICard {
   pairId: number;
   isFlipped: boolean;
   isMatched: boolean;
+  isActive: boolean;
+  img: string;
   onClick: () => void;
 }
 
-export const Card = ({ isFlipped, isMatched, pairId, onClick }: ICard) => (
+export const Card = ({
+  isFlipped,
+  isMatched,
+  pairId,
+  img,
+  isActive,
+  onClick,
+}: ICard) => (
   <button
     className={cn(
-      "w-[7vh] h-[7vh] md:w-[10vw] md:h-[10vw] flex items-center justify-center cursor-pointer border-none outline-none",
-      isFlipped || isMatched ? "bg-pink-600" : "bg-gray-700"
+      "w-[6vh] h-[6vh] md:w-[8vw] md:h-[8vw] flex items-center justify-center cursor-pointer outline-none p-0 bg-black",
+      isActive && !isMatched ? "border-4 border-blue-500" : "border-none",
+      isMatched ? "cursor-default" : ""
     )}
+    disabled={isMatched}
     onClick={onClick}
   >
-    {isFlipped || isMatched ? (
-      <span className="text-1xl">{pairId}</span>
-    ) : (
-      <span></span>
+    {isFlipped &&
+      !isMatched &&
+      (img ? (
+        <img src={img} className="w-full" />
+      ) : (
+        <span className="text-1xl">{pairId}</span>
+      ))}
+    {!isFlipped && !isMatched && (
+      <img src="/games/memory/boss.png" className="w-full" />
     )}
   </button>
 );

@@ -4,6 +4,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { ConfirmModal } from "./ConfirmModal";
 import { AdminModal } from "./AdminModal";
 import { ITeam } from "./teams/teams";
+import { IMiniGame } from "./mini-games/MiniGame";
+import { IPlayer } from "./teams/players";
 
 interface IHeader {
   onSelectGame: (index: number) => void;
@@ -11,6 +13,15 @@ interface IHeader {
   phase: Phase;
   teams: ITeam[];
   setTeams: Dispatch<SetStateAction<ITeam[]>>;
+  highlightedPlayers: IPlayer[];
+  chosenPlayers: IPlayer[][];
+  openGame?: IMiniGame;
+  turn?: string;
+  losingTeamIndex: number;
+  losers: IPlayer[];
+  teamsTurn: number;
+  previousTurns: string[];
+  setChosenPlayers: Dispatch<SetStateAction<IPlayer[]>>;
 }
 
 export const Header = ({
@@ -19,6 +30,15 @@ export const Header = ({
   onSetPhase,
   teams,
   setTeams,
+  highlightedPlayers,
+  chosenPlayers,
+  openGame,
+  turn,
+  losingTeamIndex,
+  losers,
+  teamsTurn,
+  previousTurns,
+  setChosenPlayers,
 }: IHeader) => {
   const [showModal, setShowModal] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
@@ -33,6 +53,15 @@ export const Header = ({
         setTeams={setTeams}
         onSetPhase={onSetPhase}
         onSelectGame={onSelectGame}
+        highlightedPlayers={highlightedPlayers}
+        chosenPlayers={chosenPlayers}
+        openGame={openGame}
+        turn={turn}
+        losingTeamIndex={losingTeamIndex}
+        losers={losers}
+        teamsTurn={teamsTurn}
+        previousTurns={previousTurns}
+        setChosenPlayers={setChosenPlayers}
       />
       <header className="z-20 flex items-center justify-between w-full h-[5vh] px-4 font-bold text-center black-sails-bg black-sails-text">
         <div className="relative inline-block">

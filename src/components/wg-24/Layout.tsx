@@ -12,8 +12,9 @@ import { Team } from "./teams/Team";
 import { initialTeams, ITeam } from "./teams/teams";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { IPlayer } from "./teams/players";
 
-const interleaveChosen = (chosenPlayers: string[][]) => {
+const interleaveChosen = (chosenPlayers: IPlayer[][]) => {
   if (chosenPlayers.flat().flat().length < 2)
     return chosenPlayers.flat().flat();
   const [teamA, teamB] =
@@ -35,11 +36,11 @@ const interleaveChosen = (chosenPlayers: string[][]) => {
 const getRandomPlayersForGame = (
   teams: ITeam[],
   gameType: "solo" | "duell" | "2v2" | "lagkamp"
-): string[][] => {
+): IPlayer[][] => {
   if (gameType === "solo") {
     // For solo games, pick one random player from any team
     const allPlayers = teams.flatMap((team) => team.players);
-    return [[allPlayers[Math.floor(Math.random() * allPlayers.length)].name]];
+    return [[allPlayers[Math.floor(Math.random() * allPlayers.length)]]];
   }
 
   if (gameType === "duell") {
@@ -47,7 +48,7 @@ const getRandomPlayersForGame = (
     return teams.map((team) => {
       const randomPlayer =
         team.players[Math.floor(Math.random() * team.players.length)];
-      return [randomPlayer.name];
+      return [randomPlayer];
     });
   }
 
@@ -55,13 +56,13 @@ const getRandomPlayersForGame = (
     // For 2v2, pick two players from each team
     return teams.map((team) => {
       const shuffledPlayers = [...team.players].sort(() => Math.random() - 0.5);
-      return shuffledPlayers.slice(0, 2).map((player) => player.name);
+      return shuffledPlayers.slice(0, 2);
     });
   }
 
   if (gameType === "lagkamp") {
     // For lagkamp, pick all players (assuming full teams)
-    return teams.map((team) => team.players.map((player) => player.name));
+    return teams.map((team) => team.players);
   }
 
   console.warn("Unsupported game type");
@@ -84,15 +85,15 @@ export type Phase =
 
 const Layout = () => {
   const playerMoved = useRef(false);
-  const [phase, setPhase] = useState<Phase>("ready");
+  const [phase, setPhase] = useState<Phase>("playing-game");
   const [teams, setTeams] = useState(initialTeams);
-  const [losers, setLosers] = useState<string[]>([]);
+  const [losers, setLosers] = useState<IPlayer[]>([]);
   const [teamsTurn, setTeamsTurn] = useState(Math.random() < 0.5 ? 0 : 1);
   const [losingTeamIndex, setLosingTeamIndex] = useState(0);
   const [turn, setTurn] = useState<string | undefined>();
-  const [highlightedPlayers, setHighlightedPlayers] = useState<string[]>([]);
-  const [chosenPlayers, setChosenPlayers] = useState<string[][]>([]);
-  const [openGame, setOpenGame] = useState<IMiniGame | undefined>(undefined);
+  const [highlightedPlayers, setHighlightedPlayers] = useState<IPlayer[]>([]);
+  const [chosenPlayers, setChosenPlayers] = useState<IPlayer[][]>([]);
+  const [openGame, setOpenGame] = useState<IMiniGame | undefined>(miniGames[0]);
   const [previousTurns, setPreviousTurns] = useState<string[]>([]);
 
   const handleOpenGame = (name: string) => {
@@ -128,7 +129,7 @@ const Layout = () => {
   }, [losers, setPhase]);
 
   const handleHighlightPlayers = useCallback(() => {
-    const allPlayers = teams.flatMap((team) => team.players.map((p) => p.name));
+    const allPlayers = teams.flatMap((team) => team.players);
     const interleavedChosen = interleaveChosen(chosenPlayers);
     const initialDelay = 100; // Starting delay in milliseconds
     const delayDecrement = 20; // Decrease delay by this amount for each player
@@ -136,7 +137,7 @@ const Layout = () => {
     let initialCycles = Math.floor(Math.random() * 3) + 1;
     const minCycles = 0;
     let currentChosenIndex = 0; // Index of the currently chosen player in `flattenedChosen`
-    let highlighted = []; // Accumulated highlighted players
+    const highlighted: IPlayer[] = []; // Accumulated highlighted players
     let currentStep = 0; // Tracks the current step for highlighting
     let totalSteps = initialCycles * allPlayers.length; // Steps for full cycles
     let delay = initialDelay; // Current interval delay
@@ -151,10 +152,10 @@ const Layout = () => {
       // Check if the cycle should stop at the current chosen player
       if (
         currentStep >= totalSteps &&
-        currentPlayer === interleavedChosen[currentChosenIndex]
+        currentPlayer.name === interleavedChosen[currentChosenIndex].name
       ) {
         // Add the current chosen player to the highlighted list
-        if (!highlighted.includes(currentPlayer)) {
+        if (!highlighted.some((h) => h.name === currentPlayer.name)) {
           highlighted.push(currentPlayer);
         }
 
@@ -213,7 +214,7 @@ const Layout = () => {
 
       // Find the player to move from the losing team
       const playerToMove = updatedTeams[loserIndex].players.find(
-        (p) => p.name === highlightedPlayers[0]
+        (p) => p.name === highlightedPlayers[0].name
       );
 
       if (!playerToMove) {
@@ -224,7 +225,7 @@ const Layout = () => {
       // Remove the player from the losing team
       updatedTeams[loserIndex].players = updatedTeams[
         loserIndex
-      ].players.filter((p) => p.name !== highlightedPlayers[0]);
+      ].players.filter((p) => p.name !== highlightedPlayers[0].name);
 
       // Add the player to the opposing team
       updatedTeams[opposingTeamIndex].players = [
@@ -294,8 +295,17 @@ const Layout = () => {
         onSetPhase={(p) => setPhase(p)}
         teams={teams}
         setTeams={setTeams}
+        highlightedPlayers={highlightedPlayers}
+        chosenPlayers={chosenPlayers}
+        openGame={openGame}
+        turn={turn}
+        losingTeamIndex={losingTeamIndex}
+        losers={losers}
+        teamsTurn={teamsTurn}
+        previousTurns={previousTurns}
+        setChosenPlayers={setChosenPlayers}
       />
-      {JSON.stringify(chosenPlayers)}
+      {JSON.stringify(chosenPlayers.map((c) => c.map((p) => p.name)))}
       <main className="z-10" style={{ overflow: "hidden" }}>
         <div className="overflow-y-hidden bg-center bg-cover bg-pirate-village h-[100vh]">
           {/* Background tint overlay */}
@@ -309,14 +319,16 @@ const Layout = () => {
                 phase={phase}
                 isUnOpposed={teams[1].players.length === 0}
                 onMovePlayer={(player) => {
-                  setHighlightedPlayers([player]);
+                  setHighlightedPlayers([
+                    teams[0].players.find((p) => p.name === player) as IPlayer,
+                  ]);
                   handleMovePlayer();
                 }}
               />
             )}
             <div
               className={cn(
-                "flex h-[80vh] w-[80vh] translate-y-[100vh] transition-all duration-1000",
+                "flex h-[80vh] w-[70vw] translate-y-[100vh] transition-all duration-1000",
                 phase === "explaining-game" ||
                   phase === "playing-game" ||
                   phase === "transition-to-game"
@@ -343,7 +355,7 @@ const Layout = () => {
                         ps.score < 0 &&
                         !teams.some((team) =>
                           team.players.some(
-                            (p) => p.isCaptain && p.name === ps.player
+                            (p) => p.isCaptain && p.name === ps.player.name
                           )
                         )
                     )
@@ -354,7 +366,7 @@ const Layout = () => {
                     players: team.players.map((p) => {
                       let showScore;
                       filteredPlayerScores.forEach((ps) => {
-                        if (p.name === ps.player) {
+                        if (p.name === ps.player.name) {
                           console.log(p.name);
                           showScore = ps.score;
                         }
@@ -380,9 +392,12 @@ const Layout = () => {
                           let losses = p.losses;
 
                           filteredPlayerScores.forEach((ps) => {
-                            if (p.name === ps.player && ps.score > 0) {
+                            if (p.name === ps.player.name && ps.score > 0) {
                               wins = (p.wins ?? 0) + ps.score;
-                            } else if (p.name === ps.player && ps.score < 0) {
+                            } else if (
+                              p.name === ps.player.name &&
+                              ps.score < 0
+                            ) {
                               losses = (p.losses ?? 0) - ps.score;
                             }
                           });
@@ -412,7 +427,8 @@ const Layout = () => {
               )}
             >
               <Spinner
-                turn={highlightedPlayers[0]}
+                // turn={highlightedPlayers[0].name}
+                turn="ivar"
                 onGameSelected={handleOpenGame}
                 onPhaseChange={(p) => setPhase(p)}
                 phase={phase}
@@ -426,7 +442,9 @@ const Layout = () => {
                 phase={phase}
                 isUnOpposed={teams[0].players.length === 0}
                 onMovePlayer={(player) => {
-                  setHighlightedPlayers([player]);
+                  setHighlightedPlayers([
+                    teams[1].players.find((p) => p.name === player) as IPlayer,
+                  ]);
                   setPhase("transitioning-captive");
                 }}
               />

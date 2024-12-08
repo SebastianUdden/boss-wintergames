@@ -2,9 +2,11 @@ import { useMemo } from "react";
 import { GameRules } from "./game-rules/GameRules";
 import { IScore } from "./Score";
 import { ITeam } from "../teams/teams";
-import { IPlayer } from "../teams/players";
+import { IPlayer, players } from "../teams/players";
 // import { ShipwreckGame } from "./shipwreck/components/ShipwreckGame";
 import { Phase } from "../Layout";
+import { MemoryBoard } from "./memory/MemoryBoard";
+import { cn } from "@/lib/utils";
 
 export interface IPlayerSetup {
   p1: string;
@@ -99,7 +101,7 @@ export interface MiniGameProps {
   teams: ITeam[];
   miniGame?: IMiniGame;
   playerSetup: IPlayerSetup;
-  chosenPlayers: string[][];
+  chosenPlayers: IPlayer[][];
   phase: Phase;
   onGameComplete: (playerScores: IScore[], loserIndex: number) => void;
 }
@@ -118,8 +120,13 @@ export const MiniGame = ({
   );
   const { name } = parsedMiniGame;
   return (
-    <div className="relative flex flex-grow">
-      {name !== "Shipwreck" && (
+    <div
+      className={cn(
+        "relative flex flex-grow mt-4",
+        phase === "explaining-game" ? "80vh" : "80vw"
+      )}
+    >
+      {name !== "Shipwreck" && phase === "explaining-game" && (
         <div className="relative flex flex-grow">
           <img
             src="/backgrounds/maps/pirate-map-background.png"
@@ -139,19 +146,27 @@ export const MiniGame = ({
           <div className="overlay"></div>
         </div>
       )}
+      {phase === "playing-game" && (
+        <div className="w-full p-10 bg-black rounded-xl">
+          {name === "Kraken's Recall" && (
+            <>
+              <h1>{name}</h1>
+              <MemoryBoard
+                players={chosenPlayers}
+                onGameComplete={onGameComplete}
+              />
+            </>
+          )}
+        </div>
+      )}
 
       {/* <div className="flex flex-grow p-[10vh] bg-center bg-cover">
         <div className="z-10">
          
         </div>
       </div> */}
-      {/* {name === "Memory" && (
-        <MemoryBoard
-          players={playerSetup.duel}
-          onGameComplete={onGameComplete}
-        />
-      )}
-      {name === "The floor" && (
+
+      {/* {name === "The floor" && (
         <TheFloor players={playerSetup.duel} onGameComplete={onGameComplete} />
       )}
       {name === "Boss, Bad, Ugly" && (

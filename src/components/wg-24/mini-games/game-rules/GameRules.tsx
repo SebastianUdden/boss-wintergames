@@ -289,7 +289,7 @@ export const GameRules = ({
       <div className="flex flex-col w-full gap-4">
         <h1>{name}</h1>
         <div className="flex flex-wrap items-center gap-2">
-          <Badge className="text-xl text-black bg-white hover:bg-white">
+          <Badge className="text-xl text-black capitalize bg-white hover:bg-white">
             {gameType}
           </Badge>
           <Badge>{!isAnalog ? "Digitalt" : "Fysiskt"}</Badge>

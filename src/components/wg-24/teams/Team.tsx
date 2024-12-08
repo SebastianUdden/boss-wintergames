@@ -14,7 +14,7 @@ const sortByScore = (a: IPlayer, b: IPlayer) => {
 
 interface TeamProps extends ITeam {
   isUnOpposed: boolean;
-  highlightedPlayers: string[];
+  highlightedPlayers: IPlayer[];
   phase: Phase;
   onMovePlayer: (name: string) => void;
 }
@@ -93,7 +93,7 @@ export const Team = ({
           {...player}
           minimized={minimized}
           rightAligned={rightAligned}
-          highlighted={highlightedPlayers.some((hp) => hp === player.name)}
+          highlighted={highlightedPlayers.some((hp) => hp.name === player.name)}
           phase={phase}
           playerCount={players.length}
           justifyStartApplied={justifyStartApplied}
