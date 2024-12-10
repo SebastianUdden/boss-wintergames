@@ -25,6 +25,14 @@
   color: #fff;
 }
 
+.ocean-blue-border {
+  border-color: #1f4e79;
+}
+
+.rusty-red-border {
+  border-color: #8b0000;
+}
+
 .charcoal-black {
   background-color: #2c2c2c;
   color: #f5deb3;
@@ -350,3 +358,18 @@
 /*.wheel-slice-1 { background-color: #3B5F74; } Deep Ocean Blue */
 /*.wheel-slice-2 { background-color: #8B1E3F; } Pirate Red */
 /*.wheel-slice-3 { background-color: #D4AF37; } Treasure Gold */
+
+/* 3D transform */
+/* Add this to your global CSS file */
+.perspective {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}

@@ -85,7 +85,7 @@ export type Phase =
 
 const Layout = () => {
   const playerMoved = useRef(false);
-  const [phase, setPhase] = useState<Phase>("playing-game");
+  const [phase, setPhase] = useState<Phase>("ready");
   const [teams, setTeams] = useState(initialTeams);
   const [losers, setLosers] = useState<IPlayer[]>([]);
   const [teamsTurn, setTeamsTurn] = useState(Math.random() < 0.5 ? 0 : 1);
@@ -93,7 +93,7 @@ const Layout = () => {
   const [turn, setTurn] = useState<string | undefined>();
   const [highlightedPlayers, setHighlightedPlayers] = useState<IPlayer[]>([]);
   const [chosenPlayers, setChosenPlayers] = useState<IPlayer[][]>([]);
-  const [openGame, setOpenGame] = useState<IMiniGame | undefined>(miniGames[0]);
+  const [openGame, setOpenGame] = useState<IMiniGame | undefined>();
   const [previousTurns, setPreviousTurns] = useState<string[]>([]);
 
   const handleOpenGame = (name: string) => {
@@ -276,6 +276,17 @@ const Layout = () => {
         setPhase("explaining-game");
       }, 1100);
     }
+    if (phase === "playing-game" && chosenPlayers.flat().length === 0) {
+      if (openGame?.gameType === "duell") {
+        setChosenPlayers(teams.map((t) => t.players.slice(0, 1)));
+      } else if (openGame?.gameType === "2v2") {
+        setChosenPlayers(teams.map((t) => t.players.slice(0, 2)));
+      } else if (openGame?.gameType === "lagkamp") {
+        setChosenPlayers(teams.map((t) => t.players));
+      } else if (openGame?.gameType === "solo") {
+        setChosenPlayers([[teams[0].players[0]], []]);
+      }
+    }
     if (phase === "selecting-captive") {
       handleSelectNextLoser();
     }
@@ -328,7 +339,7 @@ const Layout = () => {
             )}
             <div
               className={cn(
-                "flex h-[80vh] w-[70vw] translate-y-[100vh] transition-all duration-1000",
+                "flex h-[90vh] w-[70vw] translate-y-[100vh] transition-all duration-1000",
                 phase === "explaining-game" ||
                   phase === "playing-game" ||
                   phase === "transition-to-game"
@@ -346,6 +357,8 @@ const Layout = () => {
                 playerSetup={playerSetup}
                 chosenPlayers={chosenPlayers}
                 onGameComplete={(playerScores, loserIndex) => {
+                  console.log({ playerScores });
+                  console.log({ loserIndex });
                   const filteredPlayerScores = playerScores.filter(
                     (ps) => ps.score !== 0
                   );

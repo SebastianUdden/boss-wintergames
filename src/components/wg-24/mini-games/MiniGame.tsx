@@ -1,12 +1,12 @@
-import { useMemo } from "react";
 import { GameRules } from "./game-rules/GameRules";
 import { IScore } from "./Score";
 import { ITeam } from "../teams/teams";
-import { IPlayer, players } from "../teams/players";
+import { IPlayer } from "../teams/players";
 // import { ShipwreckGame } from "./shipwreck/components/ShipwreckGame";
 import { Phase } from "../Layout";
 import { MemoryBoard } from "./memory/MemoryBoard";
 import { cn } from "@/lib/utils";
+import { TheFloor } from "./the-floor/TheFloor";
 
 export interface IPlayerSetup {
   p1: string;
@@ -21,24 +21,24 @@ export interface IPlayerSetup {
   // duos: [string, string, string, string];
 }
 
-const replacePlaceholders = (
-  playerSetup: IPlayerSetup,
-  miniGame?: IMiniGame
-) => {
-  if (!miniGame) return "";
-  let objString = JSON.stringify(miniGame);
+// const replacePlaceholders = (
+//   playerSetup: IPlayerSetup,
+//   miniGame?: IMiniGame
+// ) => {
+//   if (!miniGame) return "";
+//   let objString = JSON.stringify(miniGame);
 
-  const { p1, p2, p3, p4, team1, team2 } = playerSetup;
-  objString = objString
-    .replace(/{p1}/g, p1)
-    .replace(/{p2}/g, p2)
-    .replace(/{p3}/g, p3)
-    .replace(/{p4}/g, p4)
-    .replace(/{team1}/g, team1)
-    .replace(/{team2}/g, team2);
+//   const { p1, p2, p3, p4, team1, team2 } = playerSetup;
+//   objString = objString
+//     .replace(/{p1}/g, p1)
+//     .replace(/{p2}/g, p2)
+//     .replace(/{p3}/g, p3)
+//     .replace(/{p4}/g, p4)
+//     .replace(/{team1}/g, team1)
+//     .replace(/{team2}/g, team2);
 
-  return JSON.parse(objString);
-};
+//   return JSON.parse(objString);
+// };
 
 export const getRandomPlayer = (array: IPlayer[]) => {
   const randomIndex = Math.floor(Math.random() * array.length);
@@ -114,11 +114,20 @@ export const MiniGame = ({
   phase,
   onGameComplete,
 }: MiniGameProps) => {
-  const parsedMiniGame = useMemo(
-    () => replacePlaceholders(playerSetup, miniGame),
-    [playerSetup]
-  );
-  const { name } = parsedMiniGame;
+  const { name } = miniGame ?? {};
+  const handleGameComplete = (scores: IScore[]) => {
+    const adjustedScores = scores.map((s, index) => {
+      const playerWon =
+        index === 0 ? s.score > scores[1].score : s.score > scores[0].score;
+      return {
+        ...s,
+        score: playerWon ? 1 : -1,
+      };
+    });
+    const losingTeamIndex = adjustedScores[0].score === 1 ? 1 : 0;
+    onGameComplete(adjustedScores, losingTeamIndex);
+  };
+  console.log({ chosenPlayers });
   return (
     <div
       className={cn(
@@ -138,7 +147,7 @@ export const MiniGame = ({
               teams={teams}
               chosenPlayers={chosenPlayers}
               playerSetup={playerSetup}
-              {...parsedMiniGame}
+              {...miniGame}
               phase={phase}
               onGameComplete={onGameComplete}
             />
@@ -146,30 +155,26 @@ export const MiniGame = ({
           <div className="overlay"></div>
         </div>
       )}
-      {phase === "playing-game" && (
+      {phase === "playing-game" && chosenPlayers.length !== 0 && (
         <div className="w-full p-10 bg-black rounded-xl">
           {name === "Kraken's Recall" && (
             <>
-              <h1>{name}</h1>
               <MemoryBoard
                 players={chosenPlayers}
-                onGameComplete={onGameComplete}
+                onGameComplete={handleGameComplete}
               />
             </>
+          )}
+          {name === "Shipmate's Wit" && (
+            <TheFloor
+              players={chosenPlayers}
+              onGameComplete={handleGameComplete}
+            />
           )}
         </div>
       )}
 
-      {/* <div className="flex flex-grow p-[10vh] bg-center bg-cover">
-        <div className="z-10">
-         
-        </div>
-      </div> */}
-
-      {/* {name === "The floor" && (
-        <TheFloor players={playerSetup.duel} onGameComplete={onGameComplete} />
-      )}
-      {name === "Boss, Bad, Ugly" && (
+      {/* {name === "Boss, Bad, Ugly" && (
         <QuickDraw
           players={playerSetup.threeWay}
           onGameComplete={onGameComplete}

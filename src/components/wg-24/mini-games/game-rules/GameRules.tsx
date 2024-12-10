@@ -17,7 +17,7 @@ const wordsToReplace = [
 interface IGameRules extends IMiniGame {
   teams: ITeam[];
   playerSetup: IPlayerSetup;
-  chosenPlayers: string[][];
+  chosenPlayers: IPlayer[][];
   phase: Phase;
   onGameComplete: (playerScores: IScore[], loserIndex: number) => void;
 }
@@ -203,7 +203,7 @@ export const GameRules = ({
   onGameComplete,
 }: IGameRules) => {
   // Utility function to map team players with score
-  const mapPlayersToScore = (players: string[], score: number) => {
+  const mapPlayersToScore = (players: IPlayer[], score: number) => {
     return players.map((player) => ({ player, score }));
   };
 
@@ -280,8 +280,6 @@ export const GameRules = ({
     },
     [gameType, handleDuell, handle2v2, handleLagkamp]
   );
-
-  const isTeamFight = gameType === "lagkamp";
 
   return (
     <div className="flex flex-col justify-between flex-grow">

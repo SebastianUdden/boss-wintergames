@@ -5,34 +5,40 @@ import { cn } from "@/lib/utils";
 export interface IScore {
   player: IPlayer;
   score: number;
-  isActive: boolean;
+}
+
+interface IScoreProps extends IScore {
+  isActive?: boolean;
   isRight?: boolean;
 }
 
-export const Score = ({ player, score, isActive, isRight }: IScore) => (
-  <div
-    className={cn(
-      "flex w-full justify-between p-4 rounded-xl ",
-      !isRight ? "flex-row-reverse" : "flew-row",
-      isActive ? "border-2 border-white" : ""
-    )}
-  >
-    <img src={player.image} className="w-[10vh]" />
-    <div className={cn("flex flex-col-reverse", isRight ? "text-right" : "")}>
-      <Label className="text-2xl">{player.name}</Label>
-      <h2 className="text-8xl">
-        {score.toLocaleString("se-SE", {
-          useGrouping: true,
-        })}
-      </h2>
-    </div>
-    {/* <Badge
+export const Score = ({ player, score, isActive, isRight }: IScoreProps) => (
+  <div className="relative w-full ">
+    {/* Content container */}
+    <div
       className={cn(
-        "flex items-center justify-center p-2  min-w-20",
-        isActive ? "bg-pink-700 hover:bg-pink-700" : ""
+        "flex justify-between p-6 rounded-md relative z-10",
+        !isRight ? "flex-row-reverse" : "flex-row"
       )}
     >
-     
-    </Badge> */}
+      <img src={player.image} className="w-[10vh]" />
+      <div className={cn("flex flex-col-reverse", isRight ? "text-right" : "")}>
+        <Label className="text-2xl">{player.name}</Label>
+        <h2 className="text-8xl">
+          {score.toLocaleString("se-SE", {
+            useGrouping: true,
+          })}
+        </h2>
+      </div>
+    </div>
+    {/* Border overlay */}
+    {isActive && (
+      <div
+        className={cn(
+          "absolute inset-0 border-8 pointer-events-none rounded-md",
+          isRight ? "rusty-red-border" : "ocean-blue-border"
+        )}
+      />
+    )}
   </div>
 );

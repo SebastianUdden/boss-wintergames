@@ -81,7 +81,7 @@ export const Team = ({
         <strong
           className={cn(
             "hidden 2xl:inline transition-opacity duration-500",
-            minimized ? "opacity-0" : "opacity-100"
+            minimized ? "opacity-0 pointer-events-none" : "opacity-100"
           )}
         >
           Vinster/Förluster
