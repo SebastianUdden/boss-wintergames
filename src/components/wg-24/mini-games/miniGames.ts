@@ -36,9 +36,9 @@ export const miniGames: IMiniGame[] = [
     gameType: "duell",
     song: "Bobby McFerrin - Don't Worry Be Happy",
     description: [
-      "Två pirater ger sig ut på en vild jakt genom ett farligt farvatten, fyllda med fällor och hinder.",
-      "Målet är enkelt: samla alla guldmynt innan din motståndare hinner göra det.",
-      "Den pirat som först lyckas samla ihop hela skatten står som segrare, medan den andra blir lämnad tomhänt på en öde ö!",
+      "Hissa flaggan, era landkrabbor! Skattjakten är igång! Spelare 1, den listiga piraten, rusar för att samla de förbannade aztekiska mynten som är utspridda över kartan. När de har samlat varenda ett, är deras sista uppdrag att hitta skattkistan, ta sitt pris och bryta den urgamla förbannelsen.",
+      "Men Spelare 2, den fruktade odöda väktaren av skatten, tänker inte låta det ske! Bunden av mörk magi för att skydda bytet, jagar den långsamma och släpande Spelare 2 piraten, i hopp om att stoppa dem i deras framfart. Om den odöda piraten fångar Spelare 1 innan de når kistan, är skatten trygg och Spelare 2 vinner.",
+      "Kommer Spelare 1 att vara snabb nog för att överlista den förbannade väktaren, eller kommer skatten att förbli förlorad i djupens mörker?",
     ],
     isAnalog: false,
     weight: 1,

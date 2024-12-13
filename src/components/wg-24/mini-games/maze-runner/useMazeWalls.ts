@@ -2,9 +2,10 @@ import { useMemo } from "react";
 
 // Custom hook to generate maze walls and return the player's starting position based on the layout
 export const useMazeWalls = (layout: string[]) => {
-  const { walls, startPosition } = useMemo(() => {
+  const { walls, p1Start, p2Start } = useMemo(() => {
     const generatedWalls = new Set<string>();
     let playerStartPosition: { x: number; y: number } | null = { x: 0, y: 0 };
+    let player2StartPosition: { x: number; y: number } | null = { x: 0, y: 0 };
 
     layout.forEach((row, y) => {
       row.split("").forEach((cell, x) => {
@@ -13,12 +14,18 @@ export const useMazeWalls = (layout: string[]) => {
         } else if (cell === "X") {
           // Set the player's start position when "X" is found
           playerStartPosition = { x, y };
+        } else if (cell === "Y") {
+          player2StartPosition = { x, y };
         }
       });
     });
 
-    return { walls: generatedWalls, startPosition: playerStartPosition };
+    return {
+      walls: generatedWalls,
+      p1Start: playerStartPosition,
+      p2Start: player2StartPosition,
+    };
   }, [layout]); // This will only recalculate if `layout` changes
 
-  return { walls, startPosition };
+  return { walls, p1Start, p2Start };
 };

@@ -6,6 +6,7 @@ import { AdminModal } from "./AdminModal";
 import { ITeam } from "./teams/teams";
 import { IMiniGame } from "./mini-games/MiniGame";
 import { IPlayer } from "./teams/players";
+import { useStoredState } from "./storedState";
 
 interface IHeader {
   onSelectGame: (index: number) => void;
@@ -41,7 +42,7 @@ export const Header = ({
   setChosenPlayers,
 }: IHeader) => {
   const [showModal, setShowModal] = useState(false);
-  const [showAdmin, setShowAdmin] = useState(false);
+  const [showAdmin, setShowAdmin] = useStoredState(false);
 
   return (
     <>
@@ -50,6 +51,7 @@ export const Header = ({
         isOpen={showAdmin}
         onClose={() => setShowAdmin(false)}
         teams={teams}
+        phase={phase}
         setTeams={setTeams}
         onSetPhase={onSetPhase}
         onSelectGame={onSelectGame}
@@ -89,7 +91,7 @@ export const Header = ({
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => setShowAdmin(!showAdmin)}
           >
-            D<span className="hidden 2xl:inline">eus</span>
+            K<span className="hidden 2xl:inline">raken</span>
           </Button>
           <Button
             data-testid="ready-state"

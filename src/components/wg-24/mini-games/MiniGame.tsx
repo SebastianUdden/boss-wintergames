@@ -7,6 +7,7 @@ import { Phase } from "../Layout";
 import { MemoryBoard } from "./memory/MemoryBoard";
 import { cn } from "@/lib/utils";
 import { TheFloor } from "./the-floor/TheFloor";
+import MazeRunner from "./maze-runner/MazeRunner";
 
 export interface IPlayerSetup {
   p1: string;
@@ -135,8 +136,8 @@ export const MiniGame = ({
         phase === "explaining-game" ? "80vh" : "80vw"
       )}
     >
-      {name !== "Shipwreck" && phase === "explaining-game" && (
-        <div className="relative flex flex-grow">
+      {phase === "explaining-game" && (
+        <div className="relative flex m-auto">
           <img
             src="/backgrounds/maps/pirate-map-background.png"
             alt="Pirate Map"
@@ -169,6 +170,12 @@ export const MiniGame = ({
             <TheFloor
               players={chosenPlayers}
               onGameComplete={handleGameComplete}
+            />
+          )}
+          {name === "Cursed coins" && (
+            <MazeRunner
+              players={chosenPlayers}
+              onGameComplete={onGameComplete}
             />
           )}
         </div>

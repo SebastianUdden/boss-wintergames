@@ -13,6 +13,10 @@ import { initialTeams, ITeam } from "./teams/teams";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { IPlayer } from "./teams/players";
+import { useStoredState } from "./storedState";
+
+type Turn = 0 | 1;
+type LosingTeamIndex = 0 | 1 | undefined;
 
 const interleaveChosen = (chosenPlayers: IPlayer[][]) => {
   if (chosenPlayers.flat().flat().length < 2)
@@ -68,7 +72,6 @@ const getRandomPlayersForGame = (
   console.warn("Unsupported game type");
   return [[]];
 };
-
 export type Phase =
   | "ready"
   | "waiting-for-spin"
@@ -85,20 +88,36 @@ export type Phase =
 
 const Layout = () => {
   const playerMoved = useRef(false);
-  const [phase, setPhase] = useState<Phase>("ready");
-  const [teams, setTeams] = useState(initialTeams);
-  const [losers, setLosers] = useState<IPlayer[]>([]);
-  const [teamsTurn, setTeamsTurn] = useState(Math.random() < 0.5 ? 0 : 1);
-  const [losingTeamIndex, setLosingTeamIndex] = useState(0);
-  const [turn, setTurn] = useState<string | undefined>();
-  const [highlightedPlayers, setHighlightedPlayers] = useState<IPlayer[]>([]);
-  const [chosenPlayers, setChosenPlayers] = useState<IPlayer[][]>([]);
-  const [openGame, setOpenGame] = useState<IMiniGame | undefined>();
-  const [previousTurns, setPreviousTurns] = useState<string[]>([]);
+  const [phase, setPhase] = useStoredState<Phase>("phase", "ready");
+  const [teams, setTeams] = useStoredState<ITeam[]>("teams", initialTeams);
+  const [losers, setLosers] = useStoredState<IPlayer[]>("losers", []);
+  const [teamsTurn, setTeamsTurn] = useStoredState<Turn>(
+    "teamsTurn",
+    Math.random() < 0.5 ? 0 : 1
+  );
+  const [losingTeamIndex, setLosingTeamIndex] =
+    useStoredState<LosingTeamIndex>("losingTeamIndex");
+  const [highlightedPlayers, setHighlightedPlayers] = useStoredState<IPlayer[]>(
+    "highlightedPlayers",
+    []
+  );
+  const [turn, setTurn] = useStoredState<string | undefined>("turn");
+  const [chosenPlayers, setChosenPlayers] = useStoredState<IPlayer[][]>(
+    "chosenPlayers",
+    []
+  );
+  const [openGame, setOpenGame] = useStoredState<IMiniGame | undefined>(
+    "openGame",
+    miniGames[2]
+  );
+  const [previousTurns, setPreviousTurns] = useStoredState<string[]>(
+    "previousTurns",
+    []
+  );
 
   const handleOpenGame = (name: string) => {
     const nextGame = miniGames.find((g) => g.name === name) ?? miniGames[0];
-    setChosenPlayers(getRandomPlayersForGame(teams, nextGame.gameType)); // Example chosen players
+    setChosenPlayers(getRandomPlayersForGame(teams, nextGame.gameType));
     setOpenGame(nextGame);
   };
 
@@ -316,7 +335,6 @@ const Layout = () => {
         previousTurns={previousTurns}
         setChosenPlayers={setChosenPlayers}
       />
-      {JSON.stringify(chosenPlayers.map((c) => c.map((p) => p.name)))}
       <main className="z-10" style={{ overflow: "hidden" }}>
         <div className="overflow-y-hidden bg-center bg-cover bg-pirate-village h-[100vh]">
           {/* Background tint overlay */}

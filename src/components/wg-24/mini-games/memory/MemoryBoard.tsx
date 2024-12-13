@@ -5,7 +5,7 @@ import { MatchedCards } from "./MatchedCards";
 import { IPlayer } from "../../teams/players";
 import { Winner } from "../Winner";
 
-const initialCards = [
+const initialCards2 = [
   {
     id: 0,
     pairId: 0,
@@ -160,7 +160,7 @@ const initialCards = [
   },
 ].sort(() => Math.random() - 0.5);
 
-const initialCards2: ICard[] = [
+const initialCards: ICard[] = [
   {
     id: 0,
     pairId: 0,

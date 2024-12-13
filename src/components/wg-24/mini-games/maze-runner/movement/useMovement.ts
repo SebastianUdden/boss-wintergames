@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 // Define direction types and constants
 export type Direction = "up" | "down" | "left" | "right";
@@ -84,19 +84,35 @@ export const getPossibleDirections = (
   return possibleDirections;
 };
 
+const getDirection = (direction: Direction, reverse: boolean): Direction => {
+  if (reverse && direction === "up") return "down";
+  else if (reverse && direction === "down") return "up";
+  else if (reverse && direction === "left") return "right";
+  else if (reverse && direction === "right") return "left";
+  return direction;
+};
+
 // Custom hook for movement
 export const useMovement = (
   initialPosition: { x: number; y: number },
-  walls: Set<string>
+  walls: Set<string>,
+  reverse: boolean
 ) => {
   const [position, setPosition] = useState(initialPosition);
 
   // Move the entity (player/enemy) in a given direction
-  const move = (direction: Direction) => {
-    const newPosition = moveInDirection(direction, position, walls);
-    setPosition(newPosition);
-    return newPosition;
-  };
+  const move = useCallback(
+    (direction: Direction) => {
+      const newPosition = moveInDirection(
+        getDirection(direction, reverse),
+        position,
+        walls
+      );
+      setPosition(newPosition);
+      return newPosition;
+    },
+    [position, walls, reverse]
+  );
 
   // Get possible valid directions
   const possibleDirections = getPossibleDirections(position, walls);

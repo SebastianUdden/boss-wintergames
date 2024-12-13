@@ -88,7 +88,7 @@ export const PlayerCard = ({
       <div
         className={cn(
           "relative flex items-center justify-center gap-6",
-          highlighted ? "scale-110 z-10" : "z-0",
+          highlighted ? "scale-110 z-50" : "z-0",
           rightAligned ? "flex-row-reverse" : ""
         )}
       >

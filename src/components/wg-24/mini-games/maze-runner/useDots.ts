@@ -23,7 +23,7 @@ export const useDots = (layout: string[]) => {
       if (prevDots.has(positionKey)) {
         const newDots = new Set(prevDots);
         newDots.delete(positionKey);
-        setPoints((prevPoints) => prevPoints + 1); // Increment points when a dot is collected
+        setPoints((prevPoints) => prevPoints + 0.5); // Increment points when a dot is collected
         return newDots;
       }
       return prevDots;

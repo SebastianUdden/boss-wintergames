@@ -1,0 +1,15 @@
+.sprite {
+  width: 64px; /* Frame width */
+  height: 64px; /* Frame height */
+  background-image: "/games/maze-runner/aztec-coin.png"; /* Link to sprite sheet */
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+
+.sprite.idle {
+  background-position: 0 0; /* First frame of the sprite sheet */
+}
+
+.sprite.walk-up {
+  background-position: -64px -128px; /* Adjust coordinates for walking up */
+}

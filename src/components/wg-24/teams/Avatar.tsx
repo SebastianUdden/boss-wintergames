@@ -14,7 +14,7 @@ export const Avatar = ({ name, image, size, highlighted }: IAvatar) => {
         maxWidth: "20vh",
       }}
       className={cn(
-        highlighted ? "aged-scroll-border" : "border-2 border-black",
+        highlighted ? "aged-scroll-border z-50" : "border-2 border-black z-20",
         "aspect-square text-[4vh] flex items-center justify-center",
         "!max-w-[10vh] 2xl:!max-w-full"
       )}
