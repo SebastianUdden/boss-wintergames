@@ -59,7 +59,15 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
       initialPaddleHeight: INITIAL_PADDLE_HEIGHT,
     });
 
-  const { t1Score, t2Score, cannonBalls, p1Charges, p2Charges } = useGameLoop({
+  const {
+    t1Score,
+    t2Score,
+    cannonBalls,
+    p1Charges,
+    p2Charges,
+    p1Hits,
+    p2Hits,
+  } = useGameLoop({
     gameState,
     gameBoxRef,
     player1PaddleRef,
@@ -192,6 +200,8 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
       <div>
         <p>Player 1 Charges: {5 - p1Charges} / 5</p>
         <p>Player 2 Charges: {5 - p2Charges} / 5</p>
+        <p>Player 1 Hits: {p1Hits} / 5</p>
+        <p>Player 2 Hits: {p2Hits} / 5</p>
       </div>
 
       {gameState === "finished" && (

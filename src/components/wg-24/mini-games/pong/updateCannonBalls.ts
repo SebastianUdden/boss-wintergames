@@ -19,48 +19,92 @@ export const updateCannonBalls = (
   setP2Charges: React.Dispatch<React.SetStateAction<number>>,
   setP1Fired: React.Dispatch<React.SetStateAction<boolean>>,
   setP2Fired: React.Dispatch<React.SetStateAction<boolean>>
-): CannonBall[] => {
+): { updatedBalls: CannonBall[]; hitsOnP1: number; hitsOnP2: number } => {
   const newBalls = [...prevBalls];
-  const toRemove = new Set<number>(); // Track indices of cannonballs to remove
+  const toRemove = new Set<number>();
+  let hitsOnP1 = 0;
+  let hitsOnP2 = 0;
 
-  // Player 1 fires
+  // Handle firing from Player 1
   if (!keys[" "] && p1Charges === 0 && p1Fired) {
-    newBalls.push({
-      x: player1Paddle.right - gameBox.left, // Fix Player 1 cannonball x-position
+    const newBall = {
+      x: player1Paddle.right - gameBox.left,
       y: player1Paddle.top - gameBox.top + player1Paddle.height / 2,
       direction: 1,
       player: 0,
-    });
-    setP1Charges(5); // Reset charge
-    setP1Fired(false); // Reset firing state
+    };
+
+    // Prevent immediate collision with Player 1's paddle
+    if (
+      newBall.x > player1Paddle.right || // Start outside the paddle
+      newBall.y < player1Paddle.top ||
+      newBall.y > player1Paddle.bottom
+    ) {
+      newBalls.push(newBall);
+    }
+
+    setP1Charges(5);
+    setP1Fired(false);
   }
 
-  // Player 2 fires
+  // Handle firing from Player 2
   if (!keys["Enter"] && p2Charges === 0 && p2Fired) {
-    newBalls.push({
-      x: player2Paddle.left - gameBox.left, // Adjust Player 2 cannonball x-position
+    const newBall = {
+      x: player2Paddle.left - gameBox.left,
       y: player2Paddle.top - gameBox.top + player2Paddle.height / 2,
       direction: -1,
       player: 1,
-    });
-    setP2Charges(5); // Reset charge
-    setP2Fired(false); // Reset firing state
+    };
+
+    // Prevent immediate collision with Player 2's paddle
+    if (
+      newBall.x < player2Paddle.left || // Start outside the paddle
+      newBall.y < player2Paddle.top ||
+      newBall.y > player2Paddle.bottom
+    ) {
+      newBalls.push(newBall);
+    }
+
+    setP2Charges(5);
+    setP2Fired(false);
   }
 
-  // Detect cannonball collisions
+  // Process cannonballs for collisions and hits
   for (let i = 0; i < newBalls.length; i++) {
-    for (let j = i + 1; j < newBalls.length; j++) {
-      const ball = newBalls[i];
-      const otherBall = newBalls[j];
+    const ball = newBalls[i];
 
-      const closeInY = Math.abs(ball.y - otherBall.y) < 10; // Check proximity in Y-axis
+    // Check if a cannonball hits Player 1's Plank
+    if (
+      ball.direction === -1 &&
+      ball.x <= player1Paddle.right &&
+      ball.y >= player1Paddle.top &&
+      ball.y <= player1Paddle.bottom
+    ) {
+      hitsOnP1++;
+      toRemove.add(i);
+    }
+
+    // Check if a cannonball hits Player 2's Plank
+    if (
+      ball.direction === 1 &&
+      ball.x >= player2Paddle.left &&
+      ball.y >= player2Paddle.top &&
+      ball.y <= player2Paddle.bottom
+    ) {
+      hitsOnP2++;
+      toRemove.add(i);
+    }
+
+    // Detect cannonball-to-cannonball collisions
+    for (let j = i + 1; j < newBalls.length; j++) {
+      const otherBall = newBalls[j];
+      const closeInY = Math.abs(ball.y - otherBall.y) < 10;
       const movingTowardEachOther =
         (ball.direction === 1 && otherBall.direction === -1) ||
         (ball.direction === -1 && otherBall.direction === 1);
-      const overlappingInX = ball.x < otherBall.x && otherBall.x - ball.x < 10; // Check proximity in X-axis
+      const overlappingInX = Math.abs(ball.x - otherBall.x) < 10;
 
       if (closeInY && movingTowardEachOther && overlappingInX) {
-        // Mark both balls for removal
         toRemove.add(i);
         toRemove.add(j);
       }
@@ -70,8 +114,10 @@ export const updateCannonBalls = (
   // Remove all cannonballs marked for removal
   const remainingBalls = newBalls.filter((_, index) => !toRemove.has(index));
 
-  // Update cannonball positions
-  return remainingBalls
-    .map((ball) => ({ ...ball, x: ball.x + ball.direction * 5 })) // Move cannonballs
-    .filter((ball) => ball.x >= 0 && ball.x <= gameBox.width); // Remove out-of-bounds cannonballs
+  // Update positions for remaining cannonballs
+  const updatedBalls = remainingBalls
+    .map((ball) => ({ ...ball, x: ball.x + ball.direction * 5 }))
+    .filter((ball) => ball.x >= 0 && ball.x <= gameBox.width);
+
+  return { updatedBalls, hitsOnP1, hitsOnP2 };
 };
