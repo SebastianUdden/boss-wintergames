@@ -39,13 +39,12 @@ interface IMazeRunner extends IMiniGameBase {
 }
 
 const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
-  // const players = useMemo(() => {
-  //   const randomIndex = Math.round(Math.random());
-  //   const otherIndex = randomIndex === 0 ? 1 : 0;
-  //   return [initialPlayers[randomIndex], initialPlayers[otherIndex]];
-  // }, [initialPlayers]);
-  const player1IsRed = teams[0].players.some(
-    (tp) => players[0][0].name === tp.name
+  const [player1, player2] = useMemo(() => {
+    const randomIndex = Math.random() < 0.5 ? 0 : 1; // Randomly select index 0 or 1
+    return [players[randomIndex], players[1 - randomIndex]];
+  }, [players]);
+  const player1IsRed = teams[1].players.some(
+    (tp) => player1[0].name === tp.name
   );
   const [selectedMazeId, setSelectedMazeId] = useState(mazes[2].id); // Default to the first maze
   const [gameState, setGameState] = useState<GameState>("ready");
@@ -65,6 +64,8 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
   );
   const { walls, p1Start, p2Start } = useMazeWalls(mazeLayout);
   const { dots, collectDot, points } = useDots(mazeLayout);
+  const lastDot = dots.size === 1;
+  const noDot = dots.size === 0;
 
   useEffect(() => {
     const dotCount = new Set<string>();
@@ -79,11 +80,28 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
   }, [count, mazeLayout]);
 
   useEffect(() => {
+    // Trigger countdown when lastDot is reached
+    if (lastDot && gameState === "active") {
+      setSecondsRemaining(count); // Set the initial countdown value
+      setRedMessage(
+        "You have gained the cursed aztec power, get the last coin and kill the treasures owner!"
+      );
+      setBlueMessage(
+        "Run and hide the last coin until you've drained their power!"
+      );
+    }
+  }, [lastDot, gameState, count]);
+
+  useEffect(() => {
+    // Handle the countdown timer
     if (secondsRemaining === null || secondsRemaining === undefined) return;
+
     if (secondsRemaining === 0) {
       setSecondsRemaining(null); // Stop timer when it reaches 0
+      setWinner(player2[0].name);
       return;
     }
+
     const timer = setTimeout(() => {
       setSecondsRemaining((prev) => (prev !== null ? prev - 1 : null));
     }, 1000);
@@ -94,8 +112,6 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
   useEffect(() => {
     setAdjustedPoints(points * MULTIPLIER);
   }, [points]);
-  const lastDot = dots.size === 1;
-  const noDot = dots.size === 0;
   // Player 1 (Arrow Keys)
   const player1Position = usePlayer(
     p1Start,
@@ -129,35 +145,20 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
       player1Position.y === player2Position.y
     ) {
       if (lastDot) {
-        setWinner(players[0][0].name); // Set Player 1 as the winner
+        setWinner(player1[0].name); // Set Player 1 as the winner
       } else {
-        setWinner(players[1][0].name); // Set Player 2 as the winner
+        setWinner(player2[0].name); // Set Player 2 as the winner
       }
-      setTimeout(() => {
-        setGameState("finished");
-      }, 5000);
     }
-  }, [gameState, player1Position, player2Position, players, lastDot]);
+  }, [gameState, player1Position, player2Position, player1, player2, lastDot]);
 
   useEffect(() => {
     if (gameState === "active" && !lastDot) {
       setRedMessage("Collect all coins and avoid capture!");
       setBlueMessage("Find and kill the thief!");
     }
-    if (gameState === "active" && lastDot) {
-      setSecondsRemaining(count);
-      setRedMessage(
-        "You have gained the cursed aztec power, get the last coin and kill the treasures owner!"
-      );
-      setBlueMessage(
-        "Run and hide the last coin until you've drained their power!"
-      );
-    }
     if (gameState === "active" && noDot) {
-      setWinner(players[0][0].name);
-      setTimeout(() => {
-        setGameState("finished");
-      }, 5000);
+      setWinner(player1[0].name);
     }
     if (gameState === "finished") {
       setScores([
@@ -174,7 +175,7 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
     gameState,
     lastDot,
     noDot,
-    players,
+    player1,
     adjustedPoints,
     count,
     dots.size,
@@ -182,6 +183,9 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
   ]);
 
   useEffect(() => {
+    if (winner) {
+      setSecondsRemaining(null);
+    }
     provideScoresOnWinner({ onGameComplete, players, winner });
   }, [winner, players]);
 
@@ -189,14 +193,14 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
     <div className="flex flex-col items-center justify-center h-full">
       <h2 className="font-bold text-8xl">Cursed Coins</h2>
 
-      <div className="flex flex-col justify-center h-full">
+      <div className="flex flex-col justify-center w-full h-full">
         {gameState === "ready" && (
           <StartButton onStartGame={startGame}>Start Game</StartButton>
         )}
 
         {/* RenderMaze component */}
         {gameState === "active" && selectedMaze && (
-          <div className="grid grid-cols-[4%,1fr,4%] gap-4 w-full font-pirata">
+          <div className="grid grid-cols-[1fr,1fr,1fr] gap-4 w-full font-pirata">
             <div className="flex items-center w-full text-right">
               {redMessage}
             </div>
@@ -207,9 +211,7 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
                 enemies={[]}
                 dots={dots}
                 secondPlayerPosition={player2Position}
-                winner={
-                  !!winner && (winner === players[0][0].name ? "p1" : "p2")
-                }
+                winner={!!winner && (winner === player1[0].name ? "p1" : "p2")}
                 player1IsRed={player1IsRed}
               />
             </div>
@@ -218,7 +220,7 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
             </div>
           </div>
         )}
-        <div className="h-5 mt-4 text-4xl font-bold font-pirata">
+        <div className="h-5 mt-4 text-4xl font-bold text-center font-pirata">
           {winner &&
             `
             ${winner} Wins!`}
@@ -226,7 +228,12 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
       </div>
 
       <div className="w-full mt-auto">
-        <Scores players={players} scores={scores} winner={winner} />
+        <Scores
+          players={[player1, player2]}
+          scores={scores}
+          winner={winner}
+          player1IsRed={player1IsRed}
+        />
       </div>
     </div>
   );

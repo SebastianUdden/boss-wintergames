@@ -6,9 +6,16 @@ interface IScores {
   scores: number[];
   turn?: 0 | 1;
   winner: string | undefined;
+  player1IsRed?: boolean;
 }
 
-export const Scores = ({ players, scores, turn, winner }: IScores) => {
+export const Scores = ({
+  players,
+  scores,
+  turn,
+  winner,
+  player1IsRed,
+}: IScores) => {
   if (!players || players.length === 0) return;
   return (
     <div className="flex items-end justify-between w-full gap-2">
@@ -20,6 +27,7 @@ export const Scores = ({ players, scores, turn, winner }: IScores) => {
             isActive={
               turn === undefined || turn === 0 || players[0][0].name === winner
             }
+            player1IsRed={player1IsRed}
           />
         )}
       {players[1].length !== 0 &&
@@ -31,6 +39,7 @@ export const Scores = ({ players, scores, turn, winner }: IScores) => {
               turn === undefined || turn === 1 || players[1][0].name === winner
             }
             isRight={true}
+            player1IsRed={player1IsRed}
           />
         )}
     </div>

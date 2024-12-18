@@ -51,7 +51,6 @@ export const Team = ({
     if (isUnOpposed) return "98vw";
     return "calc(50vw - 2rem)";
   };
-  console.log({ minimized });
 
   return (
     <div

@@ -20,6 +20,7 @@ export const useDots = (layout: string[]) => {
   const collectDot = (playerPosition: { x: number; y: number }) => {
     const positionKey = `${playerPosition.x},${playerPosition.y}`;
     setDots((prevDots) => {
+      if (prevDots.size === 1) return prevDots;
       if (prevDots.has(positionKey)) {
         const newDots = new Set(prevDots);
         newDots.delete(positionKey);

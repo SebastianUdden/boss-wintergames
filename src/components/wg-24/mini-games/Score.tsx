@@ -10,9 +10,16 @@ export interface IScore {
 interface IScoreProps extends IScore {
   isActive?: boolean;
   isRight?: boolean;
+  player1IsRed?: boolean;
 }
 
-export const Score = ({ players, score, isActive, isRight }: IScoreProps) => (
+export const Score = ({
+  players,
+  score,
+  isActive,
+  isRight,
+  player1IsRed,
+}: IScoreProps) => (
   <div className="relative w-full select-none">
     {/* Content container */}
     <div
@@ -50,7 +57,13 @@ export const Score = ({ players, score, isActive, isRight }: IScoreProps) => (
       <div
         className={cn(
           "absolute inset-0 border-8 pointer-events-none rounded-md",
-          isRight ? "rusty-red-border" : "ocean-blue-border"
+          player1IsRed
+            ? isRight
+              ? "ocean-blue-border" // Right player, but Player 1 is Red
+              : "rusty-red-border" // Left player, and Player 1 is Red
+            : isRight
+            ? "rusty-red-border" // Right player, and Player 1 is Blue
+            : "ocean-blue-border" // Left player, but Player 1 is Blue
         )}
       />
     )}
