@@ -1,4 +1,4 @@
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useMemo, useEffect } from "react";
 
 interface IPlank {
   paddleHeight: number; // Initial height of the paddle
@@ -6,10 +6,21 @@ interface IPlank {
   top?: number;
   charges: number; // Tracks cannon charges
   hits: number; // Tracks hits to reduce visible sections
+  onPlankDestroyed?: () => void; // Callback for when the plank is destroyed
 }
 
 export const Plank = forwardRef<HTMLDivElement, IPlank>(
-  ({ paddleHeight = 100, position = "left", top = 0, charges, hits }, ref) => {
+  (
+    {
+      paddleHeight = 100,
+      position = "left",
+      top = 0,
+      charges,
+      hits,
+      onPlankDestroyed,
+    },
+    ref
+  ) => {
     const maxSections = 10; // Total number of sections
     const visibleSections = maxSections - hits; // Remaining visible sections
     const adjustedHeight = (paddleHeight / maxSections) * visibleSections; // Updated paddle height
@@ -24,6 +35,13 @@ export const Plank = forwardRef<HTMLDivElement, IPlank>(
       [visibleSections]
     );
 
+    // Trigger callback when the plank is destroyed
+    useEffect(() => {
+      if (visibleSections <= 0 && onPlankDestroyed) {
+        onPlankDestroyed();
+      }
+    }, [visibleSections, onPlankDestroyed]);
+
     return (
       <div
         ref={ref}
@@ -32,9 +50,9 @@ export const Plank = forwardRef<HTMLDivElement, IPlank>(
           height: `${adjustedHeight}px`,
           width: "64px",
           [position]: "16px",
-          top: `${top + (hits * paddleHeight) / maxSections / 2}px`, // Adjust position
+          transform: `translateY(${(hits * paddleHeight) / maxSections / 2}px)`, // Use transform for smoother transitions
           borderRadius: position === "left" ? "20px 0 0 20px" : "0 20px 20px 0",
-          transition: "transform 200ms ease-in-out",
+          transition: "transform 200ms ease-in-out, height 200ms ease-in-out",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",

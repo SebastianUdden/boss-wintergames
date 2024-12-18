@@ -9,6 +9,7 @@ import { Scores } from "../Scores";
 import { StartButton } from "../StartButton";
 import { IMiniGameBase } from "../MiniGame";
 import { provideScoresOnWinner } from "../Winner";
+import { ITeam } from "../../teams/teams";
 
 const MULTIPLIER = 1;
 
@@ -33,7 +34,19 @@ const getP2Points = (
   return 1 + count - secondsRemaining;
 };
 
-const MazeRunner = ({ players, onGameComplete }: IMiniGameBase) => {
+interface IMazeRunner extends IMiniGameBase {
+  teams: ITeam[];
+}
+
+const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
+  // const players = useMemo(() => {
+  //   const randomIndex = Math.round(Math.random());
+  //   const otherIndex = randomIndex === 0 ? 1 : 0;
+  //   return [initialPlayers[randomIndex], initialPlayers[otherIndex]];
+  // }, [initialPlayers]);
+  const player1IsRed = teams[0].players.some(
+    (tp) => players[0][0].name === tp.name
+  );
   const [selectedMazeId, setSelectedMazeId] = useState(mazes[2].id); // Default to the first maze
   const [gameState, setGameState] = useState<GameState>("ready");
   const [winner, setWinner] = useState<string | undefined>(); // Track the winner
@@ -197,6 +210,7 @@ const MazeRunner = ({ players, onGameComplete }: IMiniGameBase) => {
                 winner={
                   !!winner && (winner === players[0][0].name ? "p1" : "p2")
                 }
+                player1IsRed={player1IsRed}
               />
             </div>
             <div className="flex items-center w-full text-left">

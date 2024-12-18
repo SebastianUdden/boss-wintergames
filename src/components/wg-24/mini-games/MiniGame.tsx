@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 import { TheFloor } from "./the-floor/TheFloor";
 import MazeRunner from "./maze-runner/MazeRunner";
 import { TheClicker } from "./the-clicker/TheClicker";
-import { useState } from "react";
 import { Selector } from "./Selector";
 import { Pong } from "./pong/Pong";
 
@@ -190,6 +189,7 @@ export const MiniGame = ({
           )}
           {name === "Cursed coins" && (
             <MazeRunner
+              teams={teams}
               players={chosenPlayers}
               onGameComplete={onGameComplete}
             />

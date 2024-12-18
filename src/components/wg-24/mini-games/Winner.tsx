@@ -24,16 +24,16 @@ export const provideScoresOnWinner = ({
       if (winner === players[0][0].name) {
         onGameComplete(
           [
-            { player: players[0][0], score: 1 },
-            { player: players[1][0], score: -1 },
+            { players: players[0], score: 1 },
+            { players: players[1], score: -1 },
           ],
           1
         );
       } else {
         onGameComplete(
           [
-            { player: players[0][0], score: -1 },
-            { player: players[1][0], score: 1 },
+            { players: players[0], score: -1 },
+            { players: players[1], score: 1 },
           ],
           0
         );

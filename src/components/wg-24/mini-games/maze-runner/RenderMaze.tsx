@@ -1,13 +1,14 @@
 import { cn } from "@/lib/utils";
 
 interface RenderMazeProps {
-  layout: string[];
+  player1IsRed: boolean;
   playerPosition: { x: number; y: number };
   secondPlayerPosition: { x: number; y: number };
   enemies: Array<{ x: number; y: number }>;
   dots: Set<string>;
   gridSize?: number;
   winner: "p1" | "p2" | false;
+  layout: string[];
 }
 
 export const RenderMaze = ({
@@ -18,6 +19,7 @@ export const RenderMaze = ({
   dots,
   gridSize = 50,
   winner,
+  player1IsRed,
 }: RenderMazeProps) => {
   const remainingCoins = Array.from(dots);
   return (
@@ -81,7 +83,9 @@ export const RenderMaze = ({
 
                 {player1Here && (
                   <img
-                    src="/games/maze-runner/pirate.png"
+                    src={`/games/maze-runner/pirate-${
+                      player1IsRed ? "red" : "blue"
+                    }.png`}
                     alt="Player 1"
                     className={cn(
                       "absolute z-20",
@@ -98,7 +102,9 @@ export const RenderMaze = ({
 
                 {player2Here && (
                   <img
-                    src="/games/maze-runner/pirate2.png"
+                    src={`/games/maze-runner/pirate-${
+                      player1IsRed ? "blue" : "red"
+                    }.png`}
                     alt="Player 2"
                     className={cn(
                       "absolute z-20",

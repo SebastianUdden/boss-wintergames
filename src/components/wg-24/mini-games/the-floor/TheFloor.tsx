@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import { Score } from "../Score";
 import { Timer } from "./Timer";
-import { Winner } from "../Winner";
+import { provideScoresOnWinner, Winner } from "../Winner";
 import { categories } from "./categories";
 import { StartButton } from "../StartButton";
 import { IMiniGameBase } from "../MiniGame";
 
+const TIME = 30;
 type GameState = "ready" | "active" | "finished";
 
 export const TheFloor = ({ players, onGameComplete }: IMiniGameBase) => {
   const [scores, setScores] = useState([0, 0]);
-  const [player1Time, setPlayer1Time] = useState(60);
-  const [player2Time, setPlayer2Time] = useState(60);
+  const [player1Time, setPlayer1Time] = useState(TIME);
+  const [player2Time, setPlayer2Time] = useState(TIME);
   const [winner, setWinner] = useState("");
   const [turn, setTurn] = useState<0 | 1>(() => (Math.random() < 0.5 ? 0 : 1));
   const [currentImage, setCurrentImage] = useState(0);
@@ -95,27 +96,7 @@ export const TheFloor = ({ players, onGameComplete }: IMiniGameBase) => {
   }, [messageState, turn, players]);
 
   useEffect(() => {
-    if (winner) {
-      setTimeout(() => {
-        if (winner === players[0][0].name) {
-          onGameComplete(
-            [
-              { player: players[0][0], score: 1 },
-              { player: players[1][0], score: -1 },
-            ],
-            1
-          );
-        } else {
-          onGameComplete(
-            [
-              { player: players[0][0], score: -1 },
-              { player: players[1][0], score: 1 },
-            ],
-            0
-          );
-        }
-      }, 5000);
-    }
+    provideScoresOnWinner({ onGameComplete, winner, players });
   }, [winner, players]);
 
   return (

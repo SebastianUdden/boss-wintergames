@@ -7,6 +7,7 @@ import { Plank } from "./Plank";
 import { usePaddleControls } from "./usePaddleControls";
 import { resetBall, useGameLoop } from "./useGameLoop";
 import { Ball } from "./Ball";
+import { provideScoresOnWinner } from "../Winner";
 
 export const REFERENCE_WIDTH = 500; // Standard width for normal speed
 export const HORIZONTAL_SPEED = 4;
@@ -19,7 +20,8 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
   const [gameState, setGameState] = useState<GameState>("ready");
   const [showScore] = useState<string | undefined>();
   const [winner, setWinner] = useState("");
-  const [scores, setScores] = useState([0, 0]);
+  const [showP1Plank, setShowP1Plank] = useState(true);
+  const [showP2Plank, setShowP2Plank] = useState(true);
   const [message, setMessage] = useState("Ready your cannons!");
 
   // Refs for paddles and ball positions
@@ -79,21 +81,22 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
   });
 
   useEffect(() => {
-    startGame();
-  }, []);
+    if (!showP1Plank) {
+      setWinner(players[1][0].name);
+    }
+    if (!showP2Plank) {
+      setWinner(players[0][0].name);
+    }
+  }, [showP1Plank, showP2Plank]);
 
   useEffect(() => {
-    if (cannonBalls.length > 0) {
-      // console.log("GameBox:", gameBoxRef.current?.getBoundingClientRect());
-      // console.log("CannonBalls:", cannonBalls);
+    if (t1Score > 10) {
+      setWinner(players[0][0].name);
     }
-  }, [cannonBalls]);
-
-  useEffect(() => {
-    if (scores.some((s) => s > 3)) {
-      setGameState("finished");
+    if (t2Score > 10) {
+      setWinner(players[1][0].name);
     }
-  }, [scores]);
+  }, [t1Score, t2Score, players]);
 
   const startGame = () => {
     setGameState("active");
@@ -114,13 +117,9 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
     resetBall();
   };
 
-  const endGame = () => {
-    setGameState("finished");
-    setMessage("Game Over!");
-    // onGameComplete(
-    //   scores.map((s, i) => ({ score: s * 1000, player: players[i] }))
-    // );
-  };
+  useEffect(() => {
+    provideScoresOnWinner({ onGameComplete, players, winner });
+  }, [winner, players]);
 
   return (
     <div className="flex flex-col justify-between h-full p-4 bg-gray-800 rounded-lg">
@@ -153,27 +152,33 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
         }}
       >
         {/* Player 1 Paddle */}
-        <Plank
-          ref={player1PaddleRef}
-          paddleHeight={player1PaddleHeight}
-          hits={p1Hits} // Player 2's hits reduce Player 1's plank
-          charges={p1Charges}
-          position="left"
-        />
+        {showP1Plank && (
+          <Plank
+            ref={player1PaddleRef}
+            paddleHeight={player1PaddleHeight}
+            hits={p1Hits} // Player 2's hits reduce Player 1's plank
+            charges={p1Charges}
+            position="left"
+            onPlankDestroyed={() => setShowP1Plank(false)}
+          />
+        )}
 
         {/* Player 2 Paddle */}
-        <Plank
-          ref={player2PaddleRef}
-          paddleHeight={player2PaddleHeight}
-          hits={p2Hits} // Player 1's hits reduce Player 2's plank
-          charges={p2Charges}
-          position="right"
-        />
+        {showP2Plank && (
+          <Plank
+            ref={player2PaddleRef}
+            paddleHeight={player2PaddleHeight}
+            hits={p2Hits} // Player 1's hits reduce Player 2's plank
+            charges={p2Charges}
+            position="right"
+            onPlankDestroyed={() => setShowP2Plank(false)}
+          />
+        )}
 
         <Ball
           ref={ballRef}
           showScore={false}
-          gameState="active"
+          gameState={gameState}
           overlayImage="/games/cannons/baby-kraken.png"
         />
         {cannonBalls.map((ball, index) => (
@@ -204,21 +209,6 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
           </p>
         )}
       </div>
-      <div>
-        <p>Player 1 Charges: {5 - p1Charges} / 5</p>
-        <p>Player 2 Charges: {5 - p2Charges} / 5</p>
-        <p>Player 1 Hits: {p1Hits} / 5</p>
-        <p>Player 2 Hits: {p2Hits} / 5</p>
-      </div>
-
-      {gameState === "finished" && (
-        <Button
-          className="mt-4 bg-green-700 hover:bg-green-500"
-          onClick={endGame}
-        >
-          Complete
-        </Button>
-      )}
       <div className="w-full mt-4">
         <Scores players={players} scores={[t1Score, t2Score]} winner={winner} />
       </div>

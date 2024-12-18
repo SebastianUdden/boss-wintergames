@@ -14,7 +14,6 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { IPlayer } from "./teams/players";
 import { useStoredState } from "./storedState";
-import { Button } from "./ui/button";
 
 type Turn = 0 | 1;
 type LosingTeamIndex = 0 | 1 | undefined;
@@ -302,11 +301,15 @@ const Layout = () => {
     if (phase === "transitioning-captive" && highlightedPlayers) {
       handleMovePlayer();
     }
+    if (phase !== "selecting-captive" && phase !== "selecting-players") {
+      setHighlightedPlayers(chosenPlayers?.flat() ?? []);
+    }
     if (phase === "ready" || phase === "waiting-for-spin") {
       setOpenGame(undefined);
       setChosenPlayers([]);
+      setHighlightedPlayers([]);
     }
-  }, [phase]);
+  }, [phase, chosenPlayers]);
 
   useEffect(() => {
     const getRandomPlayers = (players, count) => {
@@ -401,69 +404,82 @@ const Layout = () => {
                 onGameComplete={(playerScores, loserIndex) => {
                   console.log({ playerScores });
                   console.log({ loserIndex });
+
+                  // Filter out player scores where the score is 0, as they do not affect the outcome
                   const filteredPlayerScores = playerScores.filter(
                     (ps) => ps.score !== 0
                   );
+
+                  // Identify new losers: players whose teams scored negative and are not captains in the current teams
                   const newLosers = playerScores
                     .filter(
                       (ps) =>
-                        ps.score < 0 &&
+                        ps.score < 0 && // Check for negative score
                         !teams.some((team) =>
                           team.players.some(
-                            (p) => p.isCaptain && p.name === ps.player.name
+                            (p) =>
+                              p.isCaptain &&
+                              ps.players.some((x) => x.name === p.name)
                           )
                         )
                     )
-                    .map((p) => p.player);
+                    .flatMap((p) => p.players); // Extract players from filtered scores
+
+                  // Set the game phase to calculating score
                   setPhase("calculating-score");
+
+                  // Update teams with `showScore` for each player
                   const newTeams = teams.map((team) => ({
                     ...team,
-                    players: team.players.map((p) => {
-                      let showScore;
-                      filteredPlayerScores.forEach((ps) => {
-                        if (p.name === ps.player.name) {
-                          showScore = ps.score;
-                        }
-                      });
+                    players: team.players.map((player) => {
+                      const matchingScore = filteredPlayerScores.find((ps) =>
+                        ps.players.some((p) => p.name === player.name)
+                      );
                       return {
-                        ...p,
-                        showScore,
+                        ...player,
+                        showScore: matchingScore
+                          ? matchingScore.score
+                          : undefined, // Assign score if present
                       };
                     }),
                   }));
+
+                  // Update state with new teams, losers, and losing team index
                   setTeams(newTeams);
                   setLosers(newLosers);
                   setLosingTeamIndex(loserIndex);
-                  setOpenGame(undefined);
+                  setOpenGame(undefined); // Clear the current game
 
+                  // Delay for score visualization before transitioning to the next phase
                   setTimeout(() => {
-                    setTeams(
-                      teams.map((team) => ({
-                        ...team,
-                        minimized: false,
-                        players: team.players.map((p) => {
-                          let wins = p.wins;
-                          let losses = p.losses;
+                    const updatedTeams = teams.map((team) => ({
+                      ...team,
+                      minimized: false, // Ensure all teams are fully expanded
+                      players: team.players.map((player) => {
+                        let { wins, losses } = player;
 
-                          filteredPlayerScores.forEach((ps) => {
-                            if (p.name === ps.player.name && ps.score > 0) {
-                              wins = (p.wins ?? 0) + ps.score;
-                            } else if (
-                              p.name === ps.player.name &&
-                              ps.score < 0
-                            ) {
-                              losses = (p.losses ?? 0) - ps.score;
+                        // Adjust wins and losses based on the filtered scores
+                        filteredPlayerScores.forEach((ps) => {
+                          if (ps.players.some((p) => p.name === player.name)) {
+                            if (ps.score > 0) {
+                              wins = (wins ?? 0) + ps.score; // Increment wins for positive scores
+                            } else if (ps.score < 0) {
+                              losses = (losses ?? 0) - ps.score; // Increment losses for negative scores
                             }
-                          });
-                          return {
-                            ...p,
-                            wins,
-                            losses,
-                            showScore: undefined,
-                          };
-                        }),
-                      }))
-                    );
+                          }
+                        });
+
+                        return {
+                          ...player,
+                          wins,
+                          losses,
+                          showScore: undefined, // Clear the temporary score display
+                        };
+                      }),
+                    }));
+
+                    // Update teams and transition to the next phase
+                    setTeams(updatedTeams);
                     setPhase("selecting-captive");
                   }, 3000);
                 }}

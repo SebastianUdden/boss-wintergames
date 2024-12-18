@@ -55,8 +55,6 @@ export const checkShipCollision = (shipA: Ship, shipB: Ship): boolean => {
     rectA.y < rectB.y + rectB.height &&
     rectA.y + rectA.height > rectB.y;
 
-  // console.log(`Collision result for ${shipA.id} and ${shipB.id}: ${isCollision}`);
-
   return isCollision;
 };
 

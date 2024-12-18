@@ -30,7 +30,6 @@ export const Team = ({
   isUnOpposed,
   onMovePlayer,
 }: TeamProps) => {
-  // console.log({ highlightedPlayers });
   const [justifyStartApplied, setJustifyStartApplied] = useState(false);
   const sortedPlayers = players.sort(sortByScore);
   const cardSize = 100 / players.length - 6;
@@ -52,6 +51,7 @@ export const Team = ({
     if (isUnOpposed) return "98vw";
     return "calc(50vw - 2rem)";
   };
+  console.log({ minimized });
 
   return (
     <div
