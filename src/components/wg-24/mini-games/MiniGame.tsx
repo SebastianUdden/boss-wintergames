@@ -8,6 +8,10 @@ import { MemoryBoard } from "./memory/MemoryBoard";
 import { cn } from "@/lib/utils";
 import { TheFloor } from "./the-floor/TheFloor";
 import MazeRunner from "./maze-runner/MazeRunner";
+import { TheClicker } from "./the-clicker/TheClicker";
+import { useState } from "react";
+import { Selector } from "./Selector";
+import { Pong } from "./pong/Pong";
 
 export interface IPlayerSetup {
   p1: string;
@@ -80,6 +84,11 @@ export const getPlayerSetup = (
   return playerSetup;
 };
 
+export interface IMiniGameBase {
+  players: IPlayer[][];
+  onGameComplete: (playerScores: IScore[], loserIndex: number) => void;
+}
+
 export interface IMiniGame {
   id: number;
   color: string;
@@ -101,21 +110,26 @@ export interface IMiniGame {
 export interface MiniGameProps {
   teams: ITeam[];
   miniGame?: IMiniGame;
-  playerSetup: IPlayerSetup;
   chosenPlayers: IPlayer[][];
   phase: Phase;
+  showSelector: boolean;
   onGameComplete: (playerScores: IScore[], loserIndex: number) => void;
+  onSelectGame: (index: number) => void;
 }
 
 export const MiniGame = ({
   teams,
   miniGame,
-  playerSetup,
   chosenPlayers,
   phase,
+  showSelector,
   onGameComplete,
+  onSelectGame,
 }: MiniGameProps) => {
   const { name } = miniGame ?? {};
+  const handleSelectGame = (index: number) => {
+    onSelectGame(index);
+  };
   const handleGameComplete = (scores: IScore[]) => {
     const adjustedScores = scores.map((s, index) => {
       const playerWon =
@@ -128,7 +142,7 @@ export const MiniGame = ({
     const losingTeamIndex = adjustedScores[0].score === 1 ? 1 : 0;
     onGameComplete(adjustedScores, losingTeamIndex);
   };
-  console.log({ chosenPlayers });
+
   return (
     <div
       className={cn(
@@ -136,7 +150,10 @@ export const MiniGame = ({
         phase === "explaining-game" ? "80vh" : "80vw"
       )}
     >
-      {phase === "explaining-game" && (
+      {phase === "explaining-game" && showSelector && (
+        <Selector onSelectGame={handleSelectGame} />
+      )}
+      {phase === "explaining-game" && !showSelector && (
         <div className="relative flex m-auto">
           <img
             src="/backgrounds/maps/pirate-map-background.png"
@@ -147,7 +164,6 @@ export const MiniGame = ({
             <GameRules
               teams={teams}
               chosenPlayers={chosenPlayers}
-              playerSetup={playerSetup}
               {...miniGame}
               phase={phase}
               onGameComplete={onGameComplete}
@@ -178,6 +194,15 @@ export const MiniGame = ({
               onGameComplete={onGameComplete}
             />
           )}
+          {name === "Finger Walz" && (
+            <TheClicker
+              players={chosenPlayers}
+              onGameComplete={onGameComplete}
+            />
+          )}
+          {name === "Cannons" && (
+            <Pong players={chosenPlayers} onGameComplete={onGameComplete} />
+          )}
         </div>
       )}
 
@@ -187,9 +212,7 @@ export const MiniGame = ({
           onGameComplete={onGameComplete}
         />
       )}
-      {name === "Killerball" && (
-        <Pong players={playerSetup.duos} onGameComplete={onGameComplete} />
-      )}
+    
       {name === "The clicker" && (
         <TheClicker player={playerSetup.solo} onGameComplete={onGameComplete} />
       )}

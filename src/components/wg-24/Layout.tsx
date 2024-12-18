@@ -14,6 +14,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { IPlayer } from "./teams/players";
 import { useStoredState } from "./storedState";
+import { Button } from "./ui/button";
 
 type Turn = 0 | 1;
 type LosingTeamIndex = 0 | 1 | undefined;
@@ -88,6 +89,7 @@ export type Phase =
 
 const Layout = () => {
   const playerMoved = useRef(false);
+  const [showSelector, setShowSelector] = useState(false);
   const [phase, setPhase] = useStoredState<Phase>("phase", "ready");
   const [teams, setTeams] = useStoredState<ITeam[]>("teams", initialTeams);
   const [losers, setLosers] = useStoredState<IPlayer[]>("losers", []);
@@ -108,7 +110,7 @@ const Layout = () => {
   );
   const [openGame, setOpenGame] = useStoredState<IMiniGame | undefined>(
     "openGame",
-    miniGames[2]
+    miniGames[3]
   );
   const [previousTurns, setPreviousTurns] = useStoredState<string[]>(
     "previousTurns",
@@ -224,15 +226,14 @@ const Layout = () => {
 
   const handleMovePlayer = useCallback(() => {
     setTeams((prevTeams) => {
-      if (playerMoved.current) return prevTeams; // Prevent re-running
+      if (playerMoved.current || !losingTeamIndex) return prevTeams; // Prevent re-running
       const updatedTeams = [...prevTeams];
 
       // Use the losingTeamIndex to identify the losing team
-      const loserIndex = losingTeamIndex;
-      const opposingTeamIndex = loserIndex === 0 ? 1 : 0;
+      const opposingTeamIndex = losingTeamIndex === 0 ? 1 : 0;
 
       // Find the player to move from the losing team
-      const playerToMove = updatedTeams[loserIndex].players.find(
+      const playerToMove = updatedTeams[losingTeamIndex].players.find(
         (p) => p.name === highlightedPlayers[0].name
       );
 
@@ -242,8 +243,8 @@ const Layout = () => {
       }
 
       // Remove the player from the losing team
-      updatedTeams[loserIndex].players = updatedTeams[
-        loserIndex
+      updatedTeams[losingTeamIndex].players = updatedTeams[
+        losingTeamIndex
       ].players.filter((p) => p.name !== highlightedPlayers[0].name);
 
       // Add the player to the opposing team
@@ -295,24 +296,39 @@ const Layout = () => {
         setPhase("explaining-game");
       }, 1100);
     }
-    if (phase === "playing-game" && chosenPlayers.flat().length === 0) {
-      if (openGame?.gameType === "duell") {
-        setChosenPlayers(teams.map((t) => t.players.slice(0, 1)));
-      } else if (openGame?.gameType === "2v2") {
-        setChosenPlayers(teams.map((t) => t.players.slice(0, 2)));
-      } else if (openGame?.gameType === "lagkamp") {
-        setChosenPlayers(teams.map((t) => t.players));
-      } else if (openGame?.gameType === "solo") {
-        setChosenPlayers([[teams[0].players[0]], []]);
-      }
-    }
     if (phase === "selecting-captive") {
       handleSelectNextLoser();
     }
     if (phase === "transitioning-captive" && highlightedPlayers) {
       handleMovePlayer();
     }
+    if (phase === "ready" || phase === "waiting-for-spin") {
+      setOpenGame(undefined);
+      setChosenPlayers([]);
+    }
   }, [phase]);
+
+  useEffect(() => {
+    const getRandomPlayers = (players, count) => {
+      const shuffled = [...players].sort(() => Math.random() - 0.5); // Shuffle the players
+      return shuffled.slice(0, count); // Return the required number of players
+    };
+
+    if (teams) {
+      if (openGame?.gameType === "duell") {
+        setChosenPlayers(teams.map((t) => getRandomPlayers(t.players, 1)));
+      } else if (openGame?.gameType === "2v2") {
+        setChosenPlayers(teams.map((t) => getRandomPlayers(t.players, 2)));
+      } else if (openGame?.gameType === "lagkamp") {
+        setChosenPlayers(teams.map((t) => t.players));
+      } else if (openGame?.gameType === "solo") {
+        setChosenPlayers([
+          [getRandomPlayers(teams[teamsTurn].players, 1)[0]], // Random 1 player from team 0
+          [],
+        ]);
+      }
+    }
+  }, [openGame]);
 
   return (
     <div className="min-w-full min-h-screen shipwrecked h-[100vh]">
@@ -374,6 +390,14 @@ const Layout = () => {
                 miniGame={openGame}
                 playerSetup={playerSetup}
                 chosenPlayers={chosenPlayers}
+                showSelector={showSelector}
+                onSelectGame={(index) => {
+                  setShowSelector(false);
+                  setOpenGame(undefined);
+                  setTimeout(() => {
+                    setOpenGame(miniGames[index]);
+                  }, 100);
+                }}
                 onGameComplete={(playerScores, loserIndex) => {
                   console.log({ playerScores });
                   console.log({ loserIndex });
@@ -398,7 +422,6 @@ const Layout = () => {
                       let showScore;
                       filteredPlayerScores.forEach((ps) => {
                         if (p.name === ps.player.name) {
-                          console.log(p.name);
                           showScore = ps.score;
                         }
                       });
@@ -481,6 +504,15 @@ const Layout = () => {
               />
             )}
           </div>
+          <button
+            className="absolute z-50 text-4xl transition-all border-none outline-none right-10 -bottom-2 hover:bottom-0"
+            onClick={() => {
+              setShowSelector(true);
+              setPhase("explaining-game");
+            }}
+          >
+            Games
+          </button>
           <Footer phase={phase} setPhase={setPhase} />
         </div>
       </main>

@@ -3,11 +3,12 @@ import { useMazeWalls } from "./useMazeWalls"; // Import the custom hook for maz
 import { RenderMaze } from "./RenderMaze"; // Import the RenderMaze component
 import { usePlayer } from "./movement/usePlayer"; // Import the usePlayer hook
 import { mazes } from "./mazes"; // Import the mazes from mazes.ts
-import { GameState } from "../useGameState";
+import { GameState } from "../gameState";
 import { useDots } from "./useDots";
-import { IPlayer } from "../../teams/players";
 import { Scores } from "../Scores";
 import { StartButton } from "../StartButton";
+import { IMiniGameBase } from "../MiniGame";
+import { provideScoresOnWinner } from "../Winner";
 
 const MULTIPLIER = 1;
 
@@ -32,11 +33,7 @@ const getP2Points = (
   return 1 + count - secondsRemaining;
 };
 
-interface IMazeRunner {
-  players: IPlayer[][];
-}
-
-const MazeRunner = ({ players }: IMazeRunner) => {
+const MazeRunner = ({ players, onGameComplete }: IMiniGameBase) => {
   const [selectedMazeId, setSelectedMazeId] = useState(mazes[2].id); // Default to the first maze
   const [gameState, setGameState] = useState<GameState>("ready");
   const [winner, setWinner] = useState<string | undefined>(); // Track the winner
@@ -44,6 +41,7 @@ const MazeRunner = ({ players }: IMazeRunner) => {
   const [redMessage, setRedMessage] = useState("");
   const [adjustedPoints, setAdjustedPoints] = useState(0);
   const [count, setCount] = useState(0);
+  const [scores, setScores] = useState([0, 0]);
   const [secondsRemaining, setSecondsRemaining] = useState<
     number | undefined | null
   >(undefined);
@@ -148,7 +146,31 @@ const MazeRunner = ({ players }: IMazeRunner) => {
         setGameState("finished");
       }, 5000);
     }
-  }, [gameState, lastDot, noDot, players]);
+    if (gameState === "finished") {
+      setScores([
+        getP1Points(adjustedPoints, 0),
+        getP2Points(dots.size, 0, count),
+      ]); // Show final points for Player 1
+    } else {
+      setScores([
+        getP1Points(adjustedPoints, secondsRemaining),
+        getP2Points(dots.size, secondsRemaining, count),
+      ]); // Show final points for Player 1
+    }
+  }, [
+    gameState,
+    lastDot,
+    noDot,
+    players,
+    adjustedPoints,
+    count,
+    dots.size,
+    secondsRemaining,
+  ]);
+
+  useEffect(() => {
+    provideScoresOnWinner({ onGameComplete, players, winner });
+  }, [winner, players]);
 
   return (
     <div className="flex flex-col items-center justify-center h-full">
@@ -182,7 +204,7 @@ const MazeRunner = ({ players }: IMazeRunner) => {
             </div>
           </div>
         )}
-        <div className="h-10 mt-4 text-4xl font-bold font-pirata">
+        <div className="h-5 mt-4 text-4xl font-bold font-pirata">
           {winner &&
             `
             ${winner} Wins!`}
@@ -190,21 +212,7 @@ const MazeRunner = ({ players }: IMazeRunner) => {
       </div>
 
       <div className="w-full mt-auto">
-        <Scores
-          players={players}
-          scores={[
-            gameState === "finished"
-              ? getP1Points(adjustedPoints, 0) // Show final points for Player 1
-              : getP1Points(adjustedPoints, secondsRemaining),
-            gameState === "finished"
-              ? getP2Points(dots.size, 0, count) // Show final points for Player 2
-              : getP2Points(dots.size, secondsRemaining, count),
-          ]}
-          winner={winner}
-        />
-        {/* <div className="mt-4 text-2xl text-center timer">
-          Timer: {secondsRemaining === null ? "0" : secondsRemaining}
-        </div> */}
+        <Scores players={players} scores={scores} winner={winner} />
       </div>
     </div>
   );

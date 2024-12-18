@@ -3,7 +3,7 @@ import { IPlayer } from "../teams/players";
 import { cn } from "@/lib/utils";
 
 export interface IScore {
-  player: IPlayer;
+  players: IPlayer[];
   score: number;
 }
 
@@ -12,8 +12,8 @@ interface IScoreProps extends IScore {
   isRight?: boolean;
 }
 
-export const Score = ({ player, score, isActive, isRight }: IScoreProps) => (
-  <div className="relative w-full ">
+export const Score = ({ players, score, isActive, isRight }: IScoreProps) => (
+  <div className="relative w-full select-none">
     {/* Content container */}
     <div
       className={cn(
@@ -21,9 +21,19 @@ export const Score = ({ player, score, isActive, isRight }: IScoreProps) => (
         !isRight ? "flex-row-reverse" : "flex-row"
       )}
     >
-      <img src={player.image} className="w-[10vh]" />
+      <div className="flex max-w-1/2">
+        {players.length > 2 ? (
+          <p className="flex items-center p-8 text-4xl border-2 border-black ocean-blue">
+            Blue
+          </p>
+        ) : (
+          players.map((p) => (
+            <img src={p.image} className="max-w-[10vh] border-2 border-black" />
+          ))
+        )}
+      </div>
       <div className={cn("flex flex-col-reverse", isRight ? "text-right" : "")}>
-        <Label className="text-2xl">{player.name}</Label>
+        <Label className="text-2xl">{players[0].name}</Label>
         <h2 className="text-8xl">
           {score.toLocaleString("se-SE", {
             useGrouping: true,

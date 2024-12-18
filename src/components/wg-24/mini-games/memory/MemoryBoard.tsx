@@ -3,7 +3,8 @@ import { Card, ICard } from "./Card";
 import { IScore, Score } from "../Score";
 import { MatchedCards } from "./MatchedCards";
 import { IPlayer } from "../../teams/players";
-import { Winner } from "../Winner";
+import { provideScoresOnWinner, Winner } from "../Winner";
+import { IMiniGameBase } from "../MiniGame";
 
 const initialCards2 = [
   {
@@ -295,13 +296,7 @@ const initialCards: ICard[] = [
   },
 ].sort(() => Math.random() - 0.5);
 
-interface IMemoryBoard {
-  name?: string;
-  players: IPlayer[][];
-  onGameComplete: (playerScores: IScore[]) => void;
-}
-
-export const MemoryBoard = ({ players, onGameComplete }: IMemoryBoard) => {
+export const MemoryBoard = ({ players, onGameComplete }: IMiniGameBase) => {
   const [turn, setTurn] = useState<0 | 1>(0);
   const [cards, setCards] = useState(() => initialCards);
   const [scores, setScores] = useState(() => [
@@ -317,14 +312,8 @@ export const MemoryBoard = ({ players, onGameComplete }: IMemoryBoard) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
 
   useEffect(() => {
-    // if (winner) {
-    //   setTimeout(() => {
-    //     onGameComplete(
-    //       scores.map((s, i) => ({ score: s, player: players[i][0] }))
-    //     );
-    //   }, 5000);
-    // }
-  }, [winner, scores, players]);
+    provideScoresOnWinner({ onGameComplete, players, winner });
+  }, [winner, players]);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const gridWidth = 6; // Number of cards in a row
@@ -495,7 +484,7 @@ export const MemoryBoard = ({ players, onGameComplete }: IMemoryBoard) => {
           {players[0].length !== 0 &&
             (!winner || players[0][0].name === winner) && (
               <Score
-                player={players[0][0]}
+                players={players[0]}
                 score={scores[0]}
                 isActive={
                   turn === 0 && (!winner || players[0][0].name === winner)
@@ -505,7 +494,7 @@ export const MemoryBoard = ({ players, onGameComplete }: IMemoryBoard) => {
           {players[1].length !== 0 &&
             (!winner || players[1][0].name === winner) && (
               <Score
-                player={players[1][0]}
+                players={players[1]}
                 score={scores[1]}
                 isActive={turn === 1 && !winner}
                 isRight={true}

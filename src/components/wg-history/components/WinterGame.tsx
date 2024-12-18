@@ -27,8 +27,10 @@ export const WinterGame = ({
         <p className="ml-1 italic opacity-50">by {coordinators.join(", ")}</p>
       </div>
       <Teams teams={teams} />
-      <Activities activities={activities} />
-      {images.length !== 0 && <Images images={images} />}
+      {activities && <Activities activities={activities} />}
+      {images !== undefined && images?.length !== 0 && (
+        <Images images={images} />
+      )}
     </div>
   );
 };

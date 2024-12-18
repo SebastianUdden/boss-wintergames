@@ -207,7 +207,6 @@ export const AdminModal = ({
                             )}
                             onClick={(e) => {
                               e.stopPropagation();
-                              console.log({ chosenPlayers });
                               if (chosenPlayers.length === 0) {
                                 setChosenPlayers([
                                   i === 0 ? [p] : [],

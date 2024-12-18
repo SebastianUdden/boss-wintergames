@@ -85,6 +85,39 @@ export const Header = ({
             Games <span className="hidden xs:inline">2024</span>
           </h1>
         </div>
+        {openGame && (
+          <div className="flex items-center gap-4">
+            {chosenPlayers &&
+              chosenPlayers[0] &&
+              (phase === "playing-game" ||
+                phase === "calculating-score" ||
+                phase === "selecting-captive" ||
+                phase === "captains-choice" ||
+                phase === "transitioning-captive") && (
+                <div className="flex gap-2">
+                  {chosenPlayers[0].map((cp) => (
+                    <img src={cp.image} className="w-10 h-10 rounded-full" />
+                  ))}
+                </div>
+              )}
+            <h3 className="p-0 m-0">
+              {openGame.name} - {openGame?.gameType}{" "}
+            </h3>
+            {chosenPlayers &&
+              chosenPlayers[1] &&
+              (phase === "playing-game" ||
+                phase === "calculating-score" ||
+                phase === "selecting-captive" ||
+                phase === "captains-choice" ||
+                phase === "transitioning-captive") && (
+                <div className="flex gap-2">
+                  {chosenPlayers[1].map((cp) => (
+                    <img src={cp.image} className="w-10 h-10 rounded-full" />
+                  ))}
+                </div>
+              )}
+          </div>
+        )}
         <div className="flex h-full m-0 font-fell">
           <Button
             data-testid="ready-state"
@@ -120,7 +153,7 @@ export const Header = ({
           <Button
             data-testid="explaining-game-state"
             className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("playing-game")}
+            onClick={() => onSetPhase("explaining-game")}
             disabled={phase === "explaining-game"}
           >
             E<span className="hidden 2xl:inline">xplaining game</span>
@@ -171,7 +204,7 @@ export const Header = ({
             onClick={() => onSetPhase("transitioning-captive")}
             disabled={phase === "transitioning-captive"}
           >
-            T<span className="hidden 2xl:inline">ransitioning captive</span>
+            M<span className="hidden 2xl:inline">oving captive</span>
           </Button>
         </div>
       </header>

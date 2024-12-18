@@ -16,7 +16,7 @@ export const RenderMaze = ({
   secondPlayerPosition,
   enemies,
   dots,
-  gridSize = 64,
+  gridSize = 50,
   winner,
 }: RenderMazeProps) => {
   const remainingCoins = Array.from(dots);

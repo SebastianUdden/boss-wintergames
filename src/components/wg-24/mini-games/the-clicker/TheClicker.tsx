@@ -1,8 +1,12 @@
 import { Button } from "@/components/wg-24/ui/button";
 import { useState, useEffect } from "react";
-import { IScore } from "../Score";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/wg-24/ui/badge";
+import { Scores } from "../Scores";
+import { provideScoresOnWinner } from "../Winner";
+import { IMiniGameBase } from "../MiniGame";
+import { ClickTimer } from "./ClickTimer";
+import { GameState } from "../gameState";
+import { ClickButton } from "./ClickButton";
 
 const getRandomPosition = () => {
   const isTopHalf = Math.random() > 0.5;
@@ -12,29 +16,22 @@ const getRandomPosition = () => {
   return `${top} ${left}`;
 };
 
-const getButtonColor = (multiplier: number) => {
-  if (multiplier === 5) return "bg-red-500 hover:bg-red-600";
-  if (multiplier === 3) return "bg-teal-500 hover:bg-teal-600";
-  if (multiplier === 2) return "bg-blue-500 hover:bg-blue-600";
-  return "bg-gray-600 hover:bg-gray-700";
-};
-
-type GameState = "ready" | "active" | "finished" | "exit";
 type Multiplier = "x2" | "x3" | "x5" | undefined;
 
-interface TheClickerProps {
-  player: string;
+interface TheClickerProps extends IMiniGameBase {
   initialTime?: number;
-  onGameComplete: (playerScores: IScore[]) => void;
 }
 
 export const TheClicker = ({
-  player,
-  initialTime = 3000,
+  players,
+  initialTime = 1000,
   onGameComplete,
 }: TheClickerProps) => {
+  const [turn, setTurn] = useState<0 | 1>(0);
   const [gameState, setGameState] = useState<GameState>("ready");
-  const [score, setScore] = useState(0);
+  const [winner, setWinner] = useState<string | undefined>(); // Track the winner
+  const [p1Score, setP1Score] = useState(0);
+  const [p2Score, setP2Score] = useState(0);
   const [timeLeft, setTimeLeft] = useState(initialTime);
   const [multiplier, setMultiplier] = useState(1);
   const [showTimeBonus, setShowTimeBonus] = useState(false);
@@ -45,13 +42,16 @@ export const TheClicker = ({
 
   const startGame = () => {
     setGameState("active");
-    setScore(0);
     setMultiplier(1);
     setTimeLeft(initialTime);
   };
 
   const handleClick = () => {
-    setScore((prev) => prev + 1 * multiplier);
+    if (turn === 0) {
+      setP1Score((prev) => prev + 1 * multiplier);
+    } else {
+      setP2Score((prev) => prev + 1 * multiplier);
+    }
   };
 
   const handleBonusClick = () => {
@@ -64,12 +64,25 @@ export const TheClicker = ({
     setMultiplier(value);
     setSecondaryButtonPosition(getRandomPosition());
     setShowMultiplier(undefined);
-    setTimeout(() => setMultiplier(1), 5000); // Reset multiplier after 5 seconds
+    setTimeout(() => setMultiplier(1), 5000);
   };
 
   useEffect(() => {
     if (gameState === "ready") return;
-    if (timeLeft === 0) {
+    if (gameState === "active") {
+      document.body.style.overflow = "hidden"; // Disable scrolling
+    } else {
+      document.body.style.overflow = ""; // Re-enable scrolling
+    }
+    if (turn === 0 && timeLeft === 0) {
+      setGameState("next");
+      setTurn(1);
+      setTimeout(() => {
+        setGameState("ready");
+      }, 3000);
+    } else if (gameState !== "next" && turn === 1 && timeLeft === 0) {
+      const winnerIndex = p1Score > p2Score ? 0 : 1;
+      setWinner(players[winnerIndex][0].name);
       setGameState("finished");
       return;
     }
@@ -98,8 +111,15 @@ export const TheClicker = ({
       setShowMultiplier("x2");
     }
 
-    return () => clearInterval(timer);
-  }, [timeLeft, gameState, showMultiplier, showTimeBonus]);
+    return () => {
+      clearInterval(timer);
+      document.body.style.overflow = "";
+    };
+  }, [timeLeft, gameState, turn, showMultiplier, showTimeBonus]);
+
+  useEffect(() => {
+    provideScoresOnWinner({ onGameComplete, players, winner });
+  }, [winner, players]);
 
   const hasTime = timeLeft > 0;
   const showX2 = hasTime && showMultiplier === "x2";
@@ -108,51 +128,49 @@ export const TheClicker = ({
   const showPlus5 = hasTime && showTimeBonus;
 
   return (
-    <div className="flex flex-col p-4">
-      <h2 className="text-2xl font-bold">The Clicker</h2>
-      <Badge className="bg-pink-500 hover:bg-pink-600 w-fit">{player}</Badge>
-      <p
-        className="w-56 px-10 py-5 m-auto text-4xl text-white transition-transform duration-100 ease-out transform bg-black border border-white rounded-full"
-        style={{
-          transform:
-            timeLeft < 2000
-              ? `scale(${1 + Math.sin(timeLeft / 100) * 0.05})`
-              : "",
-          color: timeLeft < 1000 ? "red" : "white",
-        }}
-      >
-        {`${String(Math.floor(timeLeft / 6000)).padStart(2, "0")}:${String(
-          Math.floor((timeLeft % 6000) / 100)
-        ).padStart(2, "0")}:${String(timeLeft % 100).padStart(2, "0")}`}
-      </p>
+    <div className="flex flex-col items-center justify-start h-full">
+      <h1 className="mb-2">Finger Walz</h1>
 
-      <div className="relative flex w-full max-h-[70vh] max-w-[70vh] mt-6 aspect-square bg-gray-500 rounded-xl items-center justify-center">
-        {gameState === "ready" && (
+      <div className="relative flex flex-col w-full h-full max-h-[70vh] max-w-[70vh] mt-6 bg-gray-800 rounded-xl items-center justify-center">
+        {(gameState === "ready" || gameState === "next") && (
           <Button
-            className="p-10 text-4xl text-white bg-blue-500 rounded-full outline-none hover:bg-blue-600"
+            className="p-10 text-3xl text-white bg-blue-500 rounded-full outline-none select-none hover:bg-blue-600"
             onClick={startGame}
+            disabled={gameState === "next"}
           >
-            Click it, {player}!
+            {players[turn][0].name}, ye may begin{" "}
+            {gameState === "next" ? "shortly" : ""}!
           </Button>
         )}
+        <ClickTimer timeLeft={timeLeft} />
         {(gameState === "active" || gameState === "finished") && (
-          <Button
-            disabled={gameState === "finished"}
-            className={cn(
-              "p-10 text-4xl text-white  rounded-full outline-none",
-              getButtonColor(multiplier)
-            )}
-            onClick={handleClick}
-          >
-            {score}
-            {multiplier === 1 ? "" : ` x${multiplier}`}
-          </Button>
+          <ClickButton
+            handleClick={handleClick}
+            gameState={gameState}
+            multiplier={multiplier}
+            p1Score={p1Score}
+            p2Score={p2Score}
+            turn={turn}
+          />
+        )}
+        {gameState === "finished" && winner && (
+          <p className="absolute text-3xl text-center select-none bottom-28">
+            {winner} triumphed
+            <br />
+            over the waves o’ time
+            <br />
+            and sunk yer scallywag foe!
+            <br /> The sea sings yer name!
+          </p>
         )}
         {gameState === "active" && (
           <>
             {showX2 && (
               <Button
-                className={cn("absolute bg-blue-400", secondaryButtonPosition)}
+                className={cn(
+                  "absolute bg-blue-400 text-3xl select-none",
+                  secondaryButtonPosition
+                )}
                 onClick={() => handleMultiplierClick(2)}
               >
                 x2
@@ -160,7 +178,10 @@ export const TheClicker = ({
             )}
             {showX3 && (
               <Button
-                className={cn("absolute bg-teal-500", secondaryButtonPosition)}
+                className={cn(
+                  "absolute bg-teal-500 text-3xl select-none",
+                  secondaryButtonPosition
+                )}
                 onClick={() => handleMultiplierClick(3)}
               >
                 x3
@@ -168,7 +189,10 @@ export const TheClicker = ({
             )}
             {showX5 && (
               <Button
-                className={cn("absolute bg-red-600", secondaryButtonPosition)}
+                className={cn(
+                  "absolute bg-red-600 text-3xl select-none",
+                  secondaryButtonPosition
+                )}
                 onClick={() => handleMultiplierClick(5)}
               >
                 x5
@@ -177,7 +201,7 @@ export const TheClicker = ({
             {showPlus5 && (
               <Button
                 className={cn(
-                  "absolute bg-yellow-400",
+                  "absolute bg-yellow-600 text-3xl select-none",
                   secondaryButtonPosition
                 )}
                 onClick={handleBonusClick}
@@ -188,16 +212,14 @@ export const TheClicker = ({
           </>
         )}
       </div>
-      {gameState === "finished" && (
-        <Button
-          className="p-10 m-auto mt-6 text-4xl text-white bg-green-500 rounded-full hover:bg-green-600"
-          onClick={() => {
-            onGameComplete([{ score, player }]);
-          }}
-        >
-          Complete
-        </Button>
-      )}
+      <div className="w-full mt-4">
+        <Scores
+          players={players}
+          scores={[p1Score, p2Score]}
+          turn={turn}
+          winner={winner}
+        />
+      </div>
     </div>
   );
 };

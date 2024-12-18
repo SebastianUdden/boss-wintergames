@@ -39,6 +39,27 @@ const {
 
 export const wintergames = [
   {
+    occurred: "2024-12-28",
+    title: "Boss Pirate Games",
+    coordinators: [sebbe, mattis],
+    images: [
+      "/profiles/zoomed-sebbe.jpeg",
+      "/profiles/zoomed-mattis.jpeg",
+      "/profiles/zoomed-amanda.jpeg",
+      "/profiles/zoomed-ante.jpeg",
+      "/profiles/zoomed-dennis.jpeg",
+      "/profiles/zoomed-ivar.jpeg",
+      "/profiles/zoomed-joel.jpeg",
+      "/profiles/zoomed-kling.jpeg",
+      "/profiles/zoomed-palm.jpeg",
+      "/profiles/zoomed-robban.jpeg",
+      "/profiles/zoomed-schaeran.jpeg",
+      "/profiles/zoomed-virre.jpeg",
+    ],
+    teams: [],
+    activities: [{ title: "Piratliv", description: "" }],
+  },
+  {
     occurred: "2021-12-28",
     title: "",
     coordinators: [schaeran, palmen],

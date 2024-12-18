@@ -36,9 +36,16 @@ a:hover {
   color: #ffffff99 !important;
 }
 
+.bg-img {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .bg-meat-club {
   background-image: url("/games/cards/meat-club.webp");
-  background-size: cover;
-  background-position: center; /* Centers the background image */
-  background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+.bg-fifa-rules {
+  background-image: url("/games/cards/fifa-rules.webp");
 }

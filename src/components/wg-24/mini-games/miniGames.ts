@@ -46,7 +46,7 @@ export const miniGames: IMiniGame[] = [
   {
     id: 3,
     color: "#FF3366",
-    name: "Clicker",
+    name: "Finger Walz",
     gameType: "duell",
     song: "Caravan Palace - Brotherswing",
     description: [

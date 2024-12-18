@@ -1,20 +1,14 @@
-import { Button } from "@/components/wg-24/ui/button";
 import { useState, useEffect } from "react";
-import { IScore, Score } from "../Score";
+import { Score } from "../Score";
 import { Timer } from "./Timer";
-import { IPlayer } from "../../teams/players";
 import { Winner } from "../Winner";
 import { categories } from "./categories";
 import { StartButton } from "../StartButton";
+import { IMiniGameBase } from "../MiniGame";
 
 type GameState = "ready" | "active" | "finished";
 
-interface ITheFloor {
-  players: IPlayer[][];
-  onGameComplete: (playerScores: IScore[]) => void;
-}
-
-export const TheFloor = ({ players, onGameComplete }: ITheFloor) => {
+export const TheFloor = ({ players, onGameComplete }: IMiniGameBase) => {
   const [scores, setScores] = useState([0, 0]);
   const [player1Time, setPlayer1Time] = useState(60);
   const [player2Time, setPlayer2Time] = useState(60);
@@ -73,12 +67,6 @@ export const TheFloor = ({ players, onGameComplete }: ITheFloor) => {
           setWinner(players[1][0].name);
           setGameState("finished");
           setScores([-1, 1]);
-          setTimeout(() => {
-            onGameComplete([
-              { player: players[0][0], score: -1 },
-              { player: players[1][0], score: 1 },
-            ]);
-          }, 5000);
         }
       } else {
         setPlayer2Time((prev) => Math.max(prev - 1, 0));
@@ -87,12 +75,6 @@ export const TheFloor = ({ players, onGameComplete }: ITheFloor) => {
           setWinner(players[0][0].name);
           setGameState("finished");
           setScores([1, -1]);
-          setTimeout(() => {
-            onGameComplete([
-              { player: players[0][0], score: 1 },
-              { player: players[1][0], score: -1 },
-            ]);
-          }, 5000);
         }
       }
     }, 1000);
@@ -110,13 +92,31 @@ export const TheFloor = ({ players, onGameComplete }: ITheFloor) => {
         setMessage("");
       }, 3000);
     }
-
-    // setMessage(
-    //   `${
-    //     currentPlayer === 1 ? players[0][0].name : players[1][0].name
-    //   }'s turn!`
-    // );
   }, [messageState, turn, players]);
+
+  useEffect(() => {
+    if (winner) {
+      setTimeout(() => {
+        if (winner === players[0][0].name) {
+          onGameComplete(
+            [
+              { player: players[0][0], score: 1 },
+              { player: players[1][0], score: -1 },
+            ],
+            1
+          );
+        } else {
+          onGameComplete(
+            [
+              { player: players[0][0], score: -1 },
+              { player: players[1][0], score: 1 },
+            ],
+            0
+          );
+        }
+      }, 5000);
+    }
+  }, [winner, players]);
 
   return (
     <div className="flex flex-col items-center justify-start h-full">
@@ -180,7 +180,7 @@ export const TheFloor = ({ players, onGameComplete }: ITheFloor) => {
           {players[0].length !== 0 &&
             (!winner || players[0][0].name === winner) && (
               <Score
-                player={players[0][0]}
+                players={players[0]}
                 score={scores[0]}
                 isActive={turn === 0 || players[0][0].name === winner}
               />
@@ -188,7 +188,7 @@ export const TheFloor = ({ players, onGameComplete }: ITheFloor) => {
           {players[1].length !== 0 &&
             (!winner || players[1][0].name === winner) && (
               <Score
-                player={players[1][0]}
+                players={players[1]}
                 score={scores[1]}
                 isActive={turn === 1 || players[1][0].name === winner}
                 isRight={true}

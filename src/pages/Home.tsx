@@ -16,7 +16,7 @@ const links = [
   {
     to: "/mini-game-ideas",
     label: "Mini-game ideas",
-    image: "pirate-village",
+    image: "fifa-rules",
   },
 ];
 
@@ -34,15 +34,16 @@ export const Home = () => {
       <div className="flex flex-wrap gap-6 mt-10">
         {links.map(
           ({ label, to, image }) =>
-            (label === "History" ||
-              password === "argh" ||
-              password === "pirate") && (
+            ((label === "Pirate games" &&
+              (password === "argh" || password === "pirate")) ||
+              (label === "History" && password === "history") ||
+              (label === "Mini-game ideas" && password === "idea")) && (
               <Link
                 key={label}
                 to={to}
                 className={cn(
                   "relative text-4xl text-white bg-black rounded-xl hover:text-white aspect-square flex items-center justify-center group w-full max-w-[50vh]",
-                  `bg-${image} bg-cover`
+                  `bg-img bg-${image} bg-cover`
                 )}
               >
                 <div className="w-full text-center">{label}</div>
