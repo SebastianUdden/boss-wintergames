@@ -156,15 +156,18 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
         <Plank
           ref={player1PaddleRef}
           paddleHeight={player1PaddleHeight}
+          hits={p1Hits} // Player 2's hits reduce Player 1's plank
           charges={p1Charges}
+          position="left"
         />
 
         {/* Player 2 Paddle */}
         <Plank
           ref={player2PaddleRef}
           paddleHeight={player2PaddleHeight}
-          position="right"
+          hits={p2Hits} // Player 1's hits reduce Player 2's plank
           charges={p2Charges}
+          position="right"
         />
 
         <Ball
