@@ -28,7 +28,11 @@ export const Score = ({ players, score, isActive, isRight }: IScoreProps) => (
           </p>
         ) : (
           players.map((p) => (
-            <img src={p.image} className="max-w-[10vh] border-2 border-black" />
+            <img
+              key={p.image}
+              src={p.image}
+              className="max-w-[10vh] border-2 border-black"
+            />
           ))
         )}
       </div>

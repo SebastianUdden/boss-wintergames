@@ -49,7 +49,7 @@ export const PlayerCard = ({
 
   return (
     <div
-      data-testId={name}
+      data-id={name}
       onClick={() => {
         if (phase === "captains-choice" && !isCaptain) {
           onMovePlayer(name);

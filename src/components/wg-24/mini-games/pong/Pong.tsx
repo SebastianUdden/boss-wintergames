@@ -79,6 +79,10 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
   });
 
   useEffect(() => {
+    startGame();
+  }, []);
+
+  useEffect(() => {
     if (cannonBalls.length > 0) {
       // console.log("GameBox:", gameBoxRef.current?.getBoundingClientRect());
       // console.log("CannonBalls:", cannonBalls);

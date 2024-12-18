@@ -96,7 +96,11 @@ export const Header = ({
                 phase === "transitioning-captive") && (
                 <div className="flex gap-2">
                   {chosenPlayers[0].map((cp) => (
-                    <img src={cp.image} className="w-10 h-10 rounded-full" />
+                    <img
+                      key={cp.image}
+                      src={cp.image}
+                      className="w-10 h-10 rounded-full"
+                    />
                   ))}
                 </div>
               )}
@@ -112,7 +116,11 @@ export const Header = ({
                 phase === "transitioning-captive") && (
                 <div className="flex gap-2">
                   {chosenPlayers[1].map((cp) => (
-                    <img src={cp.image} className="w-10 h-10 rounded-full" />
+                    <img
+                      key={cp.image}
+                      src={cp.image}
+                      className="w-10 h-10 rounded-full"
+                    />
                   ))}
                 </div>
               )}

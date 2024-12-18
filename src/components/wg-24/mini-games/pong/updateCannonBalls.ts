@@ -1,3 +1,5 @@
+import { log } from "../../log";
+
 export interface CannonBall {
   x: number;
   y: number;
@@ -24,23 +26,43 @@ export const updateCannonBalls = (
   const toRemove = new Set<number>();
   let hitsOnP1 = 0;
   let hitsOnP2 = 0;
+  const p1Paddle = {
+    left: player1Paddle.left - gameBox.left,
+    right: player1Paddle.right - gameBox.left,
+    top: player1Paddle.top - gameBox.top,
+    bottom: player1Paddle.bottom - gameBox.top,
+    x: player1Paddle.x - gameBox.left,
+    y: player1Paddle.y - gameBox.top,
+    height: player1Paddle.height,
+    width: player1Paddle.width,
+  };
+  const p2Paddle = {
+    left: player2Paddle.left - gameBox.left,
+    right: player2Paddle.right - gameBox.left,
+    top: player2Paddle.top - gameBox.top,
+    bottom: player2Paddle.bottom - gameBox.top,
+    x: player2Paddle.x - gameBox.left,
+    y: player2Paddle.y - gameBox.top,
+    height: player2Paddle.height,
+    width: player2Paddle.width,
+  };
 
   // Handle firing from Player 1
   if (!keys[" "] && p1Charges === 0 && p1Fired) {
     const newBall = {
-      x: player1Paddle.right - gameBox.left,
-      y: player1Paddle.top - gameBox.top + player1Paddle.height / 2,
+      x: p1Paddle.right + 12,
+      y: p1Paddle.y + p1Paddle.height / 2,
       direction: 1,
       player: 0,
     };
 
-    // Prevent immediate collision with Player 1's paddle
     if (
-      newBall.x > player1Paddle.right || // Start outside the paddle
-      newBall.y < player1Paddle.top ||
-      newBall.y > player1Paddle.bottom
+      newBall.x > p1Paddle.right || // Start outside the paddle
+      newBall.y < p1Paddle.top ||
+      newBall.y > p1Paddle.bottom
     ) {
       newBalls.push(newBall);
+      log(`Player 1 fired a cannonball at x: ${newBall.x}, y: ${newBall.y}`);
     }
 
     setP1Charges(5);
@@ -50,19 +72,21 @@ export const updateCannonBalls = (
   // Handle firing from Player 2
   if (!keys["Enter"] && p2Charges === 0 && p2Fired) {
     const newBall = {
-      x: player2Paddle.left - gameBox.left,
-      y: player2Paddle.top - gameBox.top + player2Paddle.height / 2,
+      x: p2Paddle.left - 12,
+      y: p2Paddle.y + p2Paddle.height / 2,
       direction: -1,
       player: 1,
     };
 
-    // Prevent immediate collision with Player 2's paddle
     if (
-      newBall.x < player2Paddle.left || // Start outside the paddle
-      newBall.y < player2Paddle.top ||
-      newBall.y > player2Paddle.bottom
+      newBall.x < p2Paddle.left || // Start outside the paddle
+      newBall.y < p2Paddle.top ||
+      newBall.y > p2Paddle.bottom
     ) {
       newBalls.push(newBall);
+      log(
+        `Player 2 firing cannonball from x=${newBall.x}, y=${newBall.y}, direction=${newBall.direction}`
+      );
     }
 
     setP2Charges(5);
@@ -73,29 +97,36 @@ export const updateCannonBalls = (
   for (let i = 0; i < newBalls.length; i++) {
     const ball = newBalls[i];
 
-    // Check if a cannonball hits Player 1's Plank
     if (
       ball.direction === -1 &&
-      ball.x <= player1Paddle.right &&
-      ball.y >= player1Paddle.top &&
-      ball.y <= player1Paddle.bottom
+      ball.x <= p1Paddle.right &&
+      ball.y >= p1Paddle.top &&
+      ball.y <= p1Paddle.bottom
     ) {
-      hitsOnP1++;
+      hitsOnP1 += 0.5;
       toRemove.add(i);
+      log(`Cannonball hit Player 1's plank at x: ${ball.x}, y: ${ball.y}`);
+      continue;
     }
 
-    // Check if a cannonball hits Player 2's Plank
     if (
       ball.direction === 1 &&
-      ball.x >= player2Paddle.left &&
-      ball.y >= player2Paddle.top &&
-      ball.y <= player2Paddle.bottom
+      ball.x >= p2Paddle.left &&
+      ball.y >= p2Paddle.top &&
+      ball.y <= p2Paddle.bottom
     ) {
-      hitsOnP2++;
+      hitsOnP2 += 0.5;
       toRemove.add(i);
+      log(`Cannonball hit Player 2's plank at x: ${ball.x}, y: ${ball.y}`);
+      continue;
     }
 
-    // Detect cannonball-to-cannonball collisions
+    if (ball.direction === -1) {
+      if (ball.x < p1Paddle.right) {
+        log("Passed player 1 paddle");
+      }
+    }
+
     for (let j = i + 1; j < newBalls.length; j++) {
       const otherBall = newBalls[j];
       const closeInY = Math.abs(ball.y - otherBall.y) < 10;
@@ -107,6 +138,9 @@ export const updateCannonBalls = (
       if (closeInY && movingTowardEachOther && overlappingInX) {
         toRemove.add(i);
         toRemove.add(j);
+        log(
+          `Cannonball collision detected between x: ${ball.x}, y: ${ball.y} and x: ${otherBall.x}, y: ${otherBall.y}`
+        );
       }
     }
   }
@@ -116,7 +150,7 @@ export const updateCannonBalls = (
 
   // Update positions for remaining cannonballs
   const updatedBalls = remainingBalls
-    .map((ball) => ({ ...ball, x: ball.x + ball.direction * 5 }))
+    .map((ball) => ({ ...ball, x: ball.x + ball.direction * 3 }))
     .filter((ball) => ball.x >= 0 && ball.x <= gameBox.width);
 
   return { updatedBalls, hitsOnP1, hitsOnP2 };
