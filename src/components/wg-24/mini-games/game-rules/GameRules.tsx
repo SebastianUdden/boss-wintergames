@@ -5,7 +5,7 @@ import { IScore } from "../Score";
 import { Description } from "./Description";
 import { IPlayer, players } from "@/components/wg-24/teams/players";
 import { initialTeams, ITeam } from "@/components/wg-24/teams/teams";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Phase } from "../../Layout";
 import { provideScoresOnWinner } from "../Winner";
@@ -19,6 +19,7 @@ interface IGameRules extends IMiniGame {
   teams: ITeam[];
   phase: Phase;
   players: IPlayer[][];
+  onFail: () => void;
   onGameComplete: (playerScores: IScore[], loserIndex: number) => void;
 }
 
@@ -31,6 +32,7 @@ export const GameRules = ({
   criteria,
   isAnalog,
   song,
+  onFail,
   onGameComplete,
 }: IGameRules) => {
   const [winner, setWinner] = useState("");
@@ -39,8 +41,10 @@ export const GameRules = ({
     provideScoresOnWinner({ onGameComplete, players, winner });
   }, [winner, players]);
 
+  console.log(players);
+
   return (
-    <div className="flex flex-col justify-between flex-grow">
+    <div className="flex flex-col justify-between flex-grow select-none">
       {/* Content for rendering the game details */}
       <div className="flex flex-col w-full gap-4">
         <h1>{name}</h1>
@@ -72,8 +76,7 @@ export const GameRules = ({
         )}
       </div>
 
-      {/* Logic for displaying the game UI */}
-      {phase === "playing-game" && (
+      {phase === "playing-game" && gameType === "fångar" && (
         <div className="flex items-center justify-between gap-6">
           <button
             className={cn(
@@ -81,25 +84,70 @@ export const GameRules = ({
               winner === players[0][0].name ? "ocean-blue" : "treasure-color"
               // teamIndex === 0 ? "border !border-white/10" : ""
             )}
-            onClick={() => setWinner(players[0][0].name)}
-            disabled={winner === players[1][0].name}
+            onClick={onFail}
+            disabled={winner === players[0][0].name}
           >
-            BLUE
+            FINISHED
+          </button>
+        </div>
+      )}
+      {phase === "playing-game" && players[1].length === 0 && (
+        <div className="flex items-center justify-between gap-6">
+          <button
+            className={cn(
+              "treasure completed-button !font-pirata ocean-blue",
+              winner === players[0][0].name ? "ocean-blue" : "treasure-color"
+              // teamIndex === 0 ? "border !border-white/10" : ""
+            )}
+            onClick={onFail}
+            disabled={winner === players[0][0].name}
+          >
+            FAIL
           </button>
           <h2 className="text-[2vh]">determine winner</h2>
           <button
             className={cn(
               "treasure completed-button !font-pirata",
-              winner === players[1][0].name ? "rusty-red" : "treasure-color"
+              winner === players[0][0].name ? "rusty-red" : "treasure-color"
               // teamIndex === 1 ? "border-2 !border-white/10" : ""
             )}
-            onClick={() => setWinner(players[1][0].name)}
+            onClick={() => setWinner(players[0][0].name)}
             disabled={winner === players[0][0].name}
           >
-            RED
+            SUCCEED
           </button>
         </div>
       )}
+      {/* Logic for displaying the game UI */}
+      {phase === "playing-game" &&
+        players[1].length > 0 &&
+        gameType !== "fångar" && (
+          <div className="flex items-center justify-between gap-6">
+            <button
+              className={cn(
+                "treasure completed-button !font-pirata ocean-blue",
+                winner === players[0][0].name ? "ocean-blue" : "treasure-color"
+                // teamIndex === 0 ? "border !border-white/10" : ""
+              )}
+              onClick={() => setWinner(players[0][0].name)}
+              disabled={winner === players[1][0].name}
+            >
+              BLUE
+            </button>
+            <h2 className="text-[2vh]">determine winner</h2>
+            <button
+              className={cn(
+                "treasure completed-button !font-pirata",
+                winner === players[1][0].name ? "rusty-red" : "treasure-color"
+                // teamIndex === 1 ? "border-2 !border-white/10" : ""
+              )}
+              onClick={() => setWinner(players[1][0].name)}
+              disabled={winner === players[0][0].name}
+            >
+              RED
+            </button>
+          </div>
+        )}
     </div>
   );
 };

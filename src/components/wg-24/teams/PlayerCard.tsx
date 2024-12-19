@@ -48,7 +48,7 @@ export const PlayerCard = ({
     setTimeout(() => {
       setShowScoreIsNegative(showScore < 0);
       setShowScoreIsPositive(showScore > 0);
-    }, 2000);
+    }, 1000);
   }, [showScore]);
 
   const isHighlightPhase =
@@ -57,6 +57,7 @@ export const PlayerCard = ({
     phase === "playing-game" ||
     phase === "calculating-score" ||
     phase === "selecting-captive" ||
+    phase === "animating-captive" ||
     phase === "transitioning-captive";
 
   const highlight =
@@ -90,7 +91,7 @@ export const PlayerCard = ({
         }
       }}
       className={cn(
-        "flex black-sails p-0 transition-all",
+        "flex black-sails p-0 transition-all duration-300",
         minimized && justifyStartApplied
           ? "justify-start items-center"
           : "justify-between items-center",
@@ -111,7 +112,17 @@ export const PlayerCard = ({
           isEligible &&
           !rightAligned &&
           "cursor-pointer",
-        "!max-w-[10vh] 2xl:!max-w-full"
+        "!max-w-[10vh] 2xl:!max-w-full",
+        highlight && isEligible && !isCaptain && phase === "animating-captive"
+          ? "translate-x-full opacity-0"
+          : "opacity-100",
+        rightAligned &&
+          highlight &&
+          isEligible &&
+          !isCaptain &&
+          phase === "animating-captive"
+          ? "-translate-x-full opacity-0"
+          : "opacity-100"
       )}
       style={{
         backgroundColor: highlight ? "#1e1e1eff" : "#1e1e1ebb",

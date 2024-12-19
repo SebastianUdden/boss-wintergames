@@ -5,7 +5,7 @@ import { Phase } from "../Layout";
 
 interface ISpinner {
   turn: string;
-  phase: Phase;
+  phase?: Phase;
   wheelSize: string;
   onGameSelected: (game: string) => void;
   onPhaseChange: (phase: Phase) => void;
@@ -66,13 +66,6 @@ export const Spinner = ({
     );
 
     setSlices(updatedSlices);
-
-    // Update the history with the selected slice's name and weight at the time of selection
-    // const selectedSlice = slices.slice().reverse()[index];
-    // setHistory((prevHistory) => [
-    //   ...prevHistory,
-    //   { name: selectedSlice.name, weight: selectedSlice.weight },
-    // ]);
   };
 
   useEffect(() => {

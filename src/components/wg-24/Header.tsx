@@ -22,7 +22,9 @@ interface IHeader {
   losers: IPlayer[];
   teamsTurn: number;
   previousTurns: string[];
-  setChosenPlayers: Dispatch<SetStateAction<IPlayer[]>>;
+  setChosenPlayers: Dispatch<SetStateAction<IPlayer[][]>>;
+  setDebug: Dispatch<SetStateAction<boolean>>;
+  debug: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Header = ({
@@ -40,9 +42,19 @@ export const Header = ({
   teamsTurn,
   previousTurns,
   setChosenPlayers,
+  setDebug,
+  debug,
 }: IHeader) => {
   const [showModal, setShowModal] = useState(false);
   const [showAdmin, setShowAdmin] = useStoredState(false);
+  const blueChosen =
+    chosenPlayers && chosenPlayers[0] && chosenPlayers[0].length !== 0
+      ? chosenPlayers[0]
+      : [];
+  const redChosen =
+    chosenPlayers && chosenPlayers[1] && chosenPlayers[1].length !== 0
+      ? chosenPlayers[1]
+      : [];
 
   return (
     <>
@@ -64,6 +76,8 @@ export const Header = ({
         teamsTurn={teamsTurn}
         previousTurns={previousTurns}
         setChosenPlayers={setChosenPlayers}
+        setDebug={setDebug}
+        debug={debug}
       />
       <header className="z-20 flex items-center justify-between w-full h-[5vh] px-4 font-bold text-center black-sails-bg black-sails-text">
         <div className="relative inline-block">
@@ -85,17 +99,17 @@ export const Header = ({
             Games <span className="hidden xs:inline">2024</span>
           </h1>
         </div>
-        {openGame && (
+        {openGame && phase !== "game-over" && (
           <div className="flex items-center gap-4">
-            {chosenPlayers &&
-              chosenPlayers[0] &&
+            {blueChosen &&
               (phase === "playing-game" ||
                 phase === "calculating-score" ||
                 phase === "selecting-captive" ||
                 phase === "captains-choice" ||
+                phase === "animating-captive" ||
                 phase === "transitioning-captive") && (
                 <div className="flex gap-2">
-                  {chosenPlayers[0].map((cp) => (
+                  {blueChosen.map((cp) => (
                     <img
                       key={cp.image}
                       src={cp.image}
@@ -107,15 +121,15 @@ export const Header = ({
             <h3 className="p-0 m-0">
               {openGame.name} - {openGame?.gameType}{" "}
             </h3>
-            {chosenPlayers &&
-              chosenPlayers[1] &&
+            {redChosen &&
               (phase === "playing-game" ||
                 phase === "calculating-score" ||
                 phase === "selecting-captive" ||
                 phase === "captains-choice" ||
+                phase === "animating-captive" ||
                 phase === "transitioning-captive") && (
                 <div className="flex gap-2">
-                  {chosenPlayers[1].map((cp) => (
+                  {redChosen.map((cp) => (
                     <img
                       key={cp.image}
                       src={cp.image}
@@ -126,6 +140,11 @@ export const Header = ({
               )}
           </div>
         )}
+        {phase === "game-over" && (
+          <div className="items-center gap-4 fled">
+            <h3>The Note</h3>
+          </div>
+        )}
         <div className="flex h-full m-0 font-fell">
           <Button
             data-testid="ready-state"
@@ -134,86 +153,90 @@ export const Header = ({
           >
             K<span className="hidden 2xl:inline">raken</span>
           </Button>
-          <Button
-            data-testid="ready-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("ready")}
-            disabled={phase === "ready"}
-          >
-            R<span className="hidden 2xl:inline">eady</span>
-          </Button>
-          <Button
-            data-testid="waiting-for-spin-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("waiting-for-spin")}
-            disabled={phase === "waiting-for-spin"}
-          >
-            W<span className="hidden 2xl:inline">aiting for spin</span>
-          </Button>
-          <Button
-            data-testid="spinning-wheel-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("spinning-wheel")}
-            disabled={phase === "spinning-wheel"}
-          >
-            S<span className="hidden 2xl:inline">pinning wheel</span>
-          </Button>
-          <Button
-            data-testid="explaining-game-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("explaining-game")}
-            disabled={phase === "explaining-game"}
-          >
-            E<span className="hidden 2xl:inline">xplaining game</span>
-          </Button>
-          <Button
-            data-testid="selecting-players-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("selecting-players")}
-            disabled={phase === "selecting-players"}
-          >
-            S<span className="hidden 2xl:inline">electing players</span>
-          </Button>
-          <Button
-            data-testid="playing-game-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("playing-game")}
-            disabled={phase === "playing-game"}
-          >
-            P<span className="hidden 2xl:inline">laying game</span>
-          </Button>
-          <Button
-            data-testid="calculating-score-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("calculating-score")}
-            disabled={phase === "calculating-score"}
-          >
-            C<span className="hidden 2xl:inline">alculating score</span>
-          </Button>
-          <Button
-            data-testid="selecting-captive-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("selecting-captive")}
-            disabled={phase === "selecting-captive"}
-          >
-            S<span className="hidden 2xl:inline">electing captive</span>
-          </Button>
-          <Button
-            data-testid="captains-choice-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("captains-choice")}
-            disabled={phase === "captains-choice"}
-          >
-            C<span className="hidden 2xl:inline">aptains choice</span>
-          </Button>
-          <Button
-            data-testid="transitioning-captive-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-            onClick={() => onSetPhase("transitioning-captive")}
-            disabled={phase === "transitioning-captive"}
-          >
-            M<span className="hidden 2xl:inline">oving captive</span>
-          </Button>
+          {phase !== "game-over" && (
+            <>
+              <Button
+                data-testid="ready-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("ready")}
+                disabled={phase === "ready"}
+              >
+                R<span className="hidden 2xl:inline">eady</span>
+              </Button>
+              <Button
+                data-testid="waiting-for-spin-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("waiting-for-spin")}
+                disabled={phase === "waiting-for-spin"}
+              >
+                W<span className="hidden 2xl:inline">aiting for spin</span>
+              </Button>
+              <Button
+                data-testid="spinning-wheel-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("spinning-wheel")}
+                disabled={phase === "spinning-wheel"}
+              >
+                S<span className="hidden 2xl:inline">pinning wheel</span>
+              </Button>
+              <Button
+                data-testid="explaining-game-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("explaining-game")}
+                disabled={phase === "explaining-game"}
+              >
+                E<span className="hidden 2xl:inline">xplaining game</span>
+              </Button>
+              <Button
+                data-testid="selecting-players-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("selecting-players")}
+                disabled={phase === "selecting-players"}
+              >
+                S<span className="hidden 2xl:inline">electing players</span>
+              </Button>
+              <Button
+                data-testid="playing-game-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("playing-game")}
+                disabled={phase === "playing-game"}
+              >
+                P<span className="hidden 2xl:inline">laying game</span>
+              </Button>
+              <Button
+                data-testid="calculating-score-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("calculating-score")}
+                disabled={phase === "calculating-score"}
+              >
+                C<span className="hidden 2xl:inline">alculating score</span>
+              </Button>
+              <Button
+                data-testid="selecting-captive-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("selecting-captive")}
+                disabled={phase === "selecting-captive"}
+              >
+                S<span className="hidden 2xl:inline">electing captive</span>
+              </Button>
+              <Button
+                data-testid="captains-choice-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("captains-choice")}
+                disabled={phase === "captains-choice"}
+              >
+                C<span className="hidden 2xl:inline">aptains choice</span>
+              </Button>
+              <Button
+                data-testid="transitioning-captive-state"
+                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                onClick={() => onSetPhase("transitioning-captive")}
+                disabled={phase === "transitioning-captive"}
+              >
+                M<span className="hidden 2xl:inline">oving captive</span>
+              </Button>
+            </>
+          )}
         </div>
       </header>
     </>

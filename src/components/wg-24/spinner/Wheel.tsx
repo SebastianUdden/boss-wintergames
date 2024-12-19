@@ -179,6 +179,9 @@ export const Wheel = ({
 
           setIsSpinning(false);
           setShowSelected(true);
+          setTimeout(() => {
+            setShowSelected(false);
+          }, 500);
         }
       };
 
@@ -393,7 +396,7 @@ export const Wheel = ({
                       x={textX + (sliceTranslations[index]?.x || 0)}
                       y={textY + (sliceTranslations[index]?.y || 0)}
                       fill={showPulse ? "#ff0000" : "#fff"} // Main text color
-                      fontSize={sliceRadius * 0.08}
+                      fontSize={sliceRadius * 0.07}
                       fontWeight="bold"
                       textAnchor="middle"
                       alignmentBaseline="middle"
@@ -444,31 +447,3 @@ export const Wheel = ({
     </div>
   );
 };
-
-{
-  /* Indicator */
-}
-{
-  /* <div
-  style={{
-    position: "absolute",
-    top: "-65px", // Adjust to position the tip overlapping the wheel
-    left: "49%",
-    transform: "translateX(-50%)",
-    overflow: "visible",
-    zIndex: 1, // Ensure the indicator appears above the wheel
-  }}
->
-  <img
-    src="/backgrounds/wheel/wheel-indicator-6.png"
-    style={{
-      width: "9vh",
-      height: "9vh",
-      transformOrigin: "50% 0%",
-      transform: `rotate(-${rotationAmount}deg)`, // Use dynamic rotation based on speed
-      transition: `transform ${Math.max(100, tickDuration)}ms ease-in-out`, // Smooth transition based on tickDuration
-      filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.5))",
-    }}
-  />
-</div> */
-}

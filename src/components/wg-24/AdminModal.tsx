@@ -49,6 +49,8 @@ interface IModal {
   teamsTurn: number;
   previousTurns: string[];
   setChosenPlayers: Dispatch<SetStateAction<IPlayer[][]>>;
+  setDebug: Dispatch<SetStateAction<boolean>>;
+  debug: boolean;
 }
 
 export const AdminModal = ({
@@ -68,6 +70,8 @@ export const AdminModal = ({
   teamsTurn,
   previousTurns,
   setChosenPlayers,
+  setDebug,
+  debug,
 }: IModal) => {
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState("jones");
@@ -92,6 +96,10 @@ export const AdminModal = ({
   };
   const handleClearPrefixAndClose = () => {
     clearPrefixedStored();
+    handleOpenChange(false);
+  };
+  const handleDebugModeAndClose = () => {
+    setDebug(!debug);
     handleOpenChange(false);
   };
 
@@ -345,6 +353,16 @@ export const AdminModal = ({
               onClick={handleClearPrefixAndClose}
             >
               Reset - A new dawn rises...
+            </button>
+          )}
+          {password === "jones" && (
+            <button
+              className="w-full treasure-color font-pirata"
+              onClick={handleDebugModeAndClose}
+            >
+              {debug
+                ? "Close debug - Let there be light!"
+                : "Debug - Stare into the abyss"}
             </button>
           )}
           <button

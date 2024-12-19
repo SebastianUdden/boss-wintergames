@@ -10,7 +10,6 @@ export const BallChainIcon = ({
   <img
     className={cn("absolute z-40", rightAligned ? "scale-x-[-1]" : "")}
     style={{
-      height: `${size}vh`,
       width: "50px",
       height: "50px",
       top: "25%",
@@ -50,11 +49,8 @@ export const CutlassIcon = ({
       rightAligned ? "scale-y-[-1]" : ""
     )}
     style={{
-      height: `${size}vh`,
-      maxHeight: `${size / 4}vh`,
-      maxWidth: `${size / 4}vh`,
-      minWidth: "90px",
-      minHeight: "90px",
+      width: "90px",
+      height: "90px",
       top: "-14%",
       left: rightAligned ? "-12%" : "7%",
     }}

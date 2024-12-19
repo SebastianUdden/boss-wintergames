@@ -19,7 +19,6 @@ export const provideScoresOnWinner = ({
   winner,
   players,
 }: IProvideScoresOnWinner) => {
-  console.log({ winner });
   if (winner) {
     setTimeout(() => {
       if (winner === players[0][0].name) {

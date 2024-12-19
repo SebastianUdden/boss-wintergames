@@ -14,7 +14,18 @@ import { Pong } from "./pong/Pong";
 import { miniGames } from "./miniGames";
 
 const analogGames = miniGames.filter((minigame) => minigame.isAnalog);
-
+const filterCaptainsCall = (
+  players: IPlayer[][],
+  teams: ITeam[],
+  name?: string
+) => {
+  if (name && name !== "Captain's Call") return players;
+  if (teams[0].players.length < teams[1].players.length) {
+    return [teams[0].players.find((p) => p.isCaptain)];
+  } else {
+    return [teams[1].players.find((p) => p.isCaptain)];
+  }
+};
 export const getRandomPlayer = (array: IPlayer[]) => {
   const randomIndex = Math.floor(Math.random() * array.length);
   return array[randomIndex];
@@ -29,7 +40,7 @@ export interface IMiniGame {
   id: number;
   color: string;
   name: string;
-  gameType: "solo" | "duell" | "2v2" | "lagkamp";
+  gameType: "solo" | "duell" | "2v2" | "lagkamp" | "fångar";
   concept?: string;
   instructions?: string[];
   description?: string[];
@@ -49,6 +60,7 @@ export interface MiniGameProps {
   chosenPlayers: IPlayer[][];
   phase: Phase;
   showSelector: boolean;
+  onFail: () => void;
   onGameComplete: (playerScores: IScore[], loserIndex: number) => void;
   onSelectGame: (index: number) => void;
 }
@@ -59,10 +71,12 @@ export const MiniGame = ({
   chosenPlayers,
   phase,
   showSelector,
+  onFail,
   onGameComplete,
   onSelectGame,
 }: MiniGameProps) => {
   const { name } = miniGame ?? {};
+  // const players = filterCaptainsCall(chosenPlayers, teams, name);
   const handleSelectGame = (index: number) => {
     onSelectGame(index);
   };
@@ -104,6 +118,7 @@ export const MiniGame = ({
                   players={chosenPlayers}
                   {...miniGame}
                   phase={phase}
+                  onFail={onFail}
                   onGameComplete={onGameComplete}
                 />
               </div>
@@ -112,6 +127,8 @@ export const MiniGame = ({
           ))}
       {phase === "playing-game" &&
         chosenPlayers.length !== 0 &&
+        chosenPlayers[0].length !== 0 &&
+        chosenPlayers[1].length !== 0 &&
         !analogGames.some((game) => game.name === name) && (
           <div className="w-full p-10 bg-black rounded-xl">
             {name === "Kraken's Recall" && (

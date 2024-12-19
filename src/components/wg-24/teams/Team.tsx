@@ -6,6 +6,7 @@ import { IPlayer } from "./players";
 import { Phase } from "../Layout";
 
 const sortByScore = (a: IPlayer, b: IPlayer) => {
+  if (a.isCaptain) return -1;
   if (!a.wins || !b.wins) return 0;
   if (a.wins > b.wins) return -1;
   if (a.wins < b.wins) return 1;
@@ -28,7 +29,6 @@ export const Team = ({
   rightAligned,
   highlightedPlayers,
   phase,
-  isUnOpposed,
   losingTeam,
   onMovePlayer,
 }: TeamProps) => {
@@ -50,7 +50,6 @@ export const Team = ({
 
   const calculateWidth = () => {
     if (minimized) return `calc(${cardSize}vh + 1px)`;
-    if (isUnOpposed) return "98vw";
     return "calc(50vw - 2rem)";
   };
 
@@ -102,7 +101,10 @@ export const Team = ({
               (hp) => hp !== null && hp.name === player.name
             )
           }
-          isEligible={phase === "captains-choice" && name === losingTeam} // Check eligibility
+          isEligible={
+            (phase === "captains-choice" || phase === "animating-captive") &&
+            name === losingTeam
+          } // Check eligibility
           phase={phase}
           playerCount={players.length}
           justifyStartApplied={justifyStartApplied}

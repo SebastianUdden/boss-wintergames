@@ -81,6 +81,7 @@ export type Phase =
   | "calculating-score"
   | "selecting-captive"
   | "captains-choice"
+  | "animating-captive"
   | "transitioning-captive"
   | "transition-from-game"
   | "transition-game-over"
@@ -89,6 +90,7 @@ export type Phase =
 const Layout = () => {
   const playerMoved = useRef(false);
   const [showSelector, setShowSelector] = useState(false);
+  const [debug, setDebug] = useState(false);
   const [phase, setPhase] = useStoredState<Phase>("phase", "ready");
   const [teams, setTeams] = useStoredState<ITeam[]>("teams", initialTeams);
   const [losers, setLosers] = useStoredState<IPlayer[]>("losers", []);
@@ -122,7 +124,19 @@ const Layout = () => {
 
   const handleOpenGame = (name: string) => {
     const nextGame = miniGames.find((g) => g.name === name) ?? miniGames[0];
-    setChosenPlayers(getRandomPlayersForGame(teams, nextGame.gameType));
+    if (nextGame.name === "Captain's Call") {
+      console.log("1");
+      if (teams[0].players.length < teams[1].players.length) {
+        console.log("2");
+        setChosenPlayers([teams[0].players.filter((p) => p.isCaptain), []]);
+      } else {
+        console.log("3");
+        setChosenPlayers([[], teams[1].players.filter((p) => p.isCaptain)]);
+      }
+    } else {
+      console.log("4");
+      setChosenPlayers(getRandomPlayersForGame(teams, nextGame.gameType));
+    }
     setOpenGame(nextGame);
   };
 
@@ -130,8 +144,8 @@ const Layout = () => {
     if (losers.length === 0 && teams[losingTeamIndex].players.length > 1) {
       setPhase("captains-choice");
       return;
-    } else if (teams[losingTeamIndex].players.length > 1) {
-      setPhase("game-over");
+    } else if (teams[losingTeamIndex].players.length < 1) {
+      setPhase("transition-from-game");
       return;
     }
 
@@ -149,8 +163,11 @@ const Layout = () => {
       if (currentStep > totalSteps) {
         clearInterval(interval);
         setTimeout(() => {
+          setPhase("animating-captive"); // Transition to the next phase or handle captive selection here
+        }, 1000);
+        setTimeout(() => {
           setPhase("transitioning-captive"); // Transition to the next phase or handle captive selection here
-        }, 2000);
+        }, 1300);
       }
     }, 200);
   }, [losers, setPhase]);
@@ -228,6 +245,7 @@ const Layout = () => {
   }, [teams, chosenPlayers]);
 
   const handleMovePlayer = useCallback(() => {
+    const onePlayerLeft = highlightedPlayers?.length <= 1;
     setTeams((prevTeams) => {
       if (playerMoved.current || losingTeamIndex === undefined)
         return prevTeams; // Prevent re-running
@@ -235,23 +253,21 @@ const Layout = () => {
 
       // Use the losingTeamIndex to identify the losing team
       const opposingTeamIndex = losingTeamIndex === 0 ? 1 : 0;
-      const elligiblePlayers =
-        highlightedPlayers?.length === 1
-          ? highlightedPlayers
-          : highlightedPlayers?.filter((hp) => !hp.isCaptain);
-
+      const elligiblePlayers = onePlayerLeft
+        ? highlightedPlayers
+        : highlightedPlayers?.filter((hp) => !hp.isCaptain);
       // Find the player to move from the losing team
       const playerToMove = elligiblePlayers[0]
         ? updatedTeams[losingTeamIndex].players.find(
             (p) => p.name === elligiblePlayers[0].name
           )
         : undefined;
-
       if (!playerToMove) {
-        if (elligiblePlayers?.length === 0) {
+        if (teams[losingTeamIndex].players.length === 1) {
           setTimeout(() => {
             setPhase("transition-from-game");
           }, 500);
+        } else {
           setPhase("ready");
         }
         return prevTeams;
@@ -265,7 +281,7 @@ const Layout = () => {
       // Add the player to the opposing team
       updatedTeams[opposingTeamIndex].players = [
         ...updatedTeams[opposingTeamIndex].players,
-        { ...playerToMove, isCaptive: true },
+        { ...playerToMove, isCaptive: !playerToMove.isCaptive },
       ];
 
       // Mark player as moved
@@ -275,7 +291,15 @@ const Layout = () => {
 
     // Reset the highlighted player and phase after moving
     setTimeout(() => {
-      if (phase !== "game-over") {
+      if (
+        phase !== "game-over" &&
+        phase !== "animating-captive" &&
+        phase !== "transition-from-game" &&
+        phase !== "transition-game-over"
+      ) {
+        setPhase("ready");
+      }
+      if (phase === "transitioning-captive") {
         setPhase("ready");
       }
       playerMoved.current = false; // Reset the playerMoved flag
@@ -297,6 +321,7 @@ const Layout = () => {
       phase !== "showing-combatants" &&
       phase !== "calculating-score" &&
       phase !== "selecting-captive" &&
+      phase !== "animating-captive" &&
       phase !== "transitioning-captive";
     setTeams(teams.map((team) => ({ ...team, minimized })));
     if (phase === "selecting-players") {
@@ -313,7 +338,7 @@ const Layout = () => {
     if (phase === "selecting-captive") {
       handleSelectNextLoser();
     }
-    if (phase === "transitioning-captive" && highlightedPlayers) {
+    if (phase === "transitioning-captive") {
       handleMovePlayer();
     }
     if (phase !== "selecting-captive" && phase !== "selecting-players") {
@@ -335,6 +360,15 @@ const Layout = () => {
       setChosenPlayers([]);
       setHighlightedPlayers([]);
     }
+    if (
+      phase === "spinning-wheel" ||
+      phase === "transition-from-spinning" ||
+      phase === "waiting-for-spin" ||
+      phase === "explaining-game" ||
+      phase === "transition-to-game"
+    ) {
+      setHighlightedPlayers([]);
+    }
   }, [phase]);
 
   useEffect(() => {
@@ -343,13 +377,17 @@ const Layout = () => {
       return shuffled.slice(0, count); // Return the required number of players
     };
 
-    if (teams) {
+    if (teams && openGame?.name !== "Captain's Call") {
       if (openGame?.gameType === "duell") {
         setChosenPlayers(teams.map((t) => getRandomPlayers(t.players, 1)));
       } else if (openGame?.gameType === "2v2") {
         setChosenPlayers(teams.map((t) => getRandomPlayers(t.players, 2)));
       } else if (openGame?.gameType === "lagkamp") {
         setChosenPlayers(teams.map((t) => t.players));
+      } else if (openGame?.gameType === "fångar") {
+        setChosenPlayers(
+          teams.map((t) => t.players.filter((p) => p.isCaptive))
+        );
       } else if (openGame?.gameType === "solo") {
         setChosenPlayers([
           [getRandomPlayers(teams[teamsTurn].players, 1)[0]], // Random 1 player from team 0
@@ -359,7 +397,9 @@ const Layout = () => {
     }
   }, [openGame]);
 
-  console.log({ teams });
+  useEffect(() => {
+    console.log(chosenPlayers);
+  }, [chosenPlayers]);
 
   return (
     <div className="min-w-full min-h-screen shipwrecked h-[100vh]">
@@ -381,8 +421,30 @@ const Layout = () => {
         teamsTurn={teamsTurn}
         previousTurns={previousTurns}
         setChosenPlayers={setChosenPlayers}
+        setDebug={setDebug}
+        debug={debug}
       />
       <main className="z-10" style={{ overflow: "hidden" }}>
+        {debug && (
+          <>
+            <p>
+              <span className="text-orange-400">Phase:</span> {phase}
+            </p>
+            <p>
+              <span className="text-orange-400">Game:</span> {openGame?.name}
+            </p>
+            <p>
+              <span className="text-orange-400">ChosenPlayers:</span>{" "}
+              {chosenPlayers
+                ?.map((t) => t.map((p) => p.name).join(", "))
+                .join(" - ")}
+            </p>
+            <p>
+              <span className="text-orange-400">Highlighted players:</span>{" "}
+              {highlightedPlayers?.map((p) => p.name).join(", ")}
+            </p>
+          </>
+        )}
         <div className="overflow-y-hidden bg-center bg-cover bg-pirate-village h-[100vh]">
           {/* Background tint overlay */}
           <div className="absolute inset-0 z-0 bg-black bg-opacity-50 pointer-events-none top-[5vh]"></div>
@@ -409,14 +471,15 @@ const Layout = () => {
                     losingTeam={losingTeamName}
                     highlightedPlayers={highlightedPlayers}
                     phase={phase}
-                    isUnOpposed={teams[1].players.length === 0}
                     onMovePlayer={(player) => {
+                      console.log({ player });
+                      console.log(teams[0]);
                       setHighlightedPlayers([
                         teams[0].players.find(
                           (p) => p.name === player
                         ) as IPlayer,
                       ]);
-                      handleMovePlayer();
+                      setPhase("transitioning-captive");
                     }}
                   />
                 )}
@@ -439,17 +502,15 @@ const Layout = () => {
                     miniGame={openGame}
                     chosenPlayers={chosenPlayers}
                     showSelector={showSelector}
+                    onFail={() => setPhase("ready")}
                     onSelectGame={(index) => {
                       setShowSelector(false);
                       setOpenGame(undefined);
                       setTimeout(() => {
-                        setOpenGame(miniGames[index]);
+                        handleOpenGame(miniGames[index].name);
                       }, 100);
                     }}
                     onGameComplete={(playerScores, loserIndex) => {
-                      console.log({ playerScores });
-                      console.log({ loserIndex });
-
                       // Filter out player scores where the score is 0, as they do not affect the outcome
                       const filteredPlayerScores = playerScores.filter(
                         (ps) => ps.score !== 0
@@ -457,19 +518,21 @@ const Layout = () => {
 
                       // Identify new losers: players whose teams scored negative and are not captains in the current teams
                       const newLosers = playerScores
-                        .filter(
-                          (ps) =>
-                            ps.score < 0 && // Check for negative score
-                            !teams.some((team) =>
-                              team.players.some(
-                                (p) =>
-                                  p.isCaptain &&
-                                  ps.players.some((x) => x.name === p.name)
+                        .filter((ps) => ps.score < 0) // Keep only negative scores
+                        .flatMap((ps) =>
+                          ps.players.filter(
+                            (player) =>
+                              !teams.some((team) =>
+                                team.players.some(
+                                  (teamPlayer) =>
+                                    teamPlayer.isCaptain &&
+                                    teamPlayer.name === player.name
+                                )
                               )
-                            )
-                        )
-                        .flatMap((p) => p.players); // Extract players from filtered scores
-
+                          )
+                        );
+                      console.log({ teams });
+                      console.log({ newLosers });
                       // Set the game phase to calculating score
                       setPhase("calculating-score");
 
@@ -544,14 +607,16 @@ const Layout = () => {
                       : "hidden"
                   )}
                 >
-                  <Spinner
-                    // turn={highlightedPlayers[0].name}
-                    turn="ivar"
-                    onGameSelected={handleOpenGame}
-                    onPhaseChange={(p) => setPhase(p)}
-                    phase={phase}
-                    wheelSize="55vh"
-                  />
+                  {phase !== "ready" && (
+                    <Spinner
+                      // turn={highlightedPlayers[0].name}
+                      turn="ivar"
+                      onGameSelected={handleOpenGame}
+                      onPhaseChange={(p) => setPhase(p)}
+                      phase={phase}
+                      wheelSize="55vh"
+                    />
+                  )}
                 </div>
                 {teams[1].players.length > 0 && (
                   <Team
@@ -559,8 +624,9 @@ const Layout = () => {
                     losingTeam={losingTeamName}
                     highlightedPlayers={highlightedPlayers}
                     phase={phase}
-                    isUnOpposed={teams[0].players.length === 0}
                     onMovePlayer={(player) => {
+                      console.log({ player });
+                      console.log(teams[1]);
                       setHighlightedPlayers([
                         teams[1].players.find(
                           (p) => p.name === player
