@@ -11,10 +11,8 @@ export const BallChainIcon = ({
     className={cn("absolute z-40", rightAligned ? "scale-x-[-1]" : "")}
     style={{
       height: `${size}vh`,
-      maxHeight: `${size / 8}vh`,
-      maxWidth: `${size / 8}vh`,
-      minWidth: "50px",
-      minHeight: "50px",
+      width: "50px",
+      height: "50px",
       top: "25%",
     }}
     src="/leaderboard/ball-chain.png"
@@ -22,7 +20,6 @@ export const BallChainIcon = ({
 );
 
 export const CaptainIcon = ({
-  size,
   rightAligned,
 }: {
   size: number;
@@ -31,11 +28,8 @@ export const CaptainIcon = ({
   <img
     className={cn("absolute z-10", rightAligned ? "scale-x-[-1]" : "")}
     style={{
-      height: `${size}vh`,
-      maxHeight: `${size / 8}vh`,
-      maxWidth: `${size / 8}vh`,
-      minWidth: "50px",
-      minHeight: "50px",
+      width: "50px",
+      height: "50px",
       top: "20%",
       right: rightAligned ? "25%" : "15%",
     }}

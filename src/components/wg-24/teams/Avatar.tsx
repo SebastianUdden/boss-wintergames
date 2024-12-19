@@ -27,7 +27,8 @@ export const Avatar = ({ name, image, size, highlighted, phase }: IAvatar) => {
         <img
           className={cn(
             "object-cover aspect-square transition-transform origin-center",
-            phase === "showing-combatants" && highlighted
+            (phase === "showing-combatants" || phase === "captains-choice") &&
+              highlighted
               ? "scale-[1.8]"
               : "scale-100" // Scale on highlight
           )}

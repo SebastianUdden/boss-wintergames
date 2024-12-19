@@ -16,6 +16,7 @@ interface TeamProps extends ITeam {
   isUnOpposed: boolean;
   highlightedPlayers: IPlayer[];
   phase: Phase;
+  losingTeam: string; // New prop to identify the losing team
   onMovePlayer: (name: string) => void;
 }
 
@@ -28,6 +29,7 @@ export const Team = ({
   highlightedPlayers,
   phase,
   isUnOpposed,
+  losingTeam,
   onMovePlayer,
 }: TeamProps) => {
   const [justifyStartApplied, setJustifyStartApplied] = useState(false);
@@ -86,13 +88,21 @@ export const Team = ({
           Vinster/Förluster
         </strong>
       </h3>
-      {sortedPlayers.map((player, index) => (
+      {sortedPlayers?.map((player, index) => (
         <PlayerCard
           key={index}
           {...player}
           minimized={minimized}
           rightAligned={rightAligned}
-          highlighted={highlightedPlayers.some((hp) => hp.name === player.name)}
+          highlighted={
+            player &&
+            highlightedPlayers &&
+            highlightedPlayers.length !== 0 &&
+            highlightedPlayers?.some(
+              (hp) => hp !== null && hp.name === player.name
+            )
+          }
+          isEligible={phase === "captains-choice" && name === losingTeam} // Check eligibility
           phase={phase}
           playerCount={players.length}
           justifyStartApplied={justifyStartApplied}

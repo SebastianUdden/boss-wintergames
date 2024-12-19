@@ -12,9 +12,9 @@ interface IPlayerCard extends IPlayer {
   minimized: boolean;
   playerCount: number;
   justifyStartApplied: boolean;
+  isEligible: boolean; // New prop
   onMovePlayer: (name: string) => void;
 }
-
 export const PlayerCard = ({
   name,
   image,
@@ -29,12 +29,15 @@ export const PlayerCard = ({
   losses,
   showScore,
   justifyStartApplied,
+  isEligible,
   onMovePlayer,
 }: IPlayerCard) => {
   const size = 75 / playerCount;
 
   const [showScoreIsPositive, setShowScoreIsPositive] = useState(false);
   const [showScoreIsNegative, setShowScoreIsNegative] = useState(false);
+  const [captainsChoice, setCaptainsChoice] = useState<string | null>(null); // Track hovered card
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null); // Track hovered card
 
   useEffect(() => {
     if (!showScore) {
@@ -55,7 +58,12 @@ export const PlayerCard = ({
     phase === "calculating-score" ||
     phase === "selecting-captive" ||
     phase === "transitioning-captive";
-  const highlight = isHighlightPhase && highlighted;
+
+  const highlight =
+    phase === "captains-choice"
+      ? isCaptain || hoveredCard === name // Captain always highlighted
+      : isHighlightPhase && highlighted;
+
   const shouldShowBallChain =
     isCaptive && (!highlighted || phase !== "playing-game");
   const shouldShowCaptainIcon =
@@ -65,9 +73,20 @@ export const PlayerCard = ({
   return (
     <div
       data-id={name}
+      onMouseEnter={() => {
+        if (phase === "captains-choice" && isEligible && !isCaptain) {
+          setHoveredCard(name); // Highlight only eligible cards
+        }
+      }}
+      onMouseLeave={() => {
+        if (phase === "captains-choice" && !captainsChoice && !isCaptain) {
+          setHoveredCard(null); // Reset hover state
+        }
+      }}
       onClick={() => {
-        if (phase === "captains-choice" && !isCaptain) {
-          onMovePlayer(name);
+        if (phase === "captains-choice" && isEligible && !isCaptain) {
+          setCaptainsChoice(name);
+          onMovePlayer(name); // Allow move only if eligible
         }
       }}
       className={cn(
@@ -85,13 +104,13 @@ export const PlayerCard = ({
         !minimized && rightAligned ? "pl-[1vh]" : "",
         !minimized && !rightAligned ? "pr-[1vh]" : "",
         phase === "captains-choice" &&
-          !isCaptain &&
+          isEligible &&
           rightAligned &&
-          "cursor-pointer hover:border-r-white hover:border-r-8",
+          "cursor-pointer",
         phase === "captains-choice" &&
-          !isCaptain &&
+          isEligible &&
           !rightAligned &&
-          "cursor-pointer hover:border-l-white hover:border-l-8",
+          "cursor-pointer",
         "!max-w-[10vh] 2xl:!max-w-full"
       )}
       style={{
@@ -111,7 +130,11 @@ export const PlayerCard = ({
           image={image}
           size={size}
           score={0}
-          highlighted={highlighted || !isHighlightPhase}
+          highlighted={
+            phase === "captains-choice"
+              ? hoveredCard === name || (isCaptain && isEligible)
+              : highlighted
+          }
           phase={phase}
         />
         {!minimized && (
@@ -128,7 +151,7 @@ export const PlayerCard = ({
               {(isCaptain ||
                 isCaptive ||
                 (highlighted && phase === "showing-combatants")) && (
-                <div className="relative z-40 bg-black aged-scroll-border rounded-full w-[7vh] h-[7vh] flex justify-center items-center">
+                <div className="relative z-40 bg-black aged-scroll-border rounded-full w-[7vh] h-[7vh] justify-center items-center hidden 2xl:flex">
                   {highlighted && isHighlightPhase && (
                     <>
                       {isCaptive && (

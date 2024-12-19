@@ -29,6 +29,7 @@ const phases = [
   "selecting-captive",
   "captains-choice",
   "transitioning-captive",
+  "game-over",
 ];
 
 interface IModal {

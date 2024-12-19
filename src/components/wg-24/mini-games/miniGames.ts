@@ -145,7 +145,7 @@ export const miniGames: IMiniGame[] = [
     id: 10,
     color: "#00FF00",
     name: "Pirate's Pint",
-    gameType: "lagkamp",
+    gameType: "duell",
     song: "The Sandsacks - Beer Beer Beer",
     description: [
       "Töm din bägare med öl snabbare än en pirat kan hissa segel!",
