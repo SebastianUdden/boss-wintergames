@@ -3,6 +3,7 @@ import { Avatar } from "./Avatar";
 import { IPlayer } from "./players";
 import { useEffect, useState } from "react";
 import { Phase } from "../Layout";
+import { BallChainIcon, CaptainIcon, CutlassIcon } from "./CardIcons";
 
 interface IPlayerCard extends IPlayer {
   highlighted: boolean;
@@ -30,15 +31,6 @@ export const PlayerCard = ({
   justifyStartApplied,
   onMovePlayer,
 }: IPlayerCard) => {
-  const isHighlightPhase =
-    phase === "selecting-players" ||
-    phase === "showing-combatants" ||
-    phase === "playing-game" ||
-    phase === "calculating-score" ||
-    phase === "selecting-captive" ||
-    phase === "transitioning-captive";
-  const highlight = isHighlightPhase && highlighted;
-
   const size = 75 / playerCount;
 
   const [showScoreIsPositive, setShowScoreIsPositive] = useState(false);
@@ -55,6 +47,20 @@ export const PlayerCard = ({
       setShowScoreIsPositive(showScore > 0);
     }, 2000);
   }, [showScore]);
+
+  const isHighlightPhase =
+    phase === "selecting-players" ||
+    phase === "showing-combatants" ||
+    phase === "playing-game" ||
+    phase === "calculating-score" ||
+    phase === "selecting-captive" ||
+    phase === "transitioning-captive";
+  const highlight = isHighlightPhase && highlighted;
+  const shouldShowBallChain =
+    isCaptive && (!highlighted || phase !== "playing-game");
+  const shouldShowCaptainIcon =
+    isCaptain && (!highlighted || phase !== "playing-game");
+  const shouldShowCutlassIcon = highlighted && phase === "showing-combatants";
 
   return (
     <div
@@ -120,109 +126,29 @@ export const PlayerCard = ({
           {(isCaptain ||
             isCaptive ||
             (highlighted && phase === "showing-combatants")) && (
-            <div
-              className={cn(
-                "relative z-40 bg-black aged-scroll-border rounded-full w-[7vh] h-[7vh] flex justify-center items-center"
-              )}
-            >
-              {highlighted &&
-                (phase === "selecting-players" ||
-                  phase === "playing-game" ||
-                  phase === "showing-combatants") && (
-                  <>
-                    {isCaptive && (
-                      <img
-                        className={cn(
-                          "absolute z-40",
-                          rightAligned ? "scale-y-[-1]" : ""
-                        )}
-                        style={{
-                          height: `${size}vh`,
-                          maxHeight: `${size / 8}vh`,
-                          maxWidth: `${size / 8}vh`,
-                          minWidth: "50px",
-                          minHeight: "50px",
-                          top: "25%",
-                        }}
-                        src="/leaderboard/ball-chain.png"
-                      />
-                    )}
-                    {isCaptain && (
-                      <img
-                        className={cn(
-                          "absolute z-10",
-                          rightAligned ? "scale-x-[-1]" : ""
-                        )}
-                        style={{
-                          height: `${size}vh`,
-                          maxHeight: `${size / 8}vh`,
-                          maxWidth: `${size / 8}vh`,
-                          minWidth: "50px",
-                          minHeight: "50px",
-                          right: rightAligned ? "25%" : "15%",
-                        }}
-                        src="/leaderboard/captain.png"
-                      />
-                    )}
-                    {phase === "showing-combatants" && (
-                      <img
-                        className={cn(
-                          "absolute -rotate-90 z-10",
-                          rightAligned ? "scale-y-[-1]" : ""
-                        )}
-                        style={{
-                          height: `${size}vh`,
-                          maxHeight: `${size / 4}vh`,
-                          maxWidth: `${size / 4}vh`,
-                          minWidth: "90px",
-                          minHeight: "90px",
-                          top: "-14%",
-                          left: rightAligned ? "-12%" : "7%",
-                        }}
-                        src="/leaderboard/cutlass.png"
-                      />
-                    )}
-                  </>
-                )}
-              {isCaptive && !highlighted && phase !== "playing-game" && (
-                <img
-                  className={cn(
-                    "absolute w-[10vh] h-[10vh] z-40",
-                    rightAligned ? "scale-x-[-1]" : ""
+            <div className="relative z-40 bg-black aged-scroll-border rounded-full w-[7vh] h-[7vh] flex justify-center items-center">
+              {highlighted && isHighlightPhase && (
+                <>
+                  {isCaptive && (
+                    <BallChainIcon size={size} rightAligned={rightAligned} />
                   )}
-                  style={{
-                    height: `${size}vh`,
-                    maxHeight: `${size / 8}vh`,
-                    maxWidth: `${size / 8}vh`,
-                    minWidth: "50px",
-                    minHeight: "50px",
-                    top: "25%",
-                  }}
-                  src="/leaderboard/ball-chain.png"
-                />
-              )}
-              {isCaptain && !highlighted && phase !== "playing-game" && (
-                <img
-                  className={cn(
-                    "absolute w-[10vh] h-[10vh]",
-                    rightAligned ? "scale-x-[-1]" : ""
+                  {isCaptain && (
+                    <CaptainIcon size={size} rightAligned={rightAligned} />
                   )}
-                  style={{
-                    height: `${size}vh`,
-                    maxHeight: `${size / 8}vh`,
-                    maxWidth: `${size / 8}vh`,
-                    minWidth: "50px",
-                    minHeight: "50px",
-                    top: "20%",
-                    right: rightAligned ? "25%" : "15%",
-                  }}
-                  src="/leaderboard/captain.png"
-                />
+                  {shouldShowCutlassIcon && (
+                    <CutlassIcon size={size} rightAligned={rightAligned} />
+                  )}
+                </>
+              )}
+              {shouldShowBallChain && (
+                <BallChainIcon size={size} rightAligned={rightAligned} />
+              )}
+              {shouldShowCaptainIcon && (
+                <CaptainIcon size={size} rightAligned={rightAligned} />
               )}
             </div>
           )}
         </div>
-
         <span
           className={cn(
             "absolute inline p-2 italic text-white bg-black/70 text-sm bottom-0 2xl:hidden",

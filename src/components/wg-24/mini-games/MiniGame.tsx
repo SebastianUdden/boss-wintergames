@@ -147,36 +147,9 @@ export const MiniGame = ({
           </div>
         )}
 
-      {/* {name === "Boss, Bad, Ugly" && (
-        <QuickDraw
-          players={playerSetup.threeWay}
-          onGameComplete={onGameComplete}
-        />
-      )}
-    
-      {name === "The clicker" && (
-        <TheClicker player={playerSetup.solo} onGameComplete={onGameComplete} />
-      )}
-      {name === "Maze" && (
-        <MazeRunner player={playerSetup.solo} onGameComplete={onGameComplete} />
-      )}
-      {name === "Jumper" && (
-        <SideScroller
-          player={playerSetup.solo}
-          onGameComplete={onGameComplete}
-        />
-      )}
-      {name === "Cards" && (
-        <CardsGame player={playerSetup.solo} onGameComplete={onGameComplete} />
-      )} */}
       {/* {name === "Shipwreck" && (
         <ShipwreckGame
-          players={[
-            playerSetup.p1,
-            playerSetup.p2,
-            playerSetup.p3,
-            playerSetup.p4,
-          ]}
+          players={chosenPlayers}
           onGameComplete={onGameComplete}
         />
       )} */}

@@ -1,12 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Spinner } from "./spinner/Spinner";
 import { miniGames } from "./mini-games/miniGames";
-import {
-  getPlayerSetup,
-  getRandomPlayer,
-  IMiniGame,
-  MiniGame,
-} from "./mini-games/MiniGame";
+import { getRandomPlayer, IMiniGame, MiniGame } from "./mini-games/MiniGame";
 import { cn } from "@/lib/utils";
 import { Team } from "./teams/Team";
 import { initialTeams, ITeam } from "./teams/teams";
@@ -265,8 +260,6 @@ const Layout = () => {
     }, 3000);
   }, [highlightedPlayers, losingTeamIndex]);
 
-  const playerSetup = getPlayerSetup(turn ?? "", teamsTurn, teams);
-
   useEffect(() => {
     const teamPlayers =
       teams[teamsTurn].players.length > 0
@@ -391,7 +384,6 @@ const Layout = () => {
                 teams={teams}
                 phase={phase}
                 miniGame={openGame}
-                playerSetup={playerSetup}
                 chosenPlayers={chosenPlayers}
                 showSelector={showSelector}
                 onSelectGame={(index) => {

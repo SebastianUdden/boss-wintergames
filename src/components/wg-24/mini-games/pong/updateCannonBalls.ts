@@ -1,10 +1,12 @@
 import { log } from "../../log";
 
+const SPEED = 6;
 export interface CannonBall {
   x: number;
   y: number;
   direction: number; // 1 = right, -1 = left
   player: 0 | 1;
+  vy?: number; // Vertical velocity (optional initially)
 }
 
 export const updateCannonBalls = (
@@ -84,9 +86,6 @@ export const updateCannonBalls = (
       newBall.y > p2Paddle.bottom
     ) {
       newBalls.push(newBall);
-      log(
-        `Player 2 firing cannonball from x=${newBall.x}, y=${newBall.y}, direction=${newBall.direction}`
-      );
     }
 
     setP2Charges(5);
@@ -105,7 +104,6 @@ export const updateCannonBalls = (
     ) {
       hitsOnP1 += 0.5;
       toRemove.add(i);
-      log(`Cannonball hit Player 1's plank at x: ${ball.x}, y: ${ball.y}`);
       continue;
     }
 
@@ -117,30 +115,30 @@ export const updateCannonBalls = (
     ) {
       hitsOnP2 += 0.5;
       toRemove.add(i);
-      log(`Cannonball hit Player 2's plank at x: ${ball.x}, y: ${ball.y}`);
       continue;
-    }
-
-    if (ball.direction === -1) {
-      if (ball.x < p1Paddle.right) {
-        log("Passed player 1 paddle");
-      }
     }
 
     for (let j = i + 1; j < newBalls.length; j++) {
       const otherBall = newBalls[j];
-      const closeInY = Math.abs(ball.y - otherBall.y) < 10;
+      const closeInY = Math.abs(ball.y - otherBall.y) < 10; // Check proximity in Y-axis
       const movingTowardEachOther =
         (ball.direction === 1 && otherBall.direction === -1) ||
-        (ball.direction === -1 && otherBall.direction === 1);
-      const overlappingInX = Math.abs(ball.x - otherBall.x) < 10;
+        (ball.direction === -1 && otherBall.direction === 1); // Check opposite directions
+      const overlappingInX = Math.abs(ball.x - otherBall.x) < 10; // Check proximity in X-axis
 
       if (closeInY && movingTowardEachOther && overlappingInX) {
-        toRemove.add(i);
-        toRemove.add(j);
-        log(
-          `Cannonball collision detected between x: ${ball.x}, y: ${ball.y} and x: ${otherBall.x}, y: ${otherBall.y}`
-        );
+        if (Math.random() > 0.5) {
+          // Deflect the balls: Update their vertical velocity (vy)
+          ball.vy = ball.vy ?? 0; // Ensure vy is initialized
+          ball.vy += Math.random() > 0.5 ? 1 : -1;
+
+          otherBall.vy = otherBall.vy ?? 0; // Ensure vy is initialized
+          otherBall.vy += Math.random() > 0.5 ? 1 : -1;
+        } else {
+          // Destroy both balls
+          toRemove.add(i);
+          toRemove.add(j);
+        }
       }
     }
   }
@@ -150,8 +148,18 @@ export const updateCannonBalls = (
 
   // Update positions for remaining cannonballs
   const updatedBalls = remainingBalls
-    .map((ball) => ({ ...ball, x: ball.x + ball.direction * 3 }))
-    .filter((ball) => ball.x >= 0 && ball.x <= gameBox.width);
+    .map((ball) => ({
+      ...ball,
+      x: ball.x + ball.direction * SPEED, // Update horizontal position
+      y: ball.y + (ball.vy ?? 0), // Update vertical position with vy
+    }))
+    .filter(
+      (ball) =>
+        ball.x >= 0 &&
+        ball.x <= gameBox.width &&
+        ball.y >= 0 &&
+        ball.y <= gameBox.height
+    ); // Ensure ball remains in bounds
 
   return { updatedBalls, hitsOnP1, hitsOnP2 };
 };

@@ -8,6 +8,7 @@ import { usePaddleControls } from "./usePaddleControls";
 import { useGameLoop } from "./useGameLoop";
 import { Ball } from "./Ball";
 import { provideScoresOnWinner } from "../Winner";
+import { INITIAL_BALL_SPEED } from "./gameLoopUtils";
 
 export const REFERENCE_WIDTH = 500; // Standard width for normal speed
 export const HORIZONTAL_SPEED = 4;
@@ -38,16 +39,15 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
 
       ballRef.current.style.left = "50%";
       ballRef.current.style.top = "50%";
-      ballSpeed.current = {
-        x: 0,
-        y: 0,
-      };
+      ballSpeed.current = { x: 0, y: 0 };
+
       setTimeout(() => {
         ballSpeed.current = {
           x:
-            (Math.random() > 0.5 ? HORIZONTAL_SPEED : -HORIZONTAL_SPEED) *
-            widthRatio,
-          y: Math.random() > 0.5 ? VERTICAL_SPEED : -VERTICAL_SPEED,
+            (Math.random() > 0.5
+              ? INITIAL_BALL_SPEED.x
+              : -INITIAL_BALL_SPEED.x) * widthRatio,
+          y: Math.random() > 0.5 ? INITIAL_BALL_SPEED.y : -INITIAL_BALL_SPEED.y,
         };
       }, 2000);
     }
@@ -98,22 +98,41 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
     }
   }, [t1Score, t2Score, players]);
 
+  useEffect(() => {
+    if (gameState === "ready" && gameBoxRef.current) {
+      const gameBox = gameBoxRef.current.getBoundingClientRect();
+      const paddleHeight = INITIAL_PADDLE_HEIGHT; // Default paddle height
+
+      const centeredPosition = (gameBox.height - paddleHeight) / 2;
+
+      if (player1PaddleRef.current) {
+        player1PaddleRef.current.style.top = `${centeredPosition}px`;
+      }
+      if (player2PaddleRef.current) {
+        player2PaddleRef.current.style.top = `${centeredPosition}px`;
+      }
+    }
+  }, [gameState]);
+
   const startGame = () => {
     setGameState("active");
     setMessage("The scourge of the seas has been sighted, fire true!");
+
     if (
       player1PaddleRef.current &&
       player2PaddleRef.current &&
       gameBoxRef.current
     ) {
       const gameBox = gameBoxRef.current.getBoundingClientRect();
-      player1PaddleRef.current.style.top = `${
-        gameBox.height - INITIAL_PADDLE_HEIGHT
-      }px`;
-      player2PaddleRef.current.style.top = `${
-        gameBox.height - INITIAL_PADDLE_HEIGHT
-      }px`;
+      const paddleHeight = player1PaddleRef.current.offsetHeight;
+
+      // Center paddles vertically
+      const centeredPosition = (gameBox.height - paddleHeight) / 2;
+
+      player1PaddleRef.current.style.top = `${centeredPosition}px`;
+      player2PaddleRef.current.style.top = `${centeredPosition}px`;
     }
+
     resetBall();
   };
 
@@ -122,20 +141,10 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
   }, [winner, players]);
 
   return (
-    <div className="flex flex-col justify-between h-full p-4 bg-gray-800 rounded-lg">
+    <div className="flex flex-col justify-between h-full p-4 bg-gray-800 rounded-lg select-none">
       <div className="flex flex-col">
         <h1 className="mb-2">Cannons</h1>
         <p className="mb-2 text-lg">{message}</p>
-        <div className="">
-          {gameState === "ready" && (
-            <Button
-              className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500"
-              onClick={startGame}
-            >
-              Start Game
-            </Button>
-          )}
-        </div>
       </div>
       <div
         ref={gameBoxRef}
@@ -151,6 +160,14 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
           backgroundColor: "black", // Fallback color
         }}
       >
+        {gameState === "ready" && (
+          <Button
+            className="absolute z-50 p-20 text-4xl text-white -translate-x-1/2 -translate-y-1/2 bg-black left-1/2 top-1/2 hover:opacity-90"
+            onClick={startGame}
+          >
+            Start Game
+          </Button>
+        )}
         {/* Player 1 Paddle */}
         {showP1Plank && (
           <Plank

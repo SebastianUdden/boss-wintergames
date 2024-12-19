@@ -1,4 +1,8 @@
 export type BallSpeed = { x: number; y: number };
+export const INITIAL_BALL_SPEED: BallSpeed = {
+  x: 3, // Horizontal speed
+  y: 3, // Vertical speed
+};
 
 export const handleBallMovement = (
   ballRef: React.RefObject<HTMLDivElement>,
@@ -113,10 +117,11 @@ export const movePaddles = (
 };
 
 export const enforceMinMaxVerticalSpeed = (
-  ballSpeed: React.MutableRefObject<{ x: number; y: number }>
+  ballSpeed: React.MutableRefObject<BallSpeed>
 ) => {
-  const MIN_VERTICAL_SPEED = 5;
-  const MAX_VERTICAL_SPEED = 10;
+  const MIN_VERTICAL_SPEED = INITIAL_BALL_SPEED.y / 2;
+  const MAX_VERTICAL_SPEED = INITIAL_BALL_SPEED.y * 2;
+
   if (Math.abs(ballSpeed.current.y) < MIN_VERTICAL_SPEED) {
     ballSpeed.current.y =
       ballSpeed.current.y > 0 ? MIN_VERTICAL_SPEED : -MIN_VERTICAL_SPEED;

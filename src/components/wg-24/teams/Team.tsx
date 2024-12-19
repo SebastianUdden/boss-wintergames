@@ -56,7 +56,7 @@ export const Team = ({
     <div
       data-testid={name}
       className={cn(
-        "mt-2 !w-fit 2xl:!w-full flex flex-col h-[94vh] shadow-md z-20 transition-all duration-500",
+        "mt-2 !w-fit 2xl:!w-full flex flex-col h-[94vh] shadow-md z-20 transition-all duration-500 select-none",
         minimized ? "hidden 2xl:block" : "block",
         rightAligned ? "mr-2" : "ml-2"
       )}
