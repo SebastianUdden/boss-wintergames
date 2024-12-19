@@ -245,29 +245,33 @@ const Layout = () => {
   }, [teams, chosenPlayers]);
 
   const handleMovePlayer = useCallback(() => {
-    const onePlayerLeft = highlightedPlayers?.length <= 1;
     setTeams((prevTeams) => {
       if (playerMoved.current || losingTeamIndex === undefined)
         return prevTeams; // Prevent re-running
-      const updatedTeams = [...prevTeams];
 
-      // Use the losingTeamIndex to identify the losing team
+      const updatedTeams = [...prevTeams];
       const opposingTeamIndex = losingTeamIndex === 0 ? 1 : 0;
-      const elligiblePlayers = onePlayerLeft
+
+      // Check if one player is left in the highlighted group
+      const onePlayerLeft = highlightedPlayers?.length <= 1;
+      const eligiblePlayers = onePlayerLeft
         ? highlightedPlayers
         : highlightedPlayers?.filter((hp) => !hp.isCaptain);
-      // Find the player to move from the losing team
-      const playerToMove = elligiblePlayers[0]
+
+      const playerToMove = eligiblePlayers?.[0]
         ? updatedTeams[losingTeamIndex].players.find(
-            (p) => p.name === elligiblePlayers[0].name
+            (p) => p.name === eligiblePlayers[0].name
           )
         : undefined;
+
       if (!playerToMove) {
-        if (teams[losingTeamIndex].players.length === 1) {
+        // If no player to move and losing team has only one player, transition from game
+        if (updatedTeams[losingTeamIndex].players.length === 1) {
           setTimeout(() => {
             setPhase("transition-from-game");
           }, 500);
         } else {
+          // Otherwise, reset to ready
           setPhase("ready");
         }
         return prevTeams;
@@ -276,35 +280,32 @@ const Layout = () => {
       // Remove the player from the losing team
       updatedTeams[losingTeamIndex].players = updatedTeams[
         losingTeamIndex
-      ].players.filter((p) => p.name !== elligiblePlayers[0].name);
+      ].players.filter((p) => p.name !== playerToMove.name);
 
-      // Add the player to the opposing team
+      // Add the player to the opposing team as a captive
       updatedTeams[opposingTeamIndex].players = [
         ...updatedTeams[opposingTeamIndex].players,
         { ...playerToMove, isCaptive: !playerToMove.isCaptive },
       ];
 
-      // Mark player as moved
       playerMoved.current = true;
       return updatedTeams;
     });
 
-    // Reset the highlighted player and phase after moving
+    // Handle phase transitions after the move
     setTimeout(() => {
-      if (
-        phase !== "game-over" &&
-        phase !== "animating-captive" &&
-        phase !== "transition-from-game" &&
-        phase !== "transition-game-over"
-      ) {
-        setPhase("ready");
-      }
       if (phase === "transitioning-captive") {
         setPhase("ready");
+      } else if (phase === "transition-from-game" || phase === "game-over") {
+        // Maintain transition-specific states
+        setPhase("game-over");
+      } else {
+        setPhase("ready");
       }
-      playerMoved.current = false; // Reset the playerMoved flag
+
+      playerMoved.current = false; // Reset the flag
     }, 2500);
-  }, [highlightedPlayers, losingTeamIndex]);
+  }, [highlightedPlayers, losingTeamIndex, phase]);
 
   useEffect(() => {
     const teamPlayers =
