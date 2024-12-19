@@ -34,84 +34,6 @@ export const GameRules = ({
   onGameComplete,
 }: IGameRules) => {
   const [winner, setWinner] = useState("");
-  // Utility function to map team players with score
-  // const mapPlayersToScore = (players: IPlayer[], score: number) => {
-  //   return players.map((player) => ({ player, score }));
-  // };
-
-  // // Logic for handling "Lagkamp"
-  // const handleLagkamp = useCallback(
-  //   (teamIndex: number) => {
-  //     const winningTeam = teams[teamIndex];
-  //     const losingTeamIndex = teamIndex === 0 ? 1 : 0;
-  //     const losingTeam = teams[losingTeamIndex];
-
-  //     const playerScores = [
-  //       ...mapPlayersToScore(players[teamIndex], 1), // Winning team players
-  //       ...mapPlayersToScore(players[losingTeamIndex], -1), // Losing team players
-  //     ];
-
-  //     onGameComplete(playerScores, losingTeamIndex);
-  //   },
-  //   [onGameComplete, players, teams]
-  // );
-
-  // // Logic for handling "Duell"
-  // const handleDuell = useCallback(
-  //   (teamIndex: number) => {
-  //     const winningTeamIndex = teamIndex;
-  //     const losingTeamIndex = teamIndex === 0 ? 1 : 0;
-
-  //     const playerScores = players.flatMap((team, idx) => {
-  //       return team.map((player) => ({
-  //         player,
-  //         score: idx === winningTeamIndex ? 1 : -1,
-  //       }));
-  //     });
-
-  //     console.log({ playerScores });
-  //     onGameComplete(playerScores, losingTeamIndex);
-  //   },
-  //   [onGameComplete, players]
-  // );
-
-  // // Logic for handling "2v2"
-  // const handle2v2 = useCallback(
-  //   (teamIndex: number) => {
-  //     const winningTeamIndex = teamIndex;
-  //     const losingTeamIndex = teamIndex === 0 ? 1 : 0;
-
-  //     const playerScores = players.flatMap((team, idx) => {
-  //       return team.map((player) => ({
-  //         player,
-  //         score: idx === winningTeamIndex ? 1 : -1,
-  //       }));
-  //     });
-
-  //     console.log({ playerScores });
-  //     onGameComplete(playerScores, losingTeamIndex);
-  //   },
-  //   [onGameComplete, players]
-  // );
-
-  // const handleWin = useCallback(
-  //   (teamIndex: number) => {
-  //     switch (gameType) {
-  //       case "lagkamp":
-  //         handleLagkamp(teamIndex);
-  //         break;
-  //       case "duell":
-  //         handleDuell(teamIndex);
-  //         break;
-  //       case "2v2":
-  //         handle2v2(teamIndex);
-  //         break;
-  //       default:
-  //         console.error("Unsupported game category");
-  //     }
-  //   },
-  //   [gameType, handleDuell, handle2v2, handleLagkamp]
-  // );
 
   useEffect(() => {
     provideScoresOnWinner({ onGameComplete, players, winner });
@@ -155,20 +77,24 @@ export const GameRules = ({
         <div className="flex items-center justify-between gap-6">
           <button
             className={cn(
-              "treasure completed-button !font-pirata"
+              "treasure completed-button !font-pirata ocean-blue",
+              winner === players[0][0].name ? "ocean-blue" : "treasure-color"
               // teamIndex === 0 ? "border !border-white/10" : ""
             )}
             onClick={() => setWinner(players[0][0].name)}
+            disabled={winner === players[1][0].name}
           >
             BLUE
           </button>
           <h2 className="text-[2vh]">determine winner</h2>
           <button
             className={cn(
-              "treasure completed-button !font-pirata"
+              "treasure completed-button !font-pirata",
+              winner === players[1][0].name ? "rusty-red" : "treasure-color"
               // teamIndex === 1 ? "border-2 !border-white/10" : ""
             )}
             onClick={() => setWinner(players[1][0].name)}
+            disabled={winner === players[0][0].name}
           >
             RED
           </button>

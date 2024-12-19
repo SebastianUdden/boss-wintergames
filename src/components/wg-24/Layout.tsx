@@ -473,7 +473,7 @@ const Layout = () => {
                     // Update teams and transition to the next phase
                     setTeams(updatedTeams);
                     setPhase("selecting-captive");
-                  }, 3000);
+                  }, 5000);
                 }}
               />
             </div>

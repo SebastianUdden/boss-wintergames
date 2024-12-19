@@ -185,9 +185,18 @@
   padding: 0.5vh 2.5vh;
 }
 
-.treasure {
+.treasure-color {
   background-color: #251d18; /* Weathered Chestnut */
   color: #dad7cd; /* Worn Canvas */
+}
+.treasure-color:hover {
+  background-color: #261e19;
+}
+.treasure-color:active {
+  background-color: #251d18;
+}
+
+.treasure {
   border: 4px solid #251d18;
   width: fit-content;
   font-family: "IM Fell English", serif;
@@ -208,8 +217,7 @@
 
 /* Hover effect to make it stand out */
 .treasure:hover {
-  background-color: #261e19;
-  border: 4px solid #261e19;
+  border: 4px solid #251d18;
   outline: none;
   /* Increase the shadow to make it feel like it’s inviting a click */
   box-shadow: 0 8px 0 #111, 0 10px 12px rgba(0, 0, 0, 0.3);
@@ -218,12 +226,17 @@
 
 /* Active state to make it feel like it’s being pressed */
 .treasure:active {
-  background-color: #251d18;
-  border: 4px solid #251d18;
   outline: none;
   /* Reduce the shadow to make it feel like it's pressed into the surface */
   box-shadow: 0 2px 0 #111, 0 2px 4px rgba(0, 0, 0, 0.2);
   transform: translateY(2px);
+}
+
+.treasure:disabled {
+  opacity: 0.2;
+  cursor: default;
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .header {

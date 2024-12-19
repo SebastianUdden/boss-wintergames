@@ -114,49 +114,48 @@ export const PlayerCard = ({
           highlighted={highlighted || !isHighlightPhase}
           phase={phase}
         />
-        <div
-          className={cn(
-            "absolute flex items-center gap-6 top-0 text-white bg-black/70 p-2 2xl:bg-inherit 2xl:static text-sm 2xl:text-[4vh] font-bold transition-all duration-500",
-            minimized ? "opacity-0" : "opacity-100",
-            minimized && justifyStartApplied ? "hidden" : "",
-            rightAligned ? "left-0 flex-row-reverse" : "right-0"
-          )}
-        >
-          {name}
-          {(isCaptain ||
-            isCaptive ||
-            (highlighted && phase === "showing-combatants")) && (
-            <div className="relative z-40 bg-black aged-scroll-border rounded-full w-[7vh] h-[7vh] flex justify-center items-center">
-              {highlighted && isHighlightPhase && (
-                <>
-                  {isCaptive && (
+        {!minimized && (
+          <>
+            <div
+              className={cn(
+                "absolute flex items-center gap-6 top-0 text-white bg-black/70 p-2 2xl:bg-inherit 2xl:static text-sm 2xl:text-[4vh] font-bold transition-all duration-500",
+                minimized ? "opacity-0" : "opacity-100",
+                minimized && justifyStartApplied ? "hidden" : "",
+                rightAligned ? "left-0 flex-row-reverse" : "right-0"
+              )}
+            >
+              {name}
+              {(isCaptain ||
+                isCaptive ||
+                (highlighted && phase === "showing-combatants")) && (
+                <div className="relative z-40 bg-black aged-scroll-border rounded-full w-[7vh] h-[7vh] flex justify-center items-center">
+                  {highlighted && isHighlightPhase && (
+                    <>
+                      {isCaptive && (
+                        <BallChainIcon
+                          size={size}
+                          rightAligned={rightAligned}
+                        />
+                      )}
+                      {isCaptain && (
+                        <CaptainIcon size={size} rightAligned={rightAligned} />
+                      )}
+                      {shouldShowCutlassIcon && (
+                        <CutlassIcon size={size} rightAligned={rightAligned} />
+                      )}
+                    </>
+                  )}
+                  {shouldShowBallChain && (
                     <BallChainIcon size={size} rightAligned={rightAligned} />
                   )}
-                  {isCaptain && (
+                  {shouldShowCaptainIcon && (
                     <CaptainIcon size={size} rightAligned={rightAligned} />
                   )}
-                  {shouldShowCutlassIcon && (
-                    <CutlassIcon size={size} rightAligned={rightAligned} />
-                  )}
-                </>
-              )}
-              {shouldShowBallChain && (
-                <BallChainIcon size={size} rightAligned={rightAligned} />
-              )}
-              {shouldShowCaptainIcon && (
-                <CaptainIcon size={size} rightAligned={rightAligned} />
+                </div>
               )}
             </div>
-          )}
-        </div>
-        <span
-          className={cn(
-            "absolute inline p-2 italic text-white bg-black/70 text-sm bottom-0 2xl:hidden",
-            rightAligned ? "right-0" : "left-0"
-          )}
-        >
-          {wins} / {losses}
-        </span>
+          </>
+        )}
       </div>
       <p
         className={cn(
