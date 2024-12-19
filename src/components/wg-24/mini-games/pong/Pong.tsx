@@ -5,7 +5,7 @@ import { IMiniGameBase } from "../MiniGame";
 import { Scores } from "../Scores";
 import { Plank } from "./Plank";
 import { usePaddleControls } from "./usePaddleControls";
-import { resetBall, useGameLoop } from "./useGameLoop";
+import { useGameLoop } from "./useGameLoop";
 import { Ball } from "./Ball";
 import { provideScoresOnWinner } from "../Winner";
 

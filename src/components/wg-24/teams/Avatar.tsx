@@ -1,18 +1,21 @@
 import { cn } from "@/lib/utils";
 import { IPlayer } from "./players";
+import { Phase } from "../Layout";
 
 interface IAvatar extends IPlayer {
   size: number;
   highlighted: boolean;
+  phase: Phase;
 }
 
-export const Avatar = ({ name, image, size, highlighted }: IAvatar) => {
+export const Avatar = ({ name, image, size, highlighted, phase }: IAvatar) => {
   return (
     <div
       style={{
         height: `${size}vh`,
         maxHeight: `20vh`, // Ensure it doesn’t exceed these dimensions
         maxWidth: "20vh",
+        overflow: "hidden", // Prevent the image from spilling outside the box
       }}
       className={cn(
         highlighted ? "aged-scroll-border z-50" : "border-2 border-black z-20",
@@ -22,10 +25,20 @@ export const Avatar = ({ name, image, size, highlighted }: IAvatar) => {
     >
       {image ? (
         <img
-          className="object-cover aspect-square"
+          className={cn(
+            "object-cover aspect-square transition-transform origin-center",
+            phase === "showing-combatants" && highlighted
+              ? "scale-[1.8]"
+              : "scale-100" // Scale on highlight
+          )}
           src={image}
           alt={name}
-          style={{ width: "100%", height: "100%" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            transformOrigin: "center", // Ensure zoom happens from the center
+            transitionDuration: "3000ms",
+          }}
         />
       ) : (
         <p>{name.slice(0, 2).toUpperCase()}</p>

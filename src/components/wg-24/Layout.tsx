@@ -80,6 +80,7 @@ export type Phase =
   | "transition-to-game"
   | "explaining-game"
   | "selecting-players"
+  | "showing-combatants"
   | "playing-game"
   | "calculating-score"
   | "selecting-captive"
@@ -187,16 +188,13 @@ const Layout = () => {
           // Ensure all chosen players remain highlighted
           setHighlightedPlayers([...highlighted]);
 
-          // Add the setTimeout logic here
           setTimeout(() => {
-            setTeams((prevTeams) =>
-              prevTeams.map((team) => ({ ...team, minimized: true }))
-            );
-          }, 1500);
+            setPhase("showing-combatants");
+          }, 300);
 
           setTimeout(() => {
             setPhase("playing-game");
-          }, 2000);
+          }, 3000);
 
           return;
         }
@@ -225,7 +223,8 @@ const Layout = () => {
 
   const handleMovePlayer = useCallback(() => {
     setTeams((prevTeams) => {
-      if (playerMoved.current || !losingTeamIndex) return prevTeams; // Prevent re-running
+      if (playerMoved.current || losingTeamIndex === undefined)
+        return prevTeams; // Prevent re-running
       const updatedTeams = [...prevTeams];
 
       // Use the losingTeamIndex to identify the losing team
@@ -280,6 +279,7 @@ const Layout = () => {
     const minimized =
       phase !== "ready" &&
       phase !== "selecting-players" &&
+      phase !== "showing-combatants" &&
       phase !== "calculating-score" &&
       phase !== "selecting-captive" &&
       phase !== "transitioning-captive";
@@ -309,7 +309,7 @@ const Layout = () => {
       setChosenPlayers([]);
       setHighlightedPlayers([]);
     }
-  }, [phase, chosenPlayers]);
+  }, [phase]);
 
   useEffect(() => {
     const getRandomPlayers = (players, count) => {
@@ -537,147 +537,3 @@ const Layout = () => {
 };
 
 export default Layout;
-
-// const handleSelectPlayers = useCallback(() => {
-//   setPhase("selecting-players");
-//   // const nextTeam = teamsTurn === 0 ? 1 : 0;
-//   // setTeamsTurn(nextTeam);
-
-//   // let nextPlayer = { name: "" };
-//   // if (
-//   //   previousTurns.length === 0 ||
-//   //   previousTurns.length === teams.flatMap((t) => t.players).length
-//   // ) {
-//   // setPreviousTurns([]);
-//   // const nextTeamPlayers = teams[nextTeam].players;
-//   // nextPlayer = getRandomPlayer(nextTeamPlayers);
-//   // setPreviousTurns([nextPlayer.name]);
-//   // }
-//   //  else {
-//   //   const availablePlayers = teams[nextTeam].players;
-//   //   const filteredPlayers = availablePlayers.filter(
-//   //     (p) => !previousTurns.includes(p.name)
-//   //   );
-//   //   nextPlayer = getRandomPlayer(filteredPlayers);
-//   //   setPreviousTurns((prev) => [...prev, nextPlayer.name]);
-//   // }
-
-//   chosenPlayers.forEach((player) => {
-//     // Start the highlighting effect
-//     const allPlayers = teams.flatMap((team) =>
-//       team.players.map((p) => p.name)
-//     );
-//     const selectedPlayerIndex = allPlayers.indexOf(player);
-//     const cycles = 4; // Number of times to cycle through all players
-//     const totalSteps = cycles * allPlayers.length + selectedPlayerIndex;
-//     let currentStep = 0;
-
-//     const numPlayersToSelect = gameTypes[openGame.gameType]; // Solo, 1v1, etc.
-//     const selectedPlayers = [];
-//     const team1Players = [];
-//     const team2Players = [];
-//     console.log("1");
-//     console.log({ numPlayersToSelect });
-
-//     const interval = setInterval(() => {
-//       const index = currentStep % allPlayers.length;
-//       setHighlightedPlayers([allPlayers[index]]);
-//       currentStep++;
-//       if (currentStep > totalSteps) {
-//         // setTimeout(() => {
-//         //   setTeams(teams.map((team) => ({ ...team, minimized: true })));
-//         // }, 1500);
-//         // setTimeout(() => {
-//         //   setPhase("playing-game");
-//         // }, 2000);
-//         clearInterval(interval);
-//       }
-//     }, 100);
-//   });
-// }, [teamsTurn, previousTurns, teams]);
-
-// const handleSelectPlayers = useCallback(() => {
-//   setPhase("selecting-players");
-//   const nextTeam = teamsTurn === 0 ? 1 : 0;
-//   setTeamsTurn(nextTeam);
-
-//   const allPlayers = teams.flatMap((team) =>
-//     team.players.map((player) => ({ ...player, teamId: team.id }))
-//   );
-
-//   const cycles = 4; // Number of times to cycle through all players
-//   const totalSteps = cycles * allPlayers.length;
-//   let currentStep = 0;
-
-//   const numPlayersToSelect = gameTypes[openGame.gameType]; // Solo, 1v1, etc.
-//   const selectedPlayers = [];
-//   const team1Players = [];
-//   const team2Players = [];
-//   console.log("1");
-//   console.log({ numPlayersToSelect });
-//   const interval = setInterval(() => {
-//     console.log("2");
-//     const index = currentStep % allPlayers.length;
-//     const currentPlayer = allPlayers[index];
-//     console.log(currentPlayer);
-
-//     // Add player to the selected list if not already selected
-//     if (
-//       !selectedPlayers.includes(currentPlayer.name) &&
-//       selectedPlayers.length < numPlayersToSelect
-//     ) {
-//       console.log("3");
-//       selectedPlayers.push(currentPlayer.name);
-
-//       // Distribute players evenly into two teams for team games
-//       if (numPlayersToSelect > 2 && numPlayersToSelect % 2 === 0) {
-//         console.log("4");
-//         if (team1Players.length < numPlayersToSelect / 2) {
-//           console.log("5");
-//           team1Players.push(currentPlayer.name);
-//         } else {
-//           console.log("6");
-//           team2Players.push(currentPlayer.name);
-//         }
-//       }
-
-//       setHighlightedPlayers(selectedPlayers); // Update UI with highlighted players
-//     }
-
-//     currentStep++;
-
-//     // Stop when the required number of players are selected
-//     if (
-//       selectedPlayers.length >= numPlayersToSelect ||
-//       currentStep > totalSteps
-//     ) {
-//       clearInterval(interval);
-
-//       // Optional: Transition to the next phase after a delay
-//       setTimeout(() => {
-//         // Set selected teams for team games
-//         if (numPlayersToSelect > 2 && numPlayersToSelect % 2 === 0) {
-//           setTeams((prevTeams) => [
-//             {
-//               ...prevTeams[0],
-//               selectedPlayers: team1Players,
-//             },
-//             {
-//               ...prevTeams[1],
-//               selectedPlayers: team2Players,
-//             },
-//           ]);
-//         }
-
-//         // setPhase("playing-game");
-//       }, 1500);
-//     }
-//   }, 100);
-// }, [teamsTurn, previousTurns, teams, openGame]);
-
-// const gameTypes = {
-//   solo: 1,
-//   duell: 2,
-//   "2v2": 4,
-//   lagkamp: 12,
-// };

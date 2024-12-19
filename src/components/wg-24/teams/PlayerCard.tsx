@@ -32,10 +32,12 @@ export const PlayerCard = ({
 }: IPlayerCard) => {
   const isHighlightPhase =
     phase === "selecting-players" ||
+    phase === "showing-combatants" ||
     phase === "playing-game" ||
     phase === "calculating-score" ||
     phase === "selecting-captive" ||
     phase === "transitioning-captive";
+  const highlight = isHighlightPhase && highlighted;
 
   const size = 75 / playerCount;
 
@@ -68,10 +70,10 @@ export const PlayerCard = ({
           ? "justify-start items-center"
           : "justify-between items-center",
         rightAligned ? "flex-row-reverse" : "",
-        minimized && justifyStartApplied && highlighted && rightAligned
+        minimized && justifyStartApplied && highlight && rightAligned
           ? "-translate-x-[0.7vh]"
           : "",
-        minimized && justifyStartApplied && highlighted && !rightAligned
+        minimized && justifyStartApplied && highlight && !rightAligned
           ? "translate-x-[0.7vh]"
           : "",
         !minimized && rightAligned ? "pl-[1vh]" : "",
@@ -87,7 +89,7 @@ export const PlayerCard = ({
         "!max-w-[10vh] 2xl:!max-w-full"
       )}
       style={{
-        backgroundColor: highlighted ? "#1e1e1eff" : "#1e1e1ebb",
+        backgroundColor: highlight ? "#1e1e1eff" : "#1e1e1ebb",
         height: `${size}vh`,
         maxHeight: "20vh",
       }}
@@ -95,7 +97,6 @@ export const PlayerCard = ({
       <div
         className={cn(
           "relative flex items-center justify-center gap-6",
-          highlighted ? "scale-110 z-50" : "z-0",
           rightAligned ? "flex-row-reverse" : ""
         )}
       >
@@ -105,8 +106,9 @@ export const PlayerCard = ({
           size={size}
           score={0}
           highlighted={highlighted || !isHighlightPhase}
+          phase={phase}
         />
-        <p
+        <div
           className={cn(
             "absolute flex items-center gap-6 top-0 text-white bg-black/70 p-2 2xl:bg-inherit 2xl:static text-sm 2xl:text-[4vh] font-bold transition-all duration-500",
             minimized ? "opacity-0" : "opacity-100",
@@ -115,100 +117,111 @@ export const PlayerCard = ({
           )}
         >
           {name}
-          {highlighted ||
-            isCaptain ||
-            (isCaptive && (
-              <div
-                className={cn("z-50 bg-black aged-scroll-border rounded-full")}
-                style={{
-                  top: `${size * 0.37}vh`,
-                  left: !rightAligned ? `${size * 0.37}vh` : "",
-                  right: rightAligned ? `${size * 0.37}vh` : "",
-                }}
-              >
-                {highlighted &&
-                  (phase === "selecting-players" ||
-                    phase === "playing-game") && (
-                    <div className="relative w-[10vh] h-[10vh]">
-                      {isCaptive && (
-                        <img
-                          className={cn(
-                            "absolute top-10 left-5",
-                            rightAligned ? "scale-y-[-1]" : ""
-                          )}
-                          style={{
-                            height: `${size}vh`,
-                            maxHeight: `${size / 8}vh`,
-                            maxWidth: `${size / 8}vh`,
-                            minWidth: "50px",
-                            minHeight: "50px",
-                          }}
-                          src="/leaderboard/ball-chain.png"
-                        />
-                      )}
-                      {isCaptain && (
-                        <img
-                          className={cn(
-                            "absolute top-10 left-5",
-                            rightAligned ? "scale-x-[-1]" : ""
-                          )}
-                          style={{
-                            height: `${size}vh`,
-                            maxHeight: `${size / 8}vh`,
-                            maxWidth: `${size / 8}vh`,
-                          }}
-                          src="/leaderboard/captain.png"
-                        />
-                      )}
+          {(isCaptain ||
+            isCaptive ||
+            (highlighted && phase === "showing-combatants")) && (
+            <div
+              className={cn(
+                "relative z-40 bg-black aged-scroll-border rounded-full w-[7vh] h-[7vh] flex justify-center items-center"
+              )}
+            >
+              {highlighted &&
+                (phase === "selecting-players" ||
+                  phase === "playing-game" ||
+                  phase === "showing-combatants") && (
+                  <>
+                    {isCaptive && (
                       <img
                         className={cn(
-                          "absolute top-0 left-0 object-cover -rotate-90 aspect-square",
+                          "absolute z-40",
                           rightAligned ? "scale-y-[-1]" : ""
                         )}
                         style={{
                           height: `${size}vh`,
-                          maxHeight: "10vh",
-                          maxWidth: "10vh",
+                          maxHeight: `${size / 8}vh`,
+                          maxWidth: `${size / 8}vh`,
+                          minWidth: "50px",
+                          minHeight: "50px",
+                          top: "25%",
+                        }}
+                        src="/leaderboard/ball-chain.png"
+                      />
+                    )}
+                    {isCaptain && (
+                      <img
+                        className={cn(
+                          "absolute z-10",
+                          rightAligned ? "scale-x-[-1]" : ""
+                        )}
+                        style={{
+                          height: `${size}vh`,
+                          maxHeight: `${size / 8}vh`,
+                          maxWidth: `${size / 8}vh`,
+                          minWidth: "50px",
+                          minHeight: "50px",
+                          right: rightAligned ? "25%" : "15%",
+                        }}
+                        src="/leaderboard/captain.png"
+                      />
+                    )}
+                    {phase === "showing-combatants" && (
+                      <img
+                        className={cn(
+                          "absolute -rotate-90 z-10",
+                          rightAligned ? "scale-y-[-1]" : ""
+                        )}
+                        style={{
+                          height: `${size}vh`,
+                          maxHeight: `${size / 4}vh`,
+                          maxWidth: `${size / 4}vh`,
+                          minWidth: "90px",
+                          minHeight: "90px",
+                          top: "-14%",
+                          left: rightAligned ? "-12%" : "7%",
                         }}
                         src="/leaderboard/cutlass.png"
                       />
-                    </div>
+                    )}
+                  </>
+                )}
+              {isCaptive && !highlighted && phase !== "playing-game" && (
+                <img
+                  className={cn(
+                    "absolute w-[10vh] h-[10vh] z-40",
+                    rightAligned ? "scale-x-[-1]" : ""
                   )}
-                {isCaptive && !highlighted && phase !== "playing-game" && (
-                  <img
-                    className={cn(
-                      "w-[10vh] h-[10vh]",
-                      rightAligned ? "scale-x-[-1]" : ""
-                    )}
-                    style={{
-                      height: `${size}vh`,
-                      maxHeight: `${size / 8}vh`,
-                      maxWidth: `${size / 8}vh`,
-                      minWidth: "50px",
-                      minHeight: "50px",
-                    }}
-                    src="/leaderboard/ball-chain.png"
-                  />
-                )}
-                {isCaptain && !highlighted && phase !== "playing-game" && (
-                  <img
-                    className={cn(
-                      "w-[10vh] h-[10vh]",
-                      rightAligned ? "scale-x-[-1]" : ""
-                    )}
-                    style={{
-                      height: `${size}vh`,
-                      maxHeight: `${size / 8}vh`,
-                      maxWidth: `${size / 8}vh`,
-                      minWidth: "50px",
-                      minHeight: "50px",
-                    }}
-                    src="/leaderboard/captain.png"
-                  />
-                )}
-              </div>
-            ))}
-        </p>
+                  style={{
+                    height: `${size}vh`,
+                    maxHeight: `${size / 8}vh`,
+                    maxWidth: `${size / 8}vh`,
+                    minWidth: "50px",
+                    minHeight: "50px",
+                    top: "25%",
+                  }}
+                  src="/leaderboard/ball-chain.png"
+                />
+              )}
+              {isCaptain && !highlighted && phase !== "playing-game" && (
+                <img
+                  className={cn(
+                    "absolute w-[10vh] h-[10vh]",
+                    rightAligned ? "scale-x-[-1]" : ""
+                  )}
+                  style={{
+                    height: `${size}vh`,
+                    maxHeight: `${size / 8}vh`,
+                    maxWidth: `${size / 8}vh`,
+                    minWidth: "50px",
+                    minHeight: "50px",
+                    top: "20%",
+                    right: rightAligned ? "25%" : "15%",
+                  }}
+                  src="/leaderboard/captain.png"
+                />
+              )}
+            </div>
+          )}
+        </div>
 
         <span
           className={cn(
