@@ -27,7 +27,7 @@ export const miniGames: IMiniGame[] = [
       "Varje pirat har 30 sekunder på klockan – när tiden rinner ut är spelet över, och den som förlorat sina sekunder först kommer att skickas ner i djupet!",
     ],
     isAnalog: false,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 2,
@@ -41,7 +41,7 @@ export const miniGames: IMiniGame[] = [
       "Kommer Spelare 1 att vara snabb nog för att överlista den förbannade väktaren, eller kommer skatten att förbli förlorad i djupens mörker?",
     ],
     isAnalog: false,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 3,
@@ -55,7 +55,7 @@ export const miniGames: IMiniGame[] = [
       "Den pirat som lyckas samla flest poäng innan tiden tar slut står som segrare, medan den andra får nöja sig med minnen av sina förlorade chanser!",
     ],
     isAnalog: false,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 4,
@@ -69,7 +69,7 @@ export const miniGames: IMiniGame[] = [
       "Men var beredd, för den som tappar greppet först kommer att bli hånad av besättningen som en svag landkrabba!",
     ],
     isAnalog: true,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 5,
@@ -83,7 +83,7 @@ export const miniGames: IMiniGame[] = [
       "De som skapar den bästa ramsan kommer att segla med hög moral, medan förlorarna riskerar att ge upphov till myteri!",
     ],
     isAnalog: true,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 6,
@@ -97,12 +97,12 @@ export const miniGames: IMiniGame[] = [
       "Den första som ropar sitt val - 'Skalle' eller 'Kista' - binder sitt öde till myntets fall. Landar det på rätt sida, väntar ära och guld. Fel val kan däremot leda till skammen att gå lottlös över plankan till motståndarnas skepp!",
     ],
     isAnalog: true,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 7,
     color: "#007FFF",
-    name: "Captive’s choice",
+    name: "Captive’s Choice",
     gameType: "fångar",
     song: "He's a Pirate",
     description: [
@@ -114,21 +114,36 @@ export const miniGames: IMiniGame[] = [
       "Välj klokt, pirater!",
     ],
     isAnalog: true,
-    weight: 1,
+    weight: 0.1,
   },
+  // {
+  //   id: 8,
+  //   color: "#00FFFF",
+  //   name: "Shipwreck",
+  //   gameType: "2v2",
+  //   song: "Hans Zimmer - Jack Sparrow",
+  //   description: [
+  //     "Två piratlag ställs mot varandra i ett episkt skeppslag ute på de stormiga haven. Varje lag bemannar sitt skepp, där en pirat styr rodret och den andra hanterar kanonerna.",
+  //     "Tillsammans måste de navigera havets faror och avfyra sina kanoner med precision.",
+  //     "Det lag som först lyckas sänka motståndarnas skepp står som segrare och kan segla vidare, medan förlorarna går till botten med sitt skepp!",
+  //   ],
+  //   isAnalog: false,
+  //   weight: 0.1,
+  // },
   {
     id: 8,
     color: "#00FFFF",
-    name: "Shipwreck",
+    name: "Rope",
     gameType: "2v2",
     song: "Hans Zimmer - Jack Sparrow",
     description: [
-      "Två piratlag ställs mot varandra i ett episkt skeppslag ute på de stormiga haven. Varje lag bemannar sitt skepp, där en pirat styr rodret och den andra hanterar kanonerna.",
-      "Tillsammans måste de navigera havets faror och avfyra sina kanoner med precision.",
-      "Det lag som först lyckas sänka motståndarnas skepp står som segrare och kan segla vidare, medan förlorarna går till botten med sitt skepp!",
+      "Två piratduos ställs mot varandra i en episk skeppskamp. Lagen ställer upp sina skepp med bredsida mot varandra.",
+      "Sedan tar lagen tag i repet och ställer sig bakom respektive skepp.",
+      "Tillsammans ska de sedan dra motståndarna över till sin sida.",
+      "Det lag som först får motståndarna att ta ett steg som passerar deras skepp vinner!",
     ],
-    isAnalog: false,
-    weight: 1,
+    isAnalog: true,
+    weight: 0.1,
   },
   {
     id: 9,
@@ -138,11 +153,12 @@ export const miniGames: IMiniGame[] = [
     song: "Super Guitar Bros - Bowser Road",
     description: [
       "I detta klassiska piratspel med en twist ställs två lag mot varandra i en fartfylld kamp till sjöss.",
-      "Varje lag har en planka som de använder för att studsa tillbaka kanonkulor. En pirat styr plankan och avfyrar kanoner, medan den andra styr plankan storlek – gör den större för försvar eller mindre för smidighet.",
+      "Varje lag har en planka som de använder för att studsa tillbaka kanonkulor. En pirat styr plankan och avfyrar kanoner (upp/ned/skjut), medan den andra styr plankan storlek – gör den större för försvar eller mindre för smidighet (höger/vänster).",
+      "Om ett lag släpper in 10 baby-krakens eller blir träffade av 10 kannonkulor förlorar dem.",
       "Det lag som bäst samordnar sitt spel och överlistar motståndarna kommer att segra, medan förlorarna får se sin planka brytas itu!",
     ],
     isAnalog: false,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 10,
@@ -156,7 +172,7 @@ export const miniGames: IMiniGame[] = [
       "Men akta dig, spiller du så har du slösat på skeppets dyrbara ranson och blir kastad överbord!",
     ],
     isAnalog: true,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 11,
@@ -170,7 +186,7 @@ export const miniGames: IMiniGame[] = [
       "När mörkret faller smyger djungelpiraten fram för att hugga sin fiende, men för varje steg väcks djurens rop till liv och risken att bli upptäckt växer. Ju fler skott som avfyras, desto svårare blir det att bli upptäckt",
     ],
     isAnalog: true,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 12,
@@ -185,7 +201,7 @@ export const miniGames: IMiniGame[] = [
       "Sista piraten med tärningar kvar vinner skatten, medan de andra kastas överbord!",
     ],
     isAnalog: true,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 13,
@@ -199,7 +215,7 @@ export const miniGames: IMiniGame[] = [
       "Men kaptenen kan också välja att avstå – dock, ingen minns en fegis på de sju haven!",
     ],
     isAnalog: true,
-    weight: 1,
+    weight: 0.1,
   },
   {
     id: 14,
@@ -213,6 +229,6 @@ export const miniGames: IMiniGame[] = [
       "Förloraren, som visar sig vara en usel skytt, får det föga ärofyllda uppdraget att svabba däck!",
     ],
     isAnalog: true,
-    weight: 1,
+    weight: 0.1,
   },
 ];

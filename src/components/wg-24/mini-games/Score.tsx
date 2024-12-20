@@ -48,7 +48,7 @@ export const Score = ({
           ))
         )}
       </div>
-      {controls && <Controls controls={controls} />}
+      {isActive && controls && <Controls controls={controls} />}
       <div className={cn("flex flex-col-reverse", isRight ? "text-right" : "")}>
         <Label className="text-2xl">{players[0].name}</Label>
         <h2 className="text-8xl">

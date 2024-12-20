@@ -141,7 +141,7 @@ const Layout = () => {
     setMiniGames(
       miniGames.map((g) =>
         g.name === nextGame.name
-          ? { ...g, weight: g.weight > 0.3 ? g.weight - 0.1 : g.weight }
+          ? { ...g, weight: g.weight > 0.1 ? g.weight - 0.3 : g.weight }
           : g
       )
     );
@@ -171,11 +171,11 @@ const Layout = () => {
       if (currentStep > totalSteps) {
         clearInterval(interval);
         setTimeout(() => {
-          setPhase("animating-captive"); // Transition to the next phase or handle captive selection here
-        }, 1000);
-        setTimeout(() => {
+          // setPhase("animating-captive"); // Transition to the next phase or handle captive selection here
+          // setTimeout(() => {
           setPhase("transitioning-captive"); // Transition to the next phase or handle captive selection here
-        }, 1300);
+          // }, 500);
+        }, 1000);
       }
     }, 200);
   }, [losers, setPhase]);
@@ -270,11 +270,15 @@ const Layout = () => {
         ? highlightedPlayers
         : highlightedPlayers?.filter((hp) => !hp.isCaptain);
 
+      console.log({ highlightedPlayers });
+      console.log({ onePlayerLeft });
+      console.log({ eligiblePlayers });
       const playerToMove = eligiblePlayers?.[0]
         ? updatedTeams[losingTeamIndex].players.find(
             (p) => p.name === eligiblePlayers[0].name
           )
         : undefined;
+      console.log({ playerToMove });
 
       if (!playerToMove) {
         // If no player to move and losing team has only one player, transition from game
@@ -432,8 +436,13 @@ const Layout = () => {
         setChosenPlayers={setChosenPlayers}
         setDebug={setDebug}
         debug={debug}
+        miniGames={miniGames}
+        setMiniGames={setMiniGames}
       />
       <main className="z-10" style={{ overflow: "hidden" }}>
+        {miniGames
+          ?.sort((a, b) => a.weight - b.weight)
+          .map((mg) => `${mg.name}: ${Math.round(mg.weight * 100) / 100}, `)}
         {debug && (
           <>
             <p>
@@ -476,7 +485,7 @@ const Layout = () => {
           ) : (
             <>
               <div className="z-10 flex justify-between w-full gap-2">
-                {teams[0].players.length > 0 && (
+                {teams[0].players.length > 0 ? (
                   <Team
                     {...teams[0]}
                     losingTeam={losingTeamName}
@@ -493,6 +502,8 @@ const Layout = () => {
                       setPhase("transitioning-captive");
                     }}
                   />
+                ) : (
+                  <div className="w-[12%]" />
                 )}
                 {phase === "start" && (
                   <Start
@@ -629,7 +640,7 @@ const Layout = () => {
                             // Update teams and transition to the next phase
                             setTeams(updatedTeams);
                             setPhase("selecting-captive");
-                          }, 5000);
+                          }, 3000);
                         }}
                       />
                     </div>
@@ -657,7 +668,7 @@ const Layout = () => {
                     </div>
                   </>
                 )}
-                {teams[1].players.length > 0 && (
+                {teams[1].players.length > 0 ? (
                   <Team
                     {...teams[1]}
                     losingTeam={losingTeamName}
@@ -674,6 +685,8 @@ const Layout = () => {
                       setPhase("transitioning-captive");
                     }}
                   />
+                ) : (
+                  <div className="w-[12%]" />
                 )}
               </div>
               <button

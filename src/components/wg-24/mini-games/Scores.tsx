@@ -7,7 +7,7 @@ interface IScores {
   turn?: 0 | 1;
   winner: string | undefined;
   player1IsRed?: boolean;
-  controls: (string | React.ReactNode)[][];
+  controls?: (string | React.ReactNode)[][];
 }
 
 export const Scores = ({

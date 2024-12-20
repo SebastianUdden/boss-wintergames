@@ -131,7 +131,8 @@ export const TheClicker = ({
     <div className="flex flex-col items-center justify-start h-full">
       <h1 className="mb-2">Finger Walz</h1>
 
-      <div className="relative flex flex-col w-full h-full max-h-[70vh] max-w-[70vh] mt-6 bg-gray-800 rounded-xl items-center justify-center">
+      <div className="relative flex flex-col w-full h-full max-h-[70vh] max-w-[70vh] mt-6 bg-gray-800 rounded-xl items-center justify-center gap-6">
+        <ClickTimer timeLeft={timeLeft} />
         {(gameState === "ready" || gameState === "next") && (
           <Button
             className="p-10 text-3xl text-white bg-blue-500 rounded-full outline-none select-none hover:bg-blue-600"
@@ -142,7 +143,6 @@ export const TheClicker = ({
             {gameState === "next" ? "shortly" : ""}!
           </Button>
         )}
-        <ClickTimer timeLeft={timeLeft} />
         {(gameState === "active" || gameState === "finished") && (
           <ClickButton
             handleClick={handleClick}

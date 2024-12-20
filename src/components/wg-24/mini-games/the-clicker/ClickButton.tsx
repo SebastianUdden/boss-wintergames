@@ -30,7 +30,7 @@ export const ClickButton = ({
     <Button
       disabled={gameState === "finished"}
       className={cn(
-        "p-14 text-7xl text-white rounded-full outline-none select-none",
+        "w-1/4 p-12 text-5xl text-white rounded-full outline-none select-none border-none",
         getButtonColor(multiplier)
       )}
       onClick={handleClick}

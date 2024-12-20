@@ -121,7 +121,7 @@ export const TheFloor = ({ players, onGameComplete }: IMiniGameBase) => {
           )}
           {gameState === "active" && (
             <>
-              <img className="h-[55vh] rounded-xl" src={images[currentImage]} />
+              <img className="h-[45vh] rounded-xl" src={images[currentImage]} />
               <div className="flex mb-4 -translate-x-4">
                 <button
                   className={`px-4 py-2 mr-2 bg-green-800 rounded-md ${

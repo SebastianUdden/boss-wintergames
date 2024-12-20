@@ -90,10 +90,10 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
   }, [showP1Plank, showP2Plank]);
 
   useEffect(() => {
-    if (t1Score > 10) {
+    if (t1Score > 9) {
       setWinner(players[0][0].name);
     }
-    if (t2Score > 10) {
+    if (t2Score > 9) {
       setWinner(players[1][0].name);
     }
   }, [t1Score, t2Score, players]);
@@ -227,7 +227,15 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
         )}
       </div>
       <div className="w-full mt-4">
-        <Scores players={players} scores={[t1Score, t2Score]} winner={winner} />
+        <Scores
+          players={players}
+          scores={[t1Score, t2Score]}
+          winner={winner}
+          controls={[
+            ["w", "a", "s", "d", "Space"],
+            [<>&uarr;</>, <>&uarr;</>, <>&uarr;</>, <>&uarr;</>, "Enter"],
+          ]}
+        />
       </div>
     </div>
   );

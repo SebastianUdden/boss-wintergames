@@ -5,7 +5,7 @@ interface IClickTimer {
 export const ClickTimer = ({ timeLeft }: IClickTimer) => {
   return (
     <p
-      className="absolute px-16 py-5 m-auto text-white transition-transform duration-100 ease-out transform bg-black border border-white rounded-full select-none w-25 text-8xl top-36 position"
+      className="w-1/2 px-16 py-5 text-5xl text-white transition-transform duration-100 ease-out transform bg-black border border-white rounded-full select-none w-25"
       style={{
         transform:
           timeLeft < 2000

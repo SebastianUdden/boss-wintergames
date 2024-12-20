@@ -53,6 +53,8 @@ interface IModal {
   debug: boolean;
   setShowAllHeadings: Dispatch<SetStateAction<boolean>>;
   showAllHeadings: boolean;
+  setMiniGames: Dispatch<SetStateAction<IMiniGame[]>>;
+  miniGames: IMiniGame[];
 }
 
 export const AdminModal = ({
@@ -76,10 +78,13 @@ export const AdminModal = ({
   debug,
   setShowAllHeadings,
   showAllHeadings,
+  setMiniGames,
+  miniGames,
 }: IModal) => {
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState("jones");
   const [showStates, setShowStates] = useState(false);
+  const [showMiniGames, setShowMiniGames] = useState(false);
 
   useEffect(() => {
     setOpen(!!isOpen);
@@ -140,22 +145,22 @@ export const AdminModal = ({
             {password === "jones" ? "RELEASE THE KRAKEN!" : "Who goes there?"}
           </DialogTitle>
         </DialogHeader>
-        <DialogDescription className="flex flex-col flex-grow gap-6 text-xl text-left">
+        <DialogDescription className="flex flex-col flex-grow gap-6 overflow-scroll text-xl text-left">
           {password === "jones" ? (
             <>
-              <p>
-                Arrr, so the tides be turnin’ against ye, eh? Facin’ rough seas
-                or a crew hollerin’ mutiny? <br />
-                Fear not, the power o’ the gods flows through yer veins—just
-                don’t go turnin’ us into sea rats, savvy?
-              </p>
-              <button
-                className="w-full treasure-color font-pirata"
-                onClick={() => setShowAllHeadings(!showAllHeadings)}
-              >
-                {showAllHeadings ? "Lose" : "Gain"} clairvoyance
-              </button>
-              <div className="overflow-y-auto">
+              <div className="flex flex-col gap-4 overflow-y-auto">
+                <p>
+                  Arrr, so the tides be turnin’ against ye, eh? Facin’ rough
+                  seas or a crew hollerin’ mutiny? <br />
+                  Fear not, the power o’ the gods flows through yer veins—just
+                  don’t go turnin’ us into sea rats, savvy?
+                </p>
+                <button
+                  className="w-full treasure-color font-pirata"
+                  onClick={() => setShowAllHeadings(!showAllHeadings)}
+                >
+                  {showAllHeadings ? "Lose" : "Gain"} clairvoyance
+                </button>
                 <div className="flex justify-between gap-10">
                   {teams.map((t, i) => (
                     <ul className="flex flex-col w-full gap-2">
@@ -280,14 +285,18 @@ export const AdminModal = ({
                         </option>
                       ))}
                     </select>
-                    <Label className="p-4 ml-4 text-lg bg-orange-800 rounded-xl">
-                      {openGame?.name}
-                    </Label>
+                    {openGame?.name && (
+                      <Label className="p-4 ml-4 text-lg bg-orange-800 rounded-xl">
+                        {openGame?.name}
+                      </Label>
+                    )}
                   </div>
                   <div>
-                    <Label className="p-4 mr-4 text-lg bg-orange-800 rounded-xl">
-                      {phase}
-                    </Label>
+                    {phase && (
+                      <Label className="p-4 mr-4 text-lg bg-orange-800 rounded-xl">
+                        {phase}
+                      </Label>
+                    )}
                     <select
                       className="p-4 header"
                       onChange={(e) => onSetPhase(e.target.value)}
@@ -305,7 +314,7 @@ export const AdminModal = ({
                 </div>
                 <hr />
                 <h2
-                  className="text-3xl"
+                  className="text-3xl cursor-pointer hover:opacity-80"
                   onClick={() => setShowStates(!showStates)}
                 >
                   States
@@ -342,6 +351,71 @@ export const AdminModal = ({
                       <strong>Previous turns:</strong>{" "}
                       {JSON.stringify(previousTurns)}
                     </li>
+                  </ul>
+                )}
+                <h2
+                  className="text-3xl cursor-pointer hover:opacity-80"
+                  onClick={() => setShowMiniGames(!showMiniGames)}
+                >
+                  MiniGames
+                </h2>
+                {showMiniGames && miniGames && (
+                  <ul className="flex flex-col w-full gap-2">
+                    {miniGames
+                      .sort((a, b) => (a.name > b.name ? 1 : -1))
+                      .map((g) => (
+                        <li
+                          // onClick={() => handleMovePlayer(g.name)}
+                          className="flex justify-between w-full gap-1 p-2 bg-black border-2 border-white cursor-pointer rounded-xl"
+                        >
+                          <span>{g.name}</span>
+                          <div className="flex items-center gap-1">
+                            Weight: {g.weight}
+                            <button
+                              className={cn(
+                                "px-4 py-0 text-md bg-blue-600 text-white rounded-full hover:bg-blue-400"
+                              )}
+                              onClick={() =>
+                                setMiniGames(
+                                  miniGames.map((mg) =>
+                                    mg.name === g.name
+                                      ? {
+                                          ...g,
+                                          weight:
+                                            Math.round((g.weight - 0.1) * 100) /
+                                            100,
+                                        }
+                                      : mg
+                                  )
+                                )
+                              }
+                            >
+                              -
+                            </button>
+                            <button
+                              className={cn(
+                                "px-4 py-0 text-md bg-blue-600 text-white rounded-full hover:bg-blue-400"
+                              )}
+                              onClick={() =>
+                                setMiniGames(
+                                  miniGames.map((mg) =>
+                                    mg.name === g.name
+                                      ? {
+                                          ...g,
+                                          weight:
+                                            Math.round((g.weight + 0.1) * 100) /
+                                            100,
+                                        }
+                                      : mg
+                                  )
+                                )
+                              }
+                            >
+                              +
+                            </button>
+                          </div>
+                        </li>
+                      ))}
                   </ul>
                 )}
               </div>

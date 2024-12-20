@@ -41,13 +41,13 @@ export const Spinner = ({
     }
 
     const totalWeight = availableSlices.reduce(
-      (acc, slice) => acc + 1 / slice.weight,
+      (acc, slice) => acc + slice.weight, // Sum weights directly
       0
     );
     let randomNum = Math.random() * totalWeight;
 
     for (const availableSlice of availableSlices) {
-      randomNum -= 1 / availableSlice.weight;
+      randomNum -= availableSlice.weight; // Subtract weight directly
       if (randomNum <= 0) return availableSlice.index;
     }
 

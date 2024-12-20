@@ -38,6 +38,6 @@ export const provideScoresOnWinner = ({
           0
         );
       }
-    }, 5000);
+    }, 4000);
   }
 };

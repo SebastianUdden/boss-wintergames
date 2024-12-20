@@ -25,6 +25,8 @@ interface IHeader {
   setChosenPlayers: Dispatch<SetStateAction<IPlayer[][]>>;
   setDebug: Dispatch<SetStateAction<boolean>>;
   debug: boolean;
+  setMiniGames: Dispatch<SetStateAction<IMiniGame[]>>;
+  miniGames: IMiniGame[];
 }
 
 export const Header = ({
@@ -44,6 +46,8 @@ export const Header = ({
   setChosenPlayers,
   setDebug,
   debug,
+  setMiniGames,
+  miniGames,
 }: IHeader) => {
   const [showAllHeadings, setShowAllHeadings] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -81,6 +85,8 @@ export const Header = ({
         debug={debug}
         setShowAllHeadings={setShowAllHeadings}
         showAllHeadings={showAllHeadings}
+        setMiniGames={setMiniGames}
+        miniGames={miniGames}
       />
       <header className="z-20 flex items-center justify-between w-full h-[5vh] px-4 font-bold text-center black-sails-bg black-sails-text">
         <div className="relative inline-block">
