@@ -77,6 +77,7 @@ export type Phase =
   | "explaining-game"
   | "selecting-players"
   | "showing-combatants"
+  | "transition-to-playing-game"
   | "playing-game"
   | "calculating-score"
   | "selecting-captive"
@@ -90,6 +91,7 @@ export type Phase =
 const Layout = () => {
   const playerMoved = useRef(false);
   const [showSelector, setShowSelector] = useState(false);
+  const [showEndGame, setShowEndGame] = useState(true);
   const [debug, setDebug] = useState(false);
   const [phase, setPhase] = useStoredState<Phase>("phase", "ready");
   const [teams, setTeams] = useStoredState<ITeam[]>("teams", initialTeams);
@@ -125,16 +127,12 @@ const Layout = () => {
   const handleOpenGame = (name: string) => {
     const nextGame = miniGames.find((g) => g.name === name) ?? miniGames[0];
     if (nextGame.name === "Captain's Call") {
-      console.log("1");
       if (teams[0].players.length < teams[1].players.length) {
-        console.log("2");
         setChosenPlayers([teams[0].players.filter((p) => p.isCaptain), []]);
       } else {
-        console.log("3");
         setChosenPlayers([[], teams[1].players.filter((p) => p.isCaptain)]);
       }
     } else {
-      console.log("4");
       setChosenPlayers(getRandomPlayersForGame(teams, nextGame.gameType));
     }
     setOpenGame(nextGame);
@@ -216,6 +214,10 @@ const Layout = () => {
           }, 300);
 
           setTimeout(() => {
+            setPhase("transition-to-playing-game");
+          }, 2000);
+
+          setTimeout(() => {
             setPhase("playing-game");
           }, 3000);
 
@@ -268,7 +270,7 @@ const Layout = () => {
         // If no player to move and losing team has only one player, transition from game
         if (updatedTeams[losingTeamIndex].players.length === 1) {
           setTimeout(() => {
-            setPhase("transition-from-game");
+            setShowEndGame(true);
           }, 500);
         } else {
           // Otherwise, reset to ready
@@ -398,10 +400,6 @@ const Layout = () => {
     }
   }, [openGame]);
 
-  useEffect(() => {
-    console.log(chosenPlayers);
-  }, [chosenPlayers]);
-
   return (
     <div className="min-w-full min-h-screen shipwrecked h-[100vh]">
       <Header
@@ -472,9 +470,9 @@ const Layout = () => {
                     losingTeam={losingTeamName}
                     highlightedPlayers={highlightedPlayers}
                     phase={phase}
+                    showEndGame={showEndGame}
+                    endGame={() => setPhase("transition-from-game")}
                     onMovePlayer={(player) => {
-                      console.log({ player });
-                      console.log(teams[0]);
                       setHighlightedPlayers([
                         teams[0].players.find(
                           (p) => p.name === player
@@ -490,8 +488,8 @@ const Layout = () => {
                     phase === "explaining-game" ||
                       phase === "playing-game" ||
                       phase === "transition-to-game"
-                      ? ""
-                      : "hidden",
+                      ? "w-[70vw]"
+                      : "w-0",
                     phase === "explaining-game" || phase === "playing-game"
                       ? "translate-y-0"
                       : ""
@@ -532,8 +530,6 @@ const Layout = () => {
                               )
                           )
                         );
-                      console.log({ teams });
-                      console.log({ newLosers });
                       // Set the game phase to calculating score
                       setPhase("calculating-score");
 
@@ -625,9 +621,9 @@ const Layout = () => {
                     losingTeam={losingTeamName}
                     highlightedPlayers={highlightedPlayers}
                     phase={phase}
+                    showEndGame={showEndGame}
+                    endGame={() => setPhase("transition-from-game")}
                     onMovePlayer={(player) => {
-                      console.log({ player });
-                      console.log(teams[1]);
                       setHighlightedPlayers([
                         teams[1].players.find(
                           (p) => p.name === player
@@ -647,7 +643,11 @@ const Layout = () => {
               >
                 Games
               </button>
-              <Footer phase={phase} setPhase={setPhase} />
+              <Footer
+                phase={phase}
+                setPhase={setPhase}
+                showEndGame={showEndGame}
+              />
             </>
           )}
         </div>

@@ -41,8 +41,6 @@ export const GameRules = ({
     provideScoresOnWinner({ onGameComplete, players, winner });
   }, [winner, players]);
 
-  console.log(players);
-
   return (
     <div className="flex flex-col justify-between flex-grow select-none">
       {/* Content for rendering the game details */}

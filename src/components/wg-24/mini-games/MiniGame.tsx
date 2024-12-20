@@ -104,7 +104,7 @@ export const MiniGame = ({
         <Selector onSelectGame={handleSelectGame} />
       )}
       {(phase === "explaining-game" && !showSelector) ||
-        (phase === "playing-game" &&
+        ((phase === "playing-game" || phase === "transition-to-playing-game") &&
           analogGames.some((game) => game.name === name) && (
             <div className="relative flex m-auto">
               <img

@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 
+const LETTER_SPEED = 50;
+
 interface IGameOver {
   loserCaptain?: string;
 }
@@ -58,7 +60,7 @@ Before red seas rise and it be too late!`,
           clearInterval(typeEffect); // Stop interval when done
           setIsTypingComplete(true); // Mark typing as complete
         }
-      }, 5); // Typing speed in milliseconds
+      }, LETTER_SPEED); // Typing speed in milliseconds
 
       return () => clearInterval(typeEffect); // Cleanup interval
     }

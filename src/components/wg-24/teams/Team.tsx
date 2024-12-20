@@ -14,10 +14,11 @@ const sortByScore = (a: IPlayer, b: IPlayer) => {
 };
 
 interface TeamProps extends ITeam {
-  isUnOpposed: boolean;
   highlightedPlayers: IPlayer[];
   phase: Phase;
   losingTeam: string; // New prop to identify the losing team
+  showEndGame: boolean;
+  endGame: () => void;
   onMovePlayer: (name: string) => void;
 }
 
@@ -30,6 +31,8 @@ export const Team = ({
   highlightedPlayers,
   phase,
   losingTeam,
+  showEndGame,
+  endGame,
   onMovePlayer,
 }: TeamProps) => {
   const [justifyStartApplied, setJustifyStartApplied] = useState(false);
@@ -111,6 +114,11 @@ export const Team = ({
           onMovePlayer={onMovePlayer}
         />
       ))}
+      {showEndGame && sortedPlayers.length === 1 && (
+        <button className="mt-2 treasure treasure-color" onClick={endGame}>
+          Go down with the ship
+        </button>
+      )}
     </div>
   );
 };
