@@ -7,6 +7,7 @@ interface IScores {
   turn?: 0 | 1;
   winner: string | undefined;
   player1IsRed?: boolean;
+  controls: (string | React.ReactNode)[][];
 }
 
 export const Scores = ({
@@ -15,6 +16,7 @@ export const Scores = ({
   turn,
   winner,
   player1IsRed,
+  controls = [],
 }: IScores) => {
   if (!players || players.length === 0) return;
   return (
@@ -22,17 +24,20 @@ export const Scores = ({
       {players[0].length !== 0 &&
         (!winner || players[0][0].name === winner) && (
           <Score
+            teamName={player1IsRed ? "Red" : "Blue"}
             players={players[0]}
             score={scores[0]}
             isActive={
               turn === undefined || turn === 0 || players[0][0].name === winner
             }
             player1IsRed={player1IsRed}
+            controls={controls[0]}
           />
         )}
       {players[1].length !== 0 &&
         (!winner || players[1][0].name === winner) && (
           <Score
+            teamName={player1IsRed ? "Red" : "Blue"}
             players={players[1]}
             score={scores[1]}
             isActive={
@@ -40,6 +45,7 @@ export const Scores = ({
             }
             isRight={true}
             player1IsRed={player1IsRed}
+            controls={controls[1]}
           />
         )}
     </div>

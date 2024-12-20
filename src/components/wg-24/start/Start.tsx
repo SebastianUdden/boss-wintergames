@@ -74,14 +74,14 @@ export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
         A skull for the Red and a chest for the Blue, both helmsmen assigned to join a crew.`,
     },
     {
-      header: "Blue helmsman, greet your captain!",
-      playerSelection: true,
-      teamName: "Blue",
-    },
-    {
       header: "Red helmsman, greet your captain!",
       playerSelection: true,
       teamName: "Red",
+    },
+    {
+      header: "Blue helmsman, greet your captain!",
+      playerSelection: true,
+      teamName: "Blue",
     },
     {
       body: `  With helmsmen and crew each captain stand tall, but what of the ship that should carry them all?
@@ -99,11 +99,11 @@ export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
     {
       body: `   With ships and crew ready the voyage begins, helmsmen grab the rudders and follow the winds!
         Captain and crew you must heed their calls, they've wrestled with krakens and both got huge balls.
-        If their advice you can follow and voyage beyond, there's bounties galore when you leave this pond.`,
+        If their advice you can follow and voyage beyond, there's bounties galore when you leave this small pond.`,
     },
   ];
 
-  const [currentPart, setCurrentPart] = useState(14); // Tracks the current part being displayed
+  const [currentPart, setCurrentPart] = useState(0); // Tracks the current part being displayed
   const [currentText, setCurrentText] = useState(""); // Tracks the text being typed out
   const [isTypingComplete, setIsTypingComplete] = useState(false); // Indicates when typing is complete
 
@@ -114,7 +114,9 @@ export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
         availablePlayers.filter((p) => player.name !== p.name)
       );
       onUpdateTeam(0, [
-        currentPart < 3 ? { ...player, isCaptain: true } : player,
+        currentPart < 3
+          ? { ...player, isCaptain: true }
+          : { ...player, isCaptain: false },
       ]);
       setTimeout(() => {
         handleNextPart();
@@ -130,7 +132,9 @@ export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
         availablePlayers.filter((p) => player.name !== p.name)
       );
       onUpdateTeam(1, [
-        currentPart < 3 ? { ...player, isCaptain: true } : player,
+        currentPart < 3
+          ? { ...player, isCaptain: true }
+          : { ...player, isCaptain: false },
       ]);
       setTimeout(() => {
         handleNextPart();

@@ -51,6 +51,8 @@ interface IModal {
   setChosenPlayers: Dispatch<SetStateAction<IPlayer[][]>>;
   setDebug: Dispatch<SetStateAction<boolean>>;
   debug: boolean;
+  setShowAllHeadings: Dispatch<SetStateAction<boolean>>;
+  showAllHeadings: boolean;
 }
 
 export const AdminModal = ({
@@ -72,6 +74,8 @@ export const AdminModal = ({
   setChosenPlayers,
   setDebug,
   debug,
+  setShowAllHeadings,
+  showAllHeadings,
 }: IModal) => {
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState("jones");
@@ -145,6 +149,12 @@ export const AdminModal = ({
                 Fear not, the power o’ the gods flows through yer veins—just
                 don’t go turnin’ us into sea rats, savvy?
               </p>
+              <button
+                className="w-full treasure-color font-pirata"
+                onClick={() => setShowAllHeadings(!showAllHeadings)}
+              >
+                {showAllHeadings ? "Lose" : "Gain"} clairvoyance
+              </button>
               <div className="overflow-y-auto">
                 <div className="flex justify-between gap-10">
                   {teams.map((t, i) => (

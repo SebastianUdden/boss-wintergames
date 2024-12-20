@@ -88,13 +88,13 @@ export const miniGames: IMiniGame[] = [
   {
     id: 6,
     color: "#7F00FF",
-    name: "Lady of the sea",
-    gameType: "solo",
+    name: "Death or Booty",
+    gameType: "duell",
     song: "Harry Gregson-Williams - Arrival at Aslan's How",
     description: [
-      "Besättningen har strandat på en öde ö och med list och kreativitet ska de bygga sitt skepp, av de material de hittar på ön.",
-      "Tillsammans ska ni forma ett fartyg värdigt att segla över de sju haven.",
-      "Skeppet blir er trogna följeslagare i kommande strider, tills ni erövrar de sju haven eller möter ert öde och kaptenen förliser med skeppet.",
+      "Två modiga pirater möts i en avgörande duell med ödet - ett myntkast som avgör allt!",
+      "Ena sidan av myntet bär dödens fruktade skalle, medan den andra glänser av en skattkista fylld med rikedomar. Varje pirat satsar sitt öde och sitt mod på utgången!",
+      "Den första som ropar sitt val - 'Skalle' eller 'Kista' - binder sitt öde till myntets fall. Landar det på rätt sida, väntar ära och guld. Fel val kan däremot leda till skammen att gå lottlös över plankan till motståndarnas skepp!",
     ],
     isAnalog: true,
     weight: 1,

@@ -24,7 +24,7 @@ interface TheClickerProps extends IMiniGameBase {
 
 export const TheClicker = ({
   players,
-  initialTime = 1000,
+  initialTime = 3000,
   onGameComplete,
 }: TheClickerProps) => {
   const [turn, setTurn] = useState<0 | 1>(0);

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Spinner } from "./spinner/Spinner";
-import { miniGames } from "./mini-games/miniGames";
+import { miniGames as initMiniGames } from "./mini-games/miniGames";
 import { getRandomPlayer, IMiniGame, MiniGame } from "./mini-games/MiniGame";
 import { cn } from "@/lib/utils";
 import { Team } from "./teams/Team";
@@ -93,6 +93,7 @@ export type Phase =
 const Layout = () => {
   const playerMoved = useRef(false);
   const [showSelector, setShowSelector] = useState(false);
+  const [miniGames, setMiniGames] = useStoredState("mini-games", initMiniGames);
   const [showEndGame, setShowEndGame] = useState(false);
   const [debug, setDebug] = useState(false);
   const [phase, setPhase] = useStoredState<Phase>("phase", "start");
@@ -137,6 +138,13 @@ const Layout = () => {
     } else {
       setChosenPlayers(getRandomPlayersForGame(teams, nextGame.gameType));
     }
+    setMiniGames(
+      miniGames.map((g) =>
+        g.name === nextGame.name
+          ? { ...g, weight: g.weight > 0.3 ? g.weight - 0.1 : g.weight }
+          : g
+      )
+    );
     setOpenGame(nextGame);
   };
 

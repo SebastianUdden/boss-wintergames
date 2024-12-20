@@ -233,6 +233,10 @@ const MazeRunner = ({ teams, players, onGameComplete }: IMazeRunner) => {
           scores={scores}
           winner={winner}
           player1IsRed={player1IsRed}
+          controls={[
+            ["w", "a", "s", "d"],
+            [<>&uarr;</>, <>&larr;</>, <>&darr;</>, <>&rarr;</>],
+          ]}
         />
       </div>
     </div>

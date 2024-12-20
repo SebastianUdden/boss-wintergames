@@ -5,6 +5,7 @@ import { MatchedCards } from "./MatchedCards";
 import { IPlayer } from "../../teams/players";
 import { provideScoresOnWinner, Winner } from "../Winner";
 import { IMiniGameBase } from "../MiniGame";
+import { Scores } from "../Scores";
 
 const initialCards2 = [
   {
@@ -480,7 +481,20 @@ export const MemoryBoard = ({ players, onGameComplete }: IMiniGameBase) => {
       </div>
       <div className="grid grid-cols-[15%,1fr,15%] gap-4 w-full">
         <div />
-        <div className="flex items-end justify-between w-full gap-2">
+
+        <div className="w-full mt-auto">
+          <Scores
+            players={[players[0], players[1]]}
+            scores={scores}
+            winner={winner}
+            turn={turn}
+            controls={[
+              ["w", "a", "s", "d", "Enter"],
+              ["w", "a", "s", "d", "Enter"],
+            ]}
+          />
+        </div>
+        {/* <div className="flex items-end justify-between w-full gap-2">
           {players[0].length !== 0 &&
             (!winner || players[0][0].name === winner) && (
               <Score
@@ -500,7 +514,7 @@ export const MemoryBoard = ({ players, onGameComplete }: IMiniGameBase) => {
                 isRight={true}
               />
             )}
-        </div>
+        </div> */}
         <div />
       </div>
     </div>

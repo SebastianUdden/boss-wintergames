@@ -117,15 +117,15 @@ export const PlayerCard = ({
           "cursor-pointer",
         "!max-w-[10vh] 2xl:!max-w-full",
         highlight && isEligible && !isCaptain && phase === "animating-captive"
-          ? "translate-x-full opacity-0"
-          : "opacity-100",
+          ? "duration-500 translate-x-full opacity-0"
+          : "duration-300 opacity-100",
         rightAligned &&
           highlight &&
           isEligible &&
           !isCaptain &&
           phase === "animating-captive"
-          ? "-translate-x-full opacity-0"
-          : "opacity-100"
+          ? "duration-500 -translate-x-full opacity-0"
+          : "duration-300 opacity-100"
       )}
       style={{
         backgroundColor: highlight ? "#1e1e1eff" : "#1e1e1ebb",

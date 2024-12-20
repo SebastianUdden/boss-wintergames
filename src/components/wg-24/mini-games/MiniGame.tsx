@@ -104,28 +104,29 @@ export const MiniGame = ({
       {phase === "explaining-game" && showSelector && (
         <Selector onSelectGame={handleSelectGame} />
       )}
-      {(phase === "explaining-game" && !showSelector) ||
-        ((phase === "playing-game" || phase === "transition-to-playing-game") &&
-          analogGames.some((game) => game.name === name) && (
-            <div className="relative flex m-auto">
-              <img
-                src="/backgrounds/maps/pirate-map-background.png"
-                alt="Pirate Map"
-                className="flex flex-grow base-image"
-              />
-              <div className="content-overlay p-[14vw] py-[10vh] 2xl:p-[12vh]">
-                <GameRules
-                  teams={teams}
-                  players={chosenPlayers}
-                  {...miniGame}
-                  phase={phase}
-                  onFail={onFail}
-                  onGameComplete={onGameComplete}
-                />
-              </div>
-              <div className="overlay"></div>
-            </div>
-          ))}
+      {((phase === "explaining-game" && !showSelector) ||
+        (phase === "playing-game" &&
+          analogGames.some((game) => game.name === name)) ||
+        phase === "transition-to-playing-game") && (
+        <div className="relative flex m-auto">
+          <img
+            src="/backgrounds/maps/pirate-map-background.png"
+            alt="Pirate Map"
+            className="flex flex-grow base-image"
+          />
+          <div className="content-overlay p-[14vw] py-[10vh] 2xl:p-[12vh]">
+            <GameRules
+              teams={teams}
+              players={chosenPlayers}
+              {...miniGame}
+              phase={phase}
+              onFail={onFail}
+              onGameComplete={onGameComplete}
+            />
+          </div>
+          <div className="overlay"></div>
+        </div>
+      )}
       {phase === "playing-game" &&
         chosenPlayers.length !== 0 &&
         chosenPlayers[0].length !== 0 &&

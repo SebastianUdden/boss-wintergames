@@ -1,6 +1,7 @@
 import { Label } from "../ui/label";
 import { IPlayer } from "../teams/players";
 import { cn } from "@/lib/utils";
+import { Controls } from "./Controls";
 
 export interface IScore {
   players: IPlayer[];
@@ -11,14 +12,18 @@ interface IScoreProps extends IScore {
   isActive?: boolean;
   isRight?: boolean;
   player1IsRed?: boolean;
+  teamName: string;
+  controls?: (string | React.ReactNode)[];
 }
 
 export const Score = ({
   players,
+  teamName,
   score,
   isActive,
   isRight,
   player1IsRed,
+  controls,
 }: IScoreProps) => (
   <div className="relative w-full select-none">
     {/* Content container */}
@@ -31,7 +36,7 @@ export const Score = ({
       <div className="flex max-w-1/2">
         {players.length > 2 ? (
           <p className="flex items-center p-8 text-4xl border-2 border-black ocean-blue">
-            Blue
+            {teamName}
           </p>
         ) : (
           players.map((p) => (
@@ -43,6 +48,7 @@ export const Score = ({
           ))
         )}
       </div>
+      {controls && <Controls controls={controls} />}
       <div className={cn("flex flex-col-reverse", isRight ? "text-right" : "")}>
         <Label className="text-2xl">{players[0].name}</Label>
         <h2 className="text-8xl">

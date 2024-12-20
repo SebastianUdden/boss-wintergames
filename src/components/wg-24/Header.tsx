@@ -24,7 +24,7 @@ interface IHeader {
   previousTurns: string[];
   setChosenPlayers: Dispatch<SetStateAction<IPlayer[][]>>;
   setDebug: Dispatch<SetStateAction<boolean>>;
-  debug: Dispatch<SetStateAction<boolean>>;
+  debug: boolean;
 }
 
 export const Header = ({
@@ -45,6 +45,7 @@ export const Header = ({
   setDebug,
   debug,
 }: IHeader) => {
+  const [showAllHeadings, setShowAllHeadings] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showAdmin, setShowAdmin] = useStoredState(false);
   const blueChosen =
@@ -78,6 +79,8 @@ export const Header = ({
         setChosenPlayers={setChosenPlayers}
         setDebug={setDebug}
         debug={debug}
+        setShowAllHeadings={setShowAllHeadings}
+        showAllHeadings={showAllHeadings}
       />
       <header className="z-20 flex items-center justify-between w-full h-[5vh] px-4 font-bold text-center black-sails-bg black-sails-text">
         <div className="relative inline-block">
@@ -160,86 +163,106 @@ export const Header = ({
           </Button>
           {phase !== "game-over" && phase !== "start" && (
             <>
-              <Button
-                data-testid="ready-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("ready")}
-                disabled={phase === "ready"}
-              >
-                R<span className="hidden 2xl:inline">eady</span>
-              </Button>
-              <Button
-                data-testid="waiting-for-spin-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("waiting-for-spin")}
-                disabled={phase === "waiting-for-spin"}
-              >
-                W<span className="hidden 2xl:inline">aiting for spin</span>
-              </Button>
-              <Button
-                data-testid="spinning-wheel-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("spinning-wheel")}
-                disabled={phase === "spinning-wheel"}
-              >
-                S<span className="hidden 2xl:inline">pinning wheel</span>
-              </Button>
-              <Button
-                data-testid="explaining-game-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("explaining-game")}
-                disabled={phase === "explaining-game"}
-              >
-                E<span className="hidden 2xl:inline">xplaining game</span>
-              </Button>
-              <Button
-                data-testid="selecting-players-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("selecting-players")}
-                disabled={phase === "selecting-players"}
-              >
-                S<span className="hidden 2xl:inline">electing players</span>
-              </Button>
-              <Button
-                data-testid="playing-game-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("playing-game")}
-                disabled={phase === "playing-game"}
-              >
-                P<span className="hidden 2xl:inline">laying game</span>
-              </Button>
-              <Button
-                data-testid="calculating-score-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("calculating-score")}
-                disabled={phase === "calculating-score"}
-              >
-                C<span className="hidden 2xl:inline">alculating score</span>
-              </Button>
-              <Button
-                data-testid="selecting-captive-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("selecting-captive")}
-                disabled={phase === "selecting-captive"}
-              >
-                S<span className="hidden 2xl:inline">electing captive</span>
-              </Button>
-              <Button
-                data-testid="captains-choice-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("captains-choice")}
-                disabled={phase === "captains-choice"}
-              >
-                C<span className="hidden 2xl:inline">aptains choice</span>
-              </Button>
-              <Button
-                data-testid="transitioning-captive-state"
-                className="header disabled:bg-white disabled:text-black disabled:opacity-100"
-                onClick={() => onSetPhase("transitioning-captive")}
-                disabled={phase === "transitioning-captive"}
-              >
-                M<span className="hidden 2xl:inline">oving captive</span>
-              </Button>
+              {(showAllHeadings || phase === "ready") && (
+                <Button
+                  data-testid="ready-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("ready")}
+                  disabled={phase === "ready"}
+                >
+                  R<span className="hidden 2xl:inline">eady</span>
+                </Button>
+              )}
+              {(showAllHeadings || phase === "waiting-for-spin") && (
+                <Button
+                  data-testid="waiting-for-spin-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("waiting-for-spin")}
+                  disabled={phase === "waiting-for-spin"}
+                >
+                  W<span className="hidden 2xl:inline">aiting for spin</span>
+                </Button>
+              )}
+              {(showAllHeadings || phase === "spinning-wheel") && (
+                <Button
+                  data-testid="spinning-wheel-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("spinning-wheel")}
+                  disabled={phase === "spinning-wheel"}
+                >
+                  S<span className="hidden 2xl:inline">pinning wheel</span>
+                </Button>
+              )}
+              {(showAllHeadings || phase === "explaining-game") && (
+                <Button
+                  data-testid="explaining-game-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("explaining-game")}
+                  disabled={phase === "explaining-game"}
+                >
+                  E<span className="hidden 2xl:inline">xplaining game</span>
+                </Button>
+              )}
+              {(showAllHeadings || phase === "selecting-players") && (
+                <Button
+                  data-testid="selecting-players-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("selecting-players")}
+                  disabled={phase === "selecting-players"}
+                >
+                  S<span className="hidden 2xl:inline">electing players</span>
+                </Button>
+              )}
+              {(showAllHeadings || phase === "playing-game") && (
+                <Button
+                  data-testid="playing-game-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("playing-game")}
+                  disabled={phase === "playing-game"}
+                >
+                  P<span className="hidden 2xl:inline">laying game</span>
+                </Button>
+              )}
+              {(showAllHeadings || phase === "calculating-score") && (
+                <Button
+                  data-testid="calculating-score-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("calculating-score")}
+                  disabled={phase === "calculating-score"}
+                >
+                  C<span className="hidden 2xl:inline">alculating score</span>
+                </Button>
+              )}
+              {(showAllHeadings || phase === "selecting-captive") && (
+                <Button
+                  data-testid="selecting-captive-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("selecting-captive")}
+                  disabled={phase === "selecting-captive"}
+                >
+                  S<span className="hidden 2xl:inline">electing captive</span>
+                </Button>
+              )}
+              {(showAllHeadings || phase === "captains-choice") && (
+                <Button
+                  data-testid="captains-choice-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("captains-choice")}
+                  disabled={phase === "captains-choice"}
+                >
+                  C<span className="hidden 2xl:inline">aptains choice</span>
+                </Button>
+              )}
+              {(showAllHeadings || phase === "transitioning-captive") && (
+                <Button
+                  data-testid="transitioning-captive-state"
+                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  onClick={() => onSetPhase("transitioning-captive")}
+                  disabled={phase === "transitioning-captive"}
+                >
+                  M<span className="hidden 2xl:inline">oving captive</span>
+                </Button>
+              )}
             </>
           )}
         </div>

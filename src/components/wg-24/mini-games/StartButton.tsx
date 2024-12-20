@@ -8,7 +8,7 @@ interface IStartButton {
 
 export const StartButton = ({ onStartGame, children }: IStartButton) => (
   <Button
-    className="p-20 my-auto text-white ocean-blue text-8xl"
+    className="p-20 m-auto text-6xl text-white ocean-blue "
     onClick={onStartGame}
   >
     {children}
