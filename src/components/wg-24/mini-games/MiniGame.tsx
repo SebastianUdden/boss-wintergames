@@ -50,6 +50,7 @@ export interface IMiniGame {
   isSelected?: boolean;
   isAnalog?: boolean;
   weight: number;
+  weightDiff?: number;
   points?: {
     winner: number;
   };

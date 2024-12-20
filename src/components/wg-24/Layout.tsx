@@ -141,7 +141,11 @@ const Layout = () => {
     setMiniGames(
       miniGames.map((g) =>
         g.name === nextGame.name
-          ? { ...g, weight: g.weight > 0.1 ? g.weight - 0.3 : g.weight }
+          ? {
+              ...g,
+              weight:
+                g.weight >= g.weightDiff ? g.weight - g.weightDiff : g.weight,
+            }
           : g
       )
     );
