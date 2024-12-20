@@ -72,7 +72,7 @@ export const Team = ({
     >
       <h3
         className={cn(
-          "flex p-2 2xl:py-8 2xl:px-4 text-black text-lg 2xl:text-[4vh] border-2 border-black",
+          "flex p-2 2xl:py-8 2xl:px-4 text-black text-lg 2xl:text-[4vh] border-2 border-black overflow-hidden",
           color === "red" ? "rusty-red" : "stormy-seas-accent",
           minimized && justifyStartApplied
             ? "justify-start"
@@ -80,7 +80,7 @@ export const Team = ({
           rightAligned && "flex-row-reverse"
         )}
       >
-        <strong>{name}</strong>
+        <strong className="whitespace-nowrap">{name}</strong>
         <strong
           className={cn(
             "hidden 2xl:inline transition-opacity duration-500",

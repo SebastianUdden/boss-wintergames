@@ -444,9 +444,9 @@ const Layout = () => {
         setMiniGames={setMiniGames}
       />
       <main className="z-10" style={{ overflow: "hidden" }}>
-        {miniGames
+        {/* {miniGames
           ?.sort((a, b) => a.weight - b.weight)
-          .map((mg) => `${mg.name}: ${Math.round(mg.weight * 100) / 100}, `)}
+          .map((mg) => `${mg.name}: ${Math.round(mg.weight * 100) / 100}, `)} */}
         {debug && (
           <>
             <p>
@@ -511,6 +511,13 @@ const Layout = () => {
                 )}
                 {phase === "start" && (
                   <Start
+                    onUpdateShipName={(teamIndex, shipName) => {
+                      setTeams(
+                        teams?.map((t, i) =>
+                          i === teamIndex ? { ...t, name: shipName } : t
+                        )
+                      );
+                    }}
                     onUpdateTeam={(teamIndex, players) => {
                       if (teamIndex === 0 && teams) {
                         setTeams([

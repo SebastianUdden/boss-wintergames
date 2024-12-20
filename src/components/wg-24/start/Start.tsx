@@ -7,10 +7,16 @@ const LETTER_SPEED = 5;
 
 interface IStart {
   onUpdateTeam: (teamIndex: number, players: IPlayer[]) => void;
+  onUpdateShipName: (teamIndex: number, shipName: string) => void;
   onComplete?: () => void;
 }
 
-export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
+export const Start = ({
+  onUpdateTeam,
+  onUpdateShipName,
+  onComplete,
+}: IStart) => {
+  const [shipName, setShipName] = useState("");
   const [availablePlayers, setAvailablePlayers] = useState(
     players.filter((p) => p.name !== "Sebbe" && p.name !== "Mattis")
   );
@@ -18,7 +24,11 @@ export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
   const parts = [
     {
       header: "Welcome to the BOSS Pirate Games!",
-      body: `  Before we begin, two captains arise. Fight for your glory and then claim your prize.`,
+      body: `  An epic journey, win or lose. 
+The seas be ruled by pirate crews!
+
+Before we begin, two captains arise. 
+Fight for your glory and claim your prize.`,
     },
     {
       header: "Blue captain, step forth!",
@@ -71,7 +81,7 @@ export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
     {
       body: `  Now that they've recruited such a rugged crew. In but a short while can we let them stew.
         With dangers abound they must never slip, helmsmen step forth, as a coin you will flip.
-        A skull for the Red and a chest for the Blue, both helmsmen assigned to join a crew.`,
+        A skull for Red and a chest for Blue, both helmsmen assigned to join a crew.`,
     },
     {
       header: "Red helmsman, greet your captain!",
@@ -86,11 +96,21 @@ export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
     {
       body: `  With helmsmen and crew each captain stand tall, but what of the ship that should carry them all?
         They must toil to create it with blood, sweat and tears. Then bring it with them for all of their years.
-        This ship be their pride and it carries their fame, but she can not do so with no proper name.
+        This ship be their pride and it carries their fame, but she cannot do so without proper name.
         The prefix important, one Red and one Blue, the rest of the naming I leave up to you!
         Now go out and build them for glory and pride, find all the tools that these shipyards provide.
         When each ship is ready for the rest of the game, come back to this place and write in her name.
         `,
+    },
+    {
+      header: "Blue ship name",
+      shipName: true,
+      teamName: "Blue",
+    },
+    {
+      header: "Red ship name",
+      shipName: true,
+      teamName: "Red",
     },
     {
       body: `  Thus each ship is readied for the voyage ahead, with patience and virtue all doubts you have shed.
@@ -165,7 +185,12 @@ export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
     }
   }, [currentPart]);
 
+  const fullShipName = `${parts[currentPart].teamName} ${shipName}`;
+
   const handleNextPart = () => {
+    if (parts[currentPart].shipName) {
+      setShipName("");
+    }
     if (currentPart < parts.length - 1) {
       setDisableSelection(false);
       setCurrentPart((prev) => prev + 1);
@@ -194,6 +219,31 @@ export const Start = ({ onUpdateTeam, onComplete }: IStart) => {
           )}
           <h2 className="text-5xl font-bold">{parts[currentPart].header}</h2>
           <p className="whitespace-pre-wrap">{currentText}</p>
+          {parts[currentPart].shipName && (
+            <>
+              <div className="flex gap-4">
+                <input
+                  className="p-4 rounded-md"
+                  value={shipName}
+                  onChange={(e) => {
+                    setShipName(e.target.value);
+                  }}
+                />
+                <button
+                  className="treasure treasure-color"
+                  onClick={() => {
+                    onUpdateShipName(
+                      parts[currentPart].teamName === "Blue" ? 0 : 1,
+                      fullShipName
+                    );
+                  }}
+                >
+                  Try it
+                </button>
+              </div>
+              <p>{fullShipName}</p>
+            </>
+          )}
           {parts[currentPart].playerSelection && (
             <Players
               players={availablePlayers}

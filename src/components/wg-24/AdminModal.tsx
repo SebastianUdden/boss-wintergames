@@ -106,6 +106,7 @@ export const AdminModal = ({
   const handleClearPrefixAndClose = () => {
     clearPrefixedStored();
     handleOpenChange(false);
+    window.location.reload();
   };
   const handleDebugModeAndClose = () => {
     setDebug(!debug);
