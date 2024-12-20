@@ -90,30 +90,34 @@ export const Team = ({
           Vinster/Förluster
         </strong>
       </h3>
-      {sortedPlayers?.map((player, index) => (
-        <PlayerCard
-          key={index}
-          {...player}
-          minimized={minimized}
-          rightAligned={rightAligned}
-          highlighted={
-            player &&
-            highlightedPlayers &&
-            highlightedPlayers.length !== 0 &&
-            highlightedPlayers?.some(
-              (hp) => hp !== null && hp.name === player.name
-            )
-          }
-          isEligible={
-            (phase === "captains-choice" || phase === "animating-captive") &&
-            name === losingTeam
-          } // Check eligibility
-          phase={phase}
-          playerCount={players.length}
-          justifyStartApplied={justifyStartApplied}
-          onMovePlayer={onMovePlayer}
-        />
-      ))}
+      {sortedPlayers?.map(
+        (player, index) =>
+          player.name && (
+            <PlayerCard
+              key={index}
+              {...player}
+              minimized={minimized}
+              rightAligned={rightAligned}
+              highlighted={
+                player &&
+                highlightedPlayers &&
+                highlightedPlayers.length !== 0 &&
+                highlightedPlayers?.some(
+                  (hp) => hp !== null && hp.name === player.name
+                )
+              }
+              isEligible={
+                (phase === "captains-choice" ||
+                  phase === "animating-captive") &&
+                name === losingTeam
+              } // Check eligibility
+              phase={phase}
+              playerCount={players.length}
+              justifyStartApplied={justifyStartApplied}
+              onMovePlayer={onMovePlayer}
+            />
+          )
+      )}
       {showEndGame && sortedPlayers.length === 1 && (
         <button className="mt-2 treasure treasure-color" onClick={endGame}>
           Go down with the ship

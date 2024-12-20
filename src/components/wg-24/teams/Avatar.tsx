@@ -46,12 +46,15 @@ export const Avatar = ({ name, image, size, highlighted, phase }: IAvatar) => {
       )}
 
       {/* Black overlay if not highlighted */}
-      {!highlighted && phase !== "ready" && phase !== "waiting-for-spin" && (
-        <div
-          className="absolute inset-0 bg-black bg-opacity-50 pointer-events-none"
-          style={{ borderRadius: "inherit" }} // Matches parent border-radius
-        ></div>
-      )}
+      {!highlighted &&
+        phase !== "ready" &&
+        phase !== "start" &&
+        phase !== "waiting-for-spin" && (
+          <div
+            className="absolute inset-0 bg-black bg-opacity-50 pointer-events-none"
+            style={{ borderRadius: "inherit" }} // Matches parent border-radius
+          ></div>
+        )}
     </div>
   );
 };

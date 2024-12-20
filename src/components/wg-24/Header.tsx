@@ -99,7 +99,7 @@ export const Header = ({
             Games <span className="hidden xs:inline">2024</span>
           </h1>
         </div>
-        {openGame && phase !== "game-over" && (
+        {openGame && phase !== "game-over" && phase !== "start" && (
           <div className="flex items-center gap-4">
             {blueChosen &&
               (phase === "playing-game" ||
@@ -145,6 +145,11 @@ export const Header = ({
             <h3>The Note</h3>
           </div>
         )}
+        {phase === "start" && (
+          <div className="items-center gap-4 fled">
+            <h3>Welcome</h3>
+          </div>
+        )}
         <div className="flex h-full m-0 font-fell">
           <Button
             data-testid="ready-state"
@@ -153,7 +158,7 @@ export const Header = ({
           >
             K<span className="hidden 2xl:inline">raken</span>
           </Button>
-          {phase !== "game-over" && (
+          {phase !== "game-over" && phase !== "start" && (
             <>
               <Button
                 data-testid="ready-state"

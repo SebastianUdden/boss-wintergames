@@ -51,7 +51,10 @@ export const PlayerCard = ({
     }, 1000);
   }, [showScore]);
 
+  console.log({ phase });
+
   const isHighlightPhase =
+    phase === "start" ||
     phase === "selecting-players" ||
     phase === "showing-combatants" ||
     phase === "playing-game" ||
@@ -70,7 +73,7 @@ export const PlayerCard = ({
   const shouldShowCaptainIcon =
     isCaptain && (!highlighted || phase !== "playing-game");
   const shouldShowCutlassIcon = highlighted && phase === "showing-combatants";
-
+  console.log({ name, image, phase, isCaptain });
   return (
     <div
       data-id={name}

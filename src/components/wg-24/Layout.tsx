@@ -10,6 +10,7 @@ import { Footer } from "./Footer";
 import { IPlayer } from "./teams/players";
 import { useStoredState } from "./storedState";
 import { GameOver } from "./GameOver";
+import { Start } from "./start/Start";
 
 type Turn = 0 | 1;
 type LosingTeamIndex = 0 | 1 | undefined;
@@ -69,6 +70,7 @@ const getRandomPlayersForGame = (
   return [[]];
 };
 export type Phase =
+  | "start"
   | "ready"
   | "waiting-for-spin"
   | "spinning-wheel"
@@ -91,9 +93,9 @@ export type Phase =
 const Layout = () => {
   const playerMoved = useRef(false);
   const [showSelector, setShowSelector] = useState(false);
-  const [showEndGame, setShowEndGame] = useState(true);
+  const [showEndGame, setShowEndGame] = useState(false);
   const [debug, setDebug] = useState(false);
-  const [phase, setPhase] = useStoredState<Phase>("phase", "ready");
+  const [phase, setPhase] = useStoredState<Phase>("phase", "start");
   const [teams, setTeams] = useStoredState<ITeam[]>("teams", initialTeams);
   const [losers, setLosers] = useStoredState<IPlayer[]>("losers", []);
   const [teamsTurn, setTeamsTurn] = useStoredState<Turn>(
@@ -455,11 +457,13 @@ const Layout = () => {
                 phase === "game-over" ? "translate-y-0" : "translate-y-[100vh]"
               )}
             >
-              <GameOver
-                loserCaptain={
-                  teams?.find((t) => t.players.length === 1)?.players[0].name
-                }
-              />
+              {phase === "game-over" && (
+                <GameOver
+                  loserCaptain={
+                    teams?.find((t) => t.players.length === 1)?.players[0].name
+                  }
+                />
+              )}
             </div>
           ) : (
             <>
@@ -482,139 +486,169 @@ const Layout = () => {
                     }}
                   />
                 )}
-                <div
-                  className={cn(
-                    "flex h-[90vh] w-[70vw] translate-y-[100vh] transition-all duration-1000",
-                    phase === "explaining-game" ||
-                      phase === "playing-game" ||
-                      phase === "transition-to-game"
-                      ? "w-[70vw]"
-                      : "w-0",
-                    phase === "explaining-game" || phase === "playing-game"
-                      ? "translate-y-0"
-                      : ""
-                  )}
-                >
-                  <MiniGame
-                    teams={teams}
-                    phase={phase}
-                    miniGame={openGame}
-                    chosenPlayers={chosenPlayers}
-                    showSelector={showSelector}
-                    onFail={() => setPhase("ready")}
-                    onSelectGame={(index) => {
-                      setShowSelector(false);
-                      setOpenGame(undefined);
-                      setTimeout(() => {
-                        handleOpenGame(miniGames[index].name);
-                      }, 100);
+                {phase === "start" && (
+                  <Start
+                    onUpdateTeam={(teamIndex, players) => {
+                      if (teamIndex === 0 && teams) {
+                        setTeams([
+                          {
+                            ...teams[0],
+                            players: [...teams[0].players, ...players],
+                          },
+                          teams[1],
+                        ]);
+                      } else if (teams) {
+                        setTeams([
+                          teams[0],
+                          {
+                            ...teams[1],
+                            players: [...teams[1].players, ...players],
+                          },
+                        ]);
+                      }
                     }}
-                    onGameComplete={(playerScores, loserIndex) => {
-                      // Filter out player scores where the score is 0, as they do not affect the outcome
-                      const filteredPlayerScores = playerScores.filter(
-                        (ps) => ps.score !== 0
-                      );
-
-                      // Identify new losers: players whose teams scored negative and are not captains in the current teams
-                      const newLosers = playerScores
-                        .filter((ps) => ps.score < 0) // Keep only negative scores
-                        .flatMap((ps) =>
-                          ps.players.filter(
-                            (player) =>
-                              !teams.some((team) =>
-                                team.players.some(
-                                  (teamPlayer) =>
-                                    teamPlayer.isCaptain &&
-                                    teamPlayer.name === player.name
-                                )
-                              )
-                          )
-                        );
-                      // Set the game phase to calculating score
-                      setPhase("calculating-score");
-
-                      // Update teams with `showScore` for each player
-                      const newTeams = teams.map((team) => ({
-                        ...team,
-                        players: team.players.map((player) => {
-                          const matchingScore = filteredPlayerScores.find(
-                            (ps) =>
-                              ps.players.some((p) => p.name === player.name)
-                          );
-                          return {
-                            ...player,
-                            showScore: matchingScore
-                              ? matchingScore.score
-                              : undefined, // Assign score if present
-                          };
-                        }),
-                      }));
-
-                      // Update state with new teams, losers, and losing team index
-                      setTeams(newTeams);
-                      setLosers(newLosers);
-                      setLosingTeamIndex(loserIndex);
-                      setOpenGame(undefined); // Clear the current game
-
-                      // Delay for score visualization before transitioning to the next phase
-                      setTimeout(() => {
-                        const updatedTeams = teams.map((team) => ({
-                          ...team,
-                          minimized: false, // Ensure all teams are fully expanded
-                          players: team.players.map((player) => {
-                            let { wins, losses } = player;
-
-                            // Adjust wins and losses based on the filtered scores
-                            filteredPlayerScores.forEach((ps) => {
-                              if (
-                                ps.players.some((p) => p.name === player.name)
-                              ) {
-                                if (ps.score > 0) {
-                                  wins = (wins ?? 0) + ps.score; // Increment wins for positive scores
-                                } else if (ps.score < 0) {
-                                  losses = (losses ?? 0) - ps.score; // Increment losses for negative scores
-                                }
-                              }
-                            });
-
-                            return {
-                              ...player,
-                              wins,
-                              losses,
-                              showScore: undefined, // Clear the temporary score display
-                            };
-                          }),
-                        }));
-
-                        // Update teams and transition to the next phase
-                        setTeams(updatedTeams);
-                        setPhase("selecting-captive");
-                      }, 5000);
-                    }}
+                    onComplete={() => setPhase("ready")}
                   />
-                </div>
-                <div
-                  className={cn(
-                    "flex -translate-x-[5%] sm:-translate-x-0 h-[80vh] w-[80vh] translate-y-[100vh] transition-all duration-1000 bg-center bg-cover bg-wheel-of-fortune",
-                    phase === "spinning-wheel" ? "translate-y-[17vh]" : "",
-                    phase === "waiting-for-spin" ||
-                      phase === "spinning-wheel" ||
-                      phase === "transition-from-spinning"
-                      ? ""
-                      : "hidden"
-                  )}
-                >
-                  {phase !== "ready" && (
-                    <Spinner
-                      // turn={highlightedPlayers[0].name}
-                      turn="ivar"
-                      onGameSelected={handleOpenGame}
-                      onPhaseChange={(p) => setPhase(p)}
-                      phase={phase}
-                      wheelSize="55vh"
-                    />
-                  )}
-                </div>
+                )}
+                {phase !== "start" && (
+                  <>
+                    <div
+                      className={cn(
+                        "flex h-[90vh] w-[70vw] translate-y-[100vh] transition-all duration-1000",
+                        phase === "explaining-game" ||
+                          phase === "playing-game" ||
+                          phase === "transition-to-game"
+                          ? "w-[70vw]"
+                          : "w-0",
+                        phase === "explaining-game" || phase === "playing-game"
+                          ? "translate-y-0"
+                          : ""
+                      )}
+                    >
+                      <MiniGame
+                        teams={teams}
+                        phase={phase}
+                        miniGame={openGame}
+                        chosenPlayers={chosenPlayers}
+                        showSelector={showSelector}
+                        onFail={() => setPhase("ready")}
+                        onSelectGame={(index) => {
+                          setShowSelector(false);
+                          setOpenGame(undefined);
+                          setTimeout(() => {
+                            handleOpenGame(miniGames[index].name);
+                          }, 100);
+                        }}
+                        onGameComplete={(playerScores, loserIndex) => {
+                          // Filter out player scores where the score is 0, as they do not affect the outcome
+                          const filteredPlayerScores = playerScores.filter(
+                            (ps) => ps.score !== 0
+                          );
+
+                          // Identify new losers: players whose teams scored negative and are not captains in the current teams
+                          const newLosers = playerScores
+                            .filter((ps) => ps.score < 0) // Keep only negative scores
+                            .flatMap((ps) =>
+                              ps.players.filter(
+                                (player) =>
+                                  !teams.some((team) =>
+                                    team.players.some(
+                                      (teamPlayer) =>
+                                        teamPlayer.isCaptain &&
+                                        teamPlayer.name === player.name
+                                    )
+                                  )
+                              )
+                            );
+                          // Set the game phase to calculating score
+                          setPhase("calculating-score");
+
+                          // Update teams with `showScore` for each player
+                          const newTeams = teams.map((team) => ({
+                            ...team,
+                            players: team.players.map((player) => {
+                              const matchingScore = filteredPlayerScores.find(
+                                (ps) =>
+                                  ps.players.some((p) => p.name === player.name)
+                              );
+                              return {
+                                ...player,
+                                showScore: matchingScore
+                                  ? matchingScore.score
+                                  : undefined, // Assign score if present
+                              };
+                            }),
+                          }));
+
+                          // Update state with new teams, losers, and losing team index
+                          setTeams(newTeams);
+                          setLosers(newLosers);
+                          setLosingTeamIndex(loserIndex);
+                          setOpenGame(undefined); // Clear the current game
+
+                          // Delay for score visualization before transitioning to the next phase
+                          setTimeout(() => {
+                            const updatedTeams = teams.map((team) => ({
+                              ...team,
+                              minimized: false, // Ensure all teams are fully expanded
+                              players: team.players.map((player) => {
+                                let { wins, losses } = player;
+
+                                // Adjust wins and losses based on the filtered scores
+                                filteredPlayerScores.forEach((ps) => {
+                                  if (
+                                    ps.players.some(
+                                      (p) => p.name === player.name
+                                    )
+                                  ) {
+                                    if (ps.score > 0) {
+                                      wins = (wins ?? 0) + ps.score; // Increment wins for positive scores
+                                    } else if (ps.score < 0) {
+                                      losses = (losses ?? 0) - ps.score; // Increment losses for negative scores
+                                    }
+                                  }
+                                });
+
+                                return {
+                                  ...player,
+                                  wins,
+                                  losses,
+                                  showScore: undefined, // Clear the temporary score display
+                                };
+                              }),
+                            }));
+
+                            // Update teams and transition to the next phase
+                            setTeams(updatedTeams);
+                            setPhase("selecting-captive");
+                          }, 5000);
+                        }}
+                      />
+                    </div>
+                    <div
+                      className={cn(
+                        "flex -translate-x-[5%] sm:-translate-x-0 h-[80vh] w-[80vh] translate-y-[100vh] transition-all duration-1000 bg-center bg-cover bg-wheel-of-fortune",
+                        phase === "spinning-wheel" ? "translate-y-[17vh]" : "",
+                        phase === "waiting-for-spin" ||
+                          phase === "spinning-wheel" ||
+                          phase === "transition-from-spinning"
+                          ? ""
+                          : "hidden"
+                      )}
+                    >
+                      {phase !== "ready" && (
+                        <Spinner
+                          // turn={highlightedPlayers[0].name}
+                          turn="ivar"
+                          onGameSelected={handleOpenGame}
+                          onPhaseChange={(p) => setPhase(p)}
+                          phase={phase}
+                          wheelSize="55vh"
+                        />
+                      )}
+                    </div>
+                  </>
+                )}
                 {teams[1].players.length > 0 && (
                   <Team
                     {...teams[1]}

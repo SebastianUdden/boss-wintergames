@@ -18,7 +18,7 @@ export const initialTeams: ITeam[] = [
     color: "blue",
     minimized: true,
     rightAligned: false,
-    players: players.slice(0, skewTeamSize),
+    players: [],
   },
   {
     id: 1,
@@ -26,6 +26,6 @@ export const initialTeams: ITeam[] = [
     color: "red",
     minimized: true,
     rightAligned: true,
-    players: players.slice(skewTeamSize, players.length),
+    players: [],
   },
 ];
