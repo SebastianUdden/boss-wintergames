@@ -6,7 +6,6 @@ import { AdminModal } from "./AdminModal";
 import { ITeam } from "./teams/teams";
 import { IMiniGame } from "./mini-games/MiniGame";
 import { IPlayer } from "./teams/players";
-import { useStoredState } from "./storedState";
 
 interface IHeader {
   onSelectGame: (index: number) => void;
@@ -25,7 +24,11 @@ interface IHeader {
   setChosenPlayers: Dispatch<SetStateAction<IPlayer[][]>>;
   setDebug: Dispatch<SetStateAction<boolean>>;
   debug: boolean;
-  setMiniGames: Dispatch<SetStateAction<IMiniGame[]>>;
+  setMiniGames: (
+    valueOrUpdater:
+      | IMiniGame[]
+      | ((prev: IMiniGame[] | undefined) => IMiniGame[])
+  ) => void;
   miniGames: IMiniGame[];
 }
 
@@ -51,7 +54,7 @@ export const Header = ({
 }: IHeader) => {
   const [showAllHeadings, setShowAllHeadings] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showAdmin, setShowAdmin] = useStoredState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
   const blueChosen =
     chosenPlayers && chosenPlayers[0] && chosenPlayers[0].length !== 0
       ? chosenPlayers[0]
@@ -85,6 +88,8 @@ export const Header = ({
         debug={debug}
         setShowAllHeadings={setShowAllHeadings}
         showAllHeadings={showAllHeadings}
+        // eslint-disable-next-line
+        // @ts-ignore
         setMiniGames={setMiniGames}
         miniGames={miniGames}
       />

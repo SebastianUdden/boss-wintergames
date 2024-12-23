@@ -4,6 +4,7 @@ import { IPlayer } from "../teams/players";
 interface IPlayers {
   players: IPlayer[];
   onSelect: (player: IPlayer) => void;
+  disableSelection: boolean;
 }
 
 export const Players = ({ players, disableSelection, onSelect }: IPlayers) => {

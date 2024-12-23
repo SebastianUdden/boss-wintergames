@@ -18,7 +18,7 @@ export const TheFloor = ({ players, onGameComplete }: IMiniGameBase) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [gameState, setGameState] = useState<GameState>("ready");
   const [message, setMessage] = useState("");
-  const [category, setCategory] = useState("Things found on a pirate ship...");
+  const [category] = useState("Things found on a pirate ship...");
   const [messageState, setMessageState] = useState<
     "correct" | "pass" | "empty"
   >("empty");
@@ -155,6 +155,7 @@ export const TheFloor = ({ players, onGameComplete }: IMiniGameBase) => {
         </div>
         <Timer time={player2Time} />
       </div>
+      <p>{message}</p>
       <div className="grid grid-cols-[15%,1fr,15%] gap-4 w-full">
         <div />
         <div className="flex items-end justify-between w-full gap-2">

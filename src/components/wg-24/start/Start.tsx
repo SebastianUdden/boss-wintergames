@@ -127,7 +127,7 @@ Fight for your glory and claim your prize.`,
   const [currentText, setCurrentText] = useState(""); // Tracks the text being typed out
   const [isTypingComplete, setIsTypingComplete] = useState(false); // Indicates when typing is complete
 
-  const handleSelect = (type: string, player: IPlayer) => {
+  const handleSelect = (player: IPlayer, type?: string) => {
     if (type === "Blue") {
       setDisableSelection(true);
       setAvailablePlayers(
@@ -206,17 +206,17 @@ Fight for your glory and claim your prize.`,
       />
       <div className="flex flex-col gap-6 content-overlay p-[14vw] py-[12vh] 2xl:px-[15vh] text-3xl z-50">
         <>
-          {parts[currentPart].img && (
-            <img
-              className="object-cover transition-transform origin-center rounded-full aspect-square"
-              src={parts[currentPart].img}
-              style={{
-                width: "15vh",
-                height: "15vh",
-                transformOrigin: "center",
-              }}
-            />
-          )}
+          {/* {parts[currentPart].img && (
+              <img
+                className="object-cover transition-transform origin-center rounded-full aspect-square"
+                src={parts[currentPart].img}
+                style={{
+                  width: "15vh",
+                  height: "15vh",
+                  transformOrigin: "center",
+                }}
+              />
+            )} */}
           <h2 className="text-5xl font-bold">{parts[currentPart].header}</h2>
           <p className="whitespace-pre-wrap">{currentText}</p>
           {parts[currentPart].shipName && (
@@ -247,7 +247,7 @@ Fight for your glory and claim your prize.`,
           {parts[currentPart].playerSelection && (
             <Players
               players={availablePlayers}
-              onSelect={(p) => handleSelect(parts[currentPart].teamName, p)}
+              onSelect={(p) => handleSelect(p, parts[currentPart].teamName)}
               disableSelection={disableSelection}
             />
           )}

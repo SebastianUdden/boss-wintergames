@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export interface ICard {
+  id: number;
   pairId: number;
   isFlipped: boolean;
   img: string;
@@ -21,7 +22,6 @@ export const Card = ({
   borderColor,
   isFlipped,
   isMatched,
-  pairId,
   img,
   isActive,
   canFlip,

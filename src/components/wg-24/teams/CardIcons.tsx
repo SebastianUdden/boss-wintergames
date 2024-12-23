@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 
 export const BallChainIcon = ({
-  size,
   rightAligned,
 }: {
   size: number;
@@ -37,7 +36,6 @@ export const CaptainIcon = ({
 );
 
 export const CutlassIcon = ({
-  size,
   rightAligned,
 }: {
   size: number;

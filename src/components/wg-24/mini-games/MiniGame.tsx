@@ -14,18 +14,18 @@ import { Pong } from "./pong/Pong";
 import { miniGames } from "./miniGames";
 
 const analogGames = miniGames.filter((minigame) => minigame.isAnalog);
-const filterCaptainsCall = (
-  players: IPlayer[][],
-  teams: ITeam[],
-  name?: string
-) => {
-  if (name && name !== "Captain's Call") return players;
-  if (teams[0].players.length < teams[1].players.length) {
-    return [teams[0].players.find((p) => p.isCaptain)];
-  } else {
-    return [teams[1].players.find((p) => p.isCaptain)];
-  }
-};
+// const filterCaptainsCall = (
+//   players: IPlayer[][],
+//   teams: ITeam[],
+//   name?: string
+// ) => {
+//   if (name && name !== "Captain's Call") return players;
+//   if (teams[0].players.length < teams[1].players.length) {
+//     return [teams[0].players.find((p) => p.isCaptain)];
+//   } else {
+//     return [teams[1].players.find((p) => p.isCaptain)];
+//   }
+// };
 export const getRandomPlayer = (array: IPlayer[]) => {
   if (array.length === 0) return [];
   const randomIndex = Math.floor(Math.random() * array.length);
@@ -38,15 +38,15 @@ export interface IMiniGameBase {
 }
 
 export interface IMiniGame {
-  id: number;
-  color: string;
-  name: string;
-  gameType: "solo" | "duell" | "2v2" | "lagkamp" | "fångar";
+  id?: number;
+  color?: string;
+  name?: string;
+  gameType?: "solo" | "duell" | "2v2" | "lagkamp" | "fångar";
   concept?: string;
   instructions?: string[];
   description?: string[];
   criteria?: string[];
-  song: string;
+  song?: string;
   isSelected?: boolean;
   isAnalog?: boolean;
   weight: number;
@@ -58,7 +58,7 @@ export interface IMiniGame {
 
 export interface MiniGameProps {
   teams: ITeam[];
-  miniGame?: IMiniGame;
+  miniGame: IMiniGame;
   chosenPlayers: IPlayer[][];
   phase: Phase;
   showSelector: boolean;
@@ -77,7 +77,7 @@ export const MiniGame = ({
   onGameComplete,
   onSelectGame,
 }: MiniGameProps) => {
-  const { name } = miniGame ?? {};
+  const { name } = miniGame ?? { name: "" };
   // const players = filterCaptainsCall(chosenPlayers, teams, name);
   const handleSelectGame = (index: number) => {
     onSelectGame(index);

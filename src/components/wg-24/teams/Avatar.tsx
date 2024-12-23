@@ -4,8 +4,8 @@ import { Phase } from "../Layout";
 
 interface IAvatar extends IPlayer {
   size: number;
-  highlighted: boolean;
-  phase: Phase;
+  highlighted?: boolean;
+  phase?: Phase;
 }
 
 export const Avatar = ({ name, image, size, highlighted, phase }: IAvatar) => {

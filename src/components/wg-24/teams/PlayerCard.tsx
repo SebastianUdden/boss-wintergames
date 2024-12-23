@@ -6,8 +6,8 @@ import { Phase } from "../Layout";
 import { BallChainIcon, CaptainIcon, CutlassIcon } from "./CardIcons";
 
 interface IPlayerCard extends IPlayer {
-  highlighted: boolean;
-  phase: Phase;
+  highlighted?: boolean;
+  phase?: Phase;
   rightAligned: boolean;
   minimized: boolean;
   playerCount: number;

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 
-const LETTER_SPEED = 5;
+const LETTER_SPEED = 20;
 
 interface IGameOver {
   loserCaptain?: string;

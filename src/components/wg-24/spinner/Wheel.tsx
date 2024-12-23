@@ -3,6 +3,7 @@ import { useCallback, useState, useEffect, useRef } from "react";
 import "./wheel.css";
 import { cn } from "@/lib/utils";
 import { IMiniGame } from "../mini-games/MiniGame";
+import { Phase } from "../Layout";
 
 const sliceTranslations = {
   0: { x: 0, y: -10, rotate: -25 }, // Memory
@@ -51,7 +52,7 @@ const getSliceClasses = ({
 };
 
 interface IWheel {
-  phase: string;
+  phase?: Phase;
   wheelSize: string;
   slices: IMiniGame[];
   selectedIndex?: number; // Index of the slice to be at the top when spinning ends

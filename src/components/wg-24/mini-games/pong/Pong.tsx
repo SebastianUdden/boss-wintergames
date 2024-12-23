@@ -54,12 +54,11 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
   };
 
   // Track paddle sizes
-  const { keys, player1PaddleHeight, player2PaddleHeight, resetPaddleHeights } =
-    usePaddleControls({
-      gameState,
-      gameBoxRef,
-      initialPaddleHeight: INITIAL_PADDLE_HEIGHT,
-    });
+  const { keys, player1PaddleHeight, player2PaddleHeight } = usePaddleControls({
+    gameState,
+    gameBoxRef,
+    initialPaddleHeight: INITIAL_PADDLE_HEIGHT,
+  });
 
   const {
     t1Score,

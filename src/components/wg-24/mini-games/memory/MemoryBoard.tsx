@@ -1,166 +1,166 @@
 import { useEffect, useState } from "react";
 import { Card, ICard } from "./Card";
-import { IScore, Score } from "../Score";
+// import { IScore, Score } from "../Score";
 import { MatchedCards } from "./MatchedCards";
-import { IPlayer } from "../../teams/players";
+// import { IPlayer } from "../../teams/players";
 import { provideScoresOnWinner, Winner } from "../Winner";
 import { IMiniGameBase } from "../MiniGame";
 import { Scores } from "../Scores";
 
-const initialCards2 = [
-  {
-    id: 0,
-    pairId: 0,
-    isFlipped: false,
-    img: "/games/memory/meatclub.png",
-    matchedBy: 0,
-  },
-  {
-    id: 1,
-    pairId: 0,
-    isFlipped: false,
-    img: "/games/memory/meatclub.png",
-    matchedBy: 0,
-  },
-  {
-    id: 2,
-    pairId: 1,
-    isFlipped: false,
-    img: "/games/memory/mod.png",
-    matchedBy: 0,
-  },
-  {
-    id: 3,
-    pairId: 1,
-    isFlipped: false,
-    img: "/games/memory/mod.png",
-    matchedBy: 0,
-  },
-  {
-    id: 4,
-    pairId: 2,
-    isFlipped: false,
-    img: "/games/memory/curling.png",
-    matchedBy: 0,
-  },
-  {
-    id: 5,
-    pairId: 2,
-    isFlipped: false,
-    img: "/games/memory/curling.png",
-    matchedBy: 0,
-  },
-  {
-    id: 6,
-    pairId: 3,
-    isFlipped: false,
-    img: "/games/memory/drinks.png",
-    matchedBy: 0,
-  },
-  {
-    id: 7,
-    pairId: 3,
-    isFlipped: false,
-    img: "/games/memory/drinks.png",
-    matchedBy: 0,
-  },
-  {
-    id: 8,
-    pairId: 4,
-    isFlipped: false,
-    img: "/games/memory/icebath.png",
-    matchedBy: 0,
-  },
-  {
-    id: 9,
-    pairId: 4,
-    isFlipped: false,
-    img: "/games/memory/icebath.png",
-    matchedBy: 0,
-  },
-  {
-    id: 10,
-    pairId: 5,
-    isFlipped: false,
-    img: "/games/memory/chug.png",
-    matchedBy: 0,
-  },
-  {
-    id: 11,
-    pairId: 5,
-    isFlipped: false,
-    img: "/games/memory/chug.png",
-    matchedBy: 0,
-  },
-  {
-    id: 12,
-    pairId: 6,
-    isFlipped: false,
-    img: "/games/memory/driving.png",
-    matchedBy: 0,
-  },
-  {
-    id: 13,
-    pairId: 6,
-    isFlipped: false,
-    img: "/games/memory/driving.png",
-    matchedBy: 0,
-  },
-  {
-    id: 14,
-    pairId: 7,
-    isFlipped: false,
-    img: "/games/memory/lan.png",
-    matchedBy: 0,
-  },
-  {
-    id: 15,
-    pairId: 7,
-    isFlipped: false,
-    img: "/games/memory/lan.png",
-    matchedBy: 0,
-  },
-  {
-    id: 16,
-    pairId: 8,
-    isFlipped: false,
-    img: "/games/memory/vanlife.png",
-    matchedBy: 0,
-  },
-  {
-    id: 17,
-    pairId: 8,
-    isFlipped: false,
-    img: "/games/memory/vanlife.png",
-    matchedBy: 0,
-  },
-  {
-    id: 18,
-    pairId: 9,
-    isFlipped: false,
-    img: "/games/memory/poolboys.png",
-    matchedBy: 1,
-  },
-  {
-    id: 19,
-    pairId: 9,
-    isFlipped: false,
-    img: "/games/memory/poolboys.png",
-    matchedBy: 1,
-  },
-  {
-    id: 20,
-    pairId: 10,
-    isFlipped: false,
-    img: "/games/memory/archer.png",
-  },
-  {
-    id: 21,
-    pairId: 10,
-    isFlipped: false,
-    img: "/games/memory/archer.png",
-  },
-].sort(() => Math.random() - 0.5);
+// const initialCards2 = [
+//   {
+//     id: 0,
+//     pairId: 0,
+//     isFlipped: false,
+//     img: "/games/memory/meatclub.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 1,
+//     pairId: 0,
+//     isFlipped: false,
+//     img: "/games/memory/meatclub.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 2,
+//     pairId: 1,
+//     isFlipped: false,
+//     img: "/games/memory/mod.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 3,
+//     pairId: 1,
+//     isFlipped: false,
+//     img: "/games/memory/mod.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 4,
+//     pairId: 2,
+//     isFlipped: false,
+//     img: "/games/memory/curling.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 5,
+//     pairId: 2,
+//     isFlipped: false,
+//     img: "/games/memory/curling.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 6,
+//     pairId: 3,
+//     isFlipped: false,
+//     img: "/games/memory/drinks.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 7,
+//     pairId: 3,
+//     isFlipped: false,
+//     img: "/games/memory/drinks.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 8,
+//     pairId: 4,
+//     isFlipped: false,
+//     img: "/games/memory/icebath.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 9,
+//     pairId: 4,
+//     isFlipped: false,
+//     img: "/games/memory/icebath.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 10,
+//     pairId: 5,
+//     isFlipped: false,
+//     img: "/games/memory/chug.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 11,
+//     pairId: 5,
+//     isFlipped: false,
+//     img: "/games/memory/chug.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 12,
+//     pairId: 6,
+//     isFlipped: false,
+//     img: "/games/memory/driving.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 13,
+//     pairId: 6,
+//     isFlipped: false,
+//     img: "/games/memory/driving.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 14,
+//     pairId: 7,
+//     isFlipped: false,
+//     img: "/games/memory/lan.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 15,
+//     pairId: 7,
+//     isFlipped: false,
+//     img: "/games/memory/lan.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 16,
+//     pairId: 8,
+//     isFlipped: false,
+//     img: "/games/memory/vanlife.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 17,
+//     pairId: 8,
+//     isFlipped: false,
+//     img: "/games/memory/vanlife.png",
+//     matchedBy: 0,
+//   },
+//   {
+//     id: 18,
+//     pairId: 9,
+//     isFlipped: false,
+//     img: "/games/memory/poolboys.png",
+//     matchedBy: 1,
+//   },
+//   {
+//     id: 19,
+//     pairId: 9,
+//     isFlipped: false,
+//     img: "/games/memory/poolboys.png",
+//     matchedBy: 1,
+//   },
+//   {
+//     id: 20,
+//     pairId: 10,
+//     isFlipped: false,
+//     img: "/games/memory/archer.png",
+//   },
+//   {
+//     id: 21,
+//     pairId: 10,
+//     isFlipped: false,
+//     img: "/games/memory/archer.png",
+//   },
+// ].sort(() => Math.random() - 0.5);
 
 const initialCards: ICard[] = [
   {
@@ -375,7 +375,7 @@ export const MemoryBoard = ({ players, onGameComplete }: IMiniGameBase) => {
     // If the card is already matched or flipped, ignore the click
     if (
       !canFlip ||
-      cards[clickedCardIndex].isMatched ||
+      cards[clickedCardIndex].matchedBy ||
       cards[clickedCardIndex].isFlipped
     ) {
       return;
@@ -457,7 +457,7 @@ export const MemoryBoard = ({ players, onGameComplete }: IMiniGameBase) => {
           <div className="grid h-[60vh] justify-center grid-cols-6 gap-2 m-auto justify-items-center">
             {cards.map((card, index) => (
               <Card
-                key={card.id}
+                key={card?.id}
                 index={index}
                 {...card}
                 isMatched={card.matchedBy === 0 || card.matchedBy === 1}

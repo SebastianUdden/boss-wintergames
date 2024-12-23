@@ -97,7 +97,7 @@ export const Spinner = ({
         spins={spins}
         multiplier={multiplier}
         onSliceClick={(slice) => {
-          onGameSelected(slice.name);
+          onGameSelected(slice?.name ?? "");
         }}
         onSpinComplete={() => {
           onPhaseChange("transition-from-spinning");

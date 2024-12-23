@@ -31,7 +31,6 @@ export const GameRules = ({
   description,
   criteria,
   isAnalog,
-  song,
   onFail,
   onGameComplete,
 }: IGameRules) => {

@@ -11,14 +11,7 @@ interface IPlank {
 
 export const Plank = forwardRef<HTMLDivElement, IPlank>(
   (
-    {
-      paddleHeight = 100,
-      position = "left",
-      top = 0,
-      charges,
-      hits,
-      onPlankDestroyed,
-    },
+    { paddleHeight = 100, position = "left", charges, hits, onPlankDestroyed },
     ref
   ) => {
     const maxSections = 10; // Total number of sections
@@ -28,7 +21,7 @@ export const Plank = forwardRef<HTMLDivElement, IPlank>(
     // Precompute styles for visible sections
     const sectionStyles = useMemo(
       () =>
-        Array.from({ length: visibleSections }, (_, index) => ({
+        Array.from({ length: visibleSections }, () => ({
           backgroundImage: "url('/games/cannons/plank.png')",
           height: `${100 / visibleSections}%`,
         })),

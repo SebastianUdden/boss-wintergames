@@ -5,7 +5,7 @@ export interface CannonBall {
   x: number;
   y: number;
   direction: number; // 1 = right, -1 = left
-  player: 0 | 1;
+  player: number;
   vy?: number; // Vertical velocity (optional initially)
 }
 

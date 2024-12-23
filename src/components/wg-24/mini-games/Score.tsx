@@ -12,7 +12,7 @@ interface IScoreProps extends IScore {
   isActive?: boolean;
   isRight?: boolean;
   player1IsRed?: boolean;
-  teamName: string;
+  teamName?: string;
   controls?: (string | React.ReactNode)[];
 }
 
@@ -34,7 +34,7 @@ export const Score = ({
       )}
     >
       <div className="flex max-w-1/2">
-        {players.length > 2 ? (
+        {players.length > 2 && teamName ? (
           <p className="flex items-center p-8 text-4xl border-2 border-black ocean-blue">
             {teamName}
           </p>

@@ -14,9 +14,9 @@ const sortByScore = (a: IPlayer, b: IPlayer) => {
 };
 
 interface TeamProps extends ITeam {
-  highlightedPlayers: IPlayer[];
-  phase: Phase;
-  losingTeam: string; // New prop to identify the losing team
+  highlightedPlayers?: IPlayer[];
+  phase?: Phase;
+  losingTeam: string | null; // New prop to identify the losing team
   showEndGame: boolean;
   endGame: () => void;
   onMovePlayer: (name: string) => void;

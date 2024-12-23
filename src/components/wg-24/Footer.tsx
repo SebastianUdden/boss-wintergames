@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
-import { Dispatch, SetStateAction } from "react";
 import { Phase } from "./Layout";
 
 interface IFooter {
-  phase: string;
-  setPhase: Dispatch<SetStateAction<Phase>>;
+  phase?: Phase;
+  setPhase: (
+    valueOrUpdater: Phase | ((prev: Phase | undefined) => Phase)
+  ) => void;
   showEndGame?: boolean;
 }
 export const Footer = ({ phase, setPhase, showEndGame }: IFooter) => (
