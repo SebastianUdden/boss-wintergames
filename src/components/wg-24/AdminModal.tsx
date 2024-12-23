@@ -140,7 +140,7 @@ export const AdminModal = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px] md:max-w-fit min-w-[80%] min-h-[400px] max-h-[80%] p-10 flex flex-col gap-4 text-[2vh]">
+      <DialogContent className="sm:max-w-[425px] md:max-w-fit min-w-[80%] min-h-[400px] max-h-[80%] p-10 flex flex-col gap-4 text-2xl">
         <DialogHeader>
           <DialogTitle className="text-left text-8xl font-pirata">
             {password === "jones" ? "RELEASE THE KRAKEN!" : "Who goes there?"}
@@ -270,7 +270,7 @@ export const AdminModal = ({
                     </ul>
                   ))}
                 </div>
-                <div className="flex items-center justify-between mt-auto text-[2vh] min-h-[10vh]">
+                <div className="flex items-center justify-between mt-auto text-2xl min-h-[10vh]">
                   <div>
                     <select
                       className="header"

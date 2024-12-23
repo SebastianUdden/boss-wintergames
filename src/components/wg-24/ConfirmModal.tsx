@@ -34,7 +34,7 @@ export const ConfirmModal = ({ isOpen, onClose }: IModal) => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px] md:max-w-fit min-w-[700px] min-h-[400px] p-10 flex flex-col gap-4 text-[2vh]">
+      <DialogContent className="sm:max-w-[425px] md:max-w-fit min-w-[700px] min-h-[400px] p-10 flex flex-col gap-4 text-2xl">
         <DialogHeader>
           <DialogTitle className="text-4xl text-left">
             Are you sure you want to leave?
@@ -44,10 +44,10 @@ export const ConfirmModal = ({ isOpen, onClose }: IModal) => {
           <p>
             Unsaved data <strong>will be lost</strong> if you do.
           </p>
-          <div className="flex items-center justify-between mt-auto text-[2vh]">
+          <div className="flex items-center justify-between mt-auto text-2xl">
             <Link to="/">Confirm, go to home page!</Link>
             <Button
-              className="text-[2vh] p-[3vh]"
+              className="text-2xl p-[3vh]"
               onClick={() => handleOpenChange(false)}
             >
               Cancel

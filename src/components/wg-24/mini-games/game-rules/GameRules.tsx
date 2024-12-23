@@ -42,16 +42,16 @@ export const GameRules = ({
   }, [winner, players]);
 
   return (
-    <div className="flex flex-col justify-between flex-grow select-none">
+    <div className="flex flex-col justify-between flex-grow max-h-full select-none">
       {/* Content for rendering the game details */}
-      <div className="flex flex-col w-full gap-4">
+      <div className="flex flex-col w-full gap-4 py-4">
         <h1>{name}</h1>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 text-xl">
           <Badge className="text-xl text-black capitalize bg-white hover:bg-white">
             {gameType}
           </Badge>
           <Badge>{!isAnalog ? "Digitalt" : "Fysiskt"}</Badge>
-          {song}
+          {/* {song} */}
         </div>
         <Description
           description={description}
@@ -59,7 +59,7 @@ export const GameRules = ({
         />
         {criteria && (
           <div>
-            <Label className="font-bold text-[3vh]">Kriterier</Label>
+            <Label className="text-2xl font-bold">Kriterier</Label>
             <div className="flex flex-wrap gap-2 mt-2">
               {criteria.map((c) => (
                 <Badge
@@ -102,7 +102,7 @@ export const GameRules = ({
           >
             FAIL
           </button>
-          <h2 className="text-[2vh]">determine winner</h2>
+          <h2 className="text-2xl">determine winner</h2>
           <button
             className={cn(
               "treasure completed-button !font-pirata",
@@ -132,7 +132,7 @@ export const GameRules = ({
             >
               BLUE
             </button>
-            <h2 className="text-[2vh]">determine winner</h2>
+            <h2 className="text-2xl">determine winner</h2>
             <button
               className={cn(
                 "treasure completed-button !font-pirata",

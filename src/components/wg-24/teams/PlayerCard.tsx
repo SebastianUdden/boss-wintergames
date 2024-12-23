@@ -152,7 +152,7 @@ export const PlayerCard = ({
           <>
             <div
               className={cn(
-                "absolute flex items-center gap-6 top-0 text-white bg-black/70 p-2 2xl:bg-inherit 2xl:static text-sm 2xl:text-[4vh] font-bold transition-all duration-500",
+                "absolute flex items-center gap-6 top-0 text-white bg-black/70 p-2 2xl:bg-inherit 2xl:static text-sm 2xl:text-2xl font-bold transition-all duration-500",
                 minimized ? "opacity-0" : "opacity-100",
                 minimized && justifyStartApplied ? "hidden" : "",
                 rightAligned ? "left-0 flex-row-reverse" : "right-0"
@@ -193,7 +193,7 @@ export const PlayerCard = ({
       </div>
       <p
         className={cn(
-          "hidden 2xl:flex  items-center gap-6 text-md 2xl:text-[4vh] italic text-orange-400 transition-all duration-500",
+          "hidden 2xl:flex  items-center gap-6 text-md 2xl:text-2xl italic text-orange-400 transition-all duration-500",
           minimized ? "opacity-0" : "opacity-100",
           minimized && justifyStartApplied ? "hidden" : "",
           rightAligned ? "" : "flex-row-reverse"
@@ -202,7 +202,7 @@ export const PlayerCard = ({
         {wins} / {losses}
         <span
           className={cn(
-            "text-md 2xl:text-[3vh] opacity-0 font-pirata transition-all duration-300",
+            "text-md 2xl:text-2xl opacity-0 font-pirata transition-all duration-300",
             rightAligned ? "translate-x-40" : "-translate-x-40",
             showScoreIsPositive ? "text-green-700" : "",
             showScoreIsNegative ? "text-red-700" : "",

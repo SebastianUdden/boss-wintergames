@@ -19,7 +19,7 @@ export const Description = ({ description, wordsToReplace }: IDescription) => {
         return (
           <Badge
             key={index}
-            className="px-2 py-0 treasure-badge text-[1.5vh] rounded-full"
+            className="px-2 py-0 text-2xl rounded-full treasure-badge"
           >
             {part}
           </Badge>
@@ -33,7 +33,7 @@ export const Description = ({ description, wordsToReplace }: IDescription) => {
   return (
     <ul className="p-4 bg-black bg-opacity-50 rounded-xl">
       {description?.map((d, index) => (
-        <li key={index} className="my-2 text-[1.5vh]">
+        <li key={index} className="my-2 text-2xl">
           {replaceWordsWithBadges(d)}
         </li>
       ))}

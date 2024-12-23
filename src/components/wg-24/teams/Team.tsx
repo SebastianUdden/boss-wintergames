@@ -72,7 +72,7 @@ export const Team = ({
     >
       <h3
         className={cn(
-          "flex p-2 2xl:py-8 2xl:px-4 text-black text-lg 2xl:text-[4vh] border-2 border-black overflow-hidden",
+          "flex p-2 2xl:py-8 2xl:px-4 text-black text-lg 2xl:text-2xl border-2 border-black overflow-hidden",
           color === "red" ? "rusty-red" : "stormy-seas-accent",
           minimized && justifyStartApplied
             ? "justify-start"

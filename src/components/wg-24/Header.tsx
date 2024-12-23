@@ -89,8 +89,8 @@ export const Header = ({
         miniGames={miniGames}
       />
       <header className="z-20 flex items-center justify-between w-full h-[5vh] px-4 font-bold text-center black-sails-bg black-sails-text">
-        <div className="relative inline-block">
-          <h1 className="font-bold font-fell text-sm sm:text-[2vh]">
+        <div className="relative inline-block text-xl">
+          <h1 className="text-sm font-bold font-fell sm:text-2xl">
             <button
               className="p-0 m-0 border-none shadow-none outline-none bg-none text-inherit hover:text-white/50 focus:outline-none"
               onClick={() => setShowModal(true)}
@@ -98,10 +98,10 @@ export const Header = ({
               BOSS
             </button>{" "}
             <span className="relative">
-              <span className="line-through opacity-20 text-sm sm:text-[2vh]">
+              <span className="text-sm line-through opacity-20 sm:text-2xl">
                 Winter
               </span>
-              <span className="absolute text-sm sm:text-[2vh] text-white left-[0.5vh] -top-[0.5vh] 2xl:-top-[0.5vh] -rotate-12 font-pirata pirate">
+              <span className="absolute text-sm sm:text-xl text-white left-[0.5vh] -top-[0.5vh] 2xl:-top-[0.5vh] -rotate-12 font-pirata pirate">
                 Pirate
               </span>
             </span>

@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { miniGames } from "../mini-games/miniGames";
 import { Phase } from "../Layout";
 
+const SPIN_COUNT = 5;
+const MULTIPLIER_COUNT = 1;
+
 interface ISpinner {
   turn: string;
   phase?: Phase;
@@ -23,8 +26,8 @@ export const Spinner = ({
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(
     null
   );
-  const spins = 1;
-  const multiplier = 1;
+  const spins = SPIN_COUNT;
+  const multiplier = MULTIPLIER_COUNT;
 
   // Function to get a random slice based on weights, excluding the last selected index
   const getRandomSliceIndex = () => {

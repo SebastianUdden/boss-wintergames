@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Players } from "./Players";
 import { IPlayer, players } from "../teams/players";
 
-const LETTER_SPEED = 5;
+const LETTER_SPEED = 50;
 
 interface IStart {
   onUpdateTeam: (teamIndex: number, players: IPlayer[]) => void;

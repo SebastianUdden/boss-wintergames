@@ -2,7 +2,8 @@
 
 ## Critical
 
-- Adjust weights in Kraken
+- Captives choice, en spelare fånge pajar spelet
+- Cursed coins, en kapten svart spelskärm
 
 ## Nice to have
 
