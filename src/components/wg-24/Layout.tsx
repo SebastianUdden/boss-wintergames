@@ -99,10 +99,7 @@ const Layout = () => {
   const [phase, setPhase] = useStoredState<Phase>("phase", "start");
   const [teams, setTeams] = useStoredState<ITeam[]>("teams", initialTeams);
   const [losers, setLosers] = useStoredState<IPlayer[]>("losers", []);
-  const [teamsTurn] = useStoredState<Turn>(
-    "teamsTurn",
-    Math.random() < 0.5 ? 0 : 1
-  );
+  const [teamsTurn] = useState<Turn>(Math.random() < 0.5 ? 0 : 1);
   const [losingTeamIndex, setLosingTeamIndex] = useStoredState<LosingTeamIndex>(
     "losingTeamIndex",
     0
@@ -227,7 +224,7 @@ const Layout = () => {
       // Check if the cycle should stop at the current chosen player
       if (
         currentStep >= totalSteps &&
-        currentPlayer.name === interleavedChosen[currentChosenIndex].name
+        currentPlayer?.name === interleavedChosen[currentChosenIndex]?.name
       ) {
         // Add the current chosen player to the highlighted list
         if (!highlighted.some((h) => h.name === currentPlayer.name)) {
@@ -486,7 +483,7 @@ const Layout = () => {
   if (!teams || !miniGames) return null;
 
   return (
-    <div className="min-w-full min-h-screen shipwrecked h-[100vh]">
+    <div className="min-w-full min-h-screen shipwrecked h-[100vh] overflow-y-hidden">
       <Header
         // eslint-disable-next-line
         // @ts-ignore
@@ -556,7 +553,7 @@ const Layout = () => {
             </p>
           </>
         )}
-        <div className="overflow-y-hidden bg-center bg-cover bg-pirate-village h-[100vh]">
+        <div className="h-full overflow-y-hidden bg-center bg-cover bg-pirate-village">
           {/* Background tint overlay */}
           <div className="absolute inset-0 z-0 bg-black bg-opacity-50 pointer-events-none top-[5vh]"></div>
 
@@ -602,12 +599,12 @@ const Layout = () => {
                 )}
                 {phase === "start" && (
                   <Start
+                    setTeams={setTeams}
                     onUpdateShipName={(teamIndex, shipName) => {
-                      setTeams(
-                        teams?.map((t, i) =>
-                          i === teamIndex ? { ...t, name: shipName } : t
-                        )
+                      const newTeams = teams?.map((t, i) =>
+                        i === teamIndex ? { ...t, name: shipName } : t
                       );
+                      setTeams(newTeams);
                     }}
                     onUpdateTeam={(teamIndex, players) => {
                       if (teamIndex === 0 && teams) {
@@ -646,7 +643,7 @@ const Layout = () => {
                           : ""
                       )}
                     >
-                      {openGame && chosenPlayers && phase && teams && (
+                      {chosenPlayers && phase && teams && (
                         <MiniGame
                           teams={teams}
                           phase={phase}
@@ -756,7 +753,7 @@ const Layout = () => {
                     </div>
                     <div
                       className={cn(
-                        "flex -translate-x-[5%] sm:-translate-x-0 h-[80vh] w-[80vh] translate-y-[100vh] transition-all duration-1000 bg-center bg-cover bg-wheel-of-fortune",
+                        "flex -translate-x-[12%] h-[80vh] w-[80vh] translate-y-[100vh] transition-all duration-1000 bg-center bg-cover bg-wheel-of-fortune",
                         phase === "spinning-wheel" ? "translate-y-[17vh]" : "",
                         phase === "waiting-for-spin" ||
                           phase === "spinning-wheel" ||
@@ -801,15 +798,17 @@ const Layout = () => {
                   <div className="w-[12%]" />
                 )}
               </div>
-              <button
-                className="absolute z-50 text-4xl transition-all border-none outline-none right-10 -bottom-2 hover:bottom-0"
-                onClick={() => {
-                  setShowSelector(true);
-                  setPhase("explaining-game");
-                }}
-              >
-                Games
-              </button>
+              {phase !== "start" && phase !== "transition-from-game" && (
+                <button
+                  className="absolute z-50 text-4xl transition-all border-none outline-none treasure treasure-color right-10 -bottom-2 hover:bottom-0"
+                  onClick={() => {
+                    setShowSelector(true);
+                    setPhase("explaining-game");
+                  }}
+                >
+                  Games
+                </button>
+              )}
               <Footer
                 phase={phase}
                 setPhase={setPhase}

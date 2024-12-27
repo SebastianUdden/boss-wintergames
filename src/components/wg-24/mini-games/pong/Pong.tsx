@@ -11,7 +11,7 @@ import { provideScoresOnWinner } from "../Winner";
 import { INITIAL_BALL_SPEED } from "./gameLoopUtils";
 
 export const REFERENCE_WIDTH = 500; // Standard width for normal speed
-export const HORIZONTAL_SPEED = 4;
+export const HORIZONTAL_SPEED = 6;
 export const VERTICAL_SPEED = 3;
 export const INITIAL_PADDLE_HEIGHT = 200;
 
@@ -231,8 +231,8 @@ export const Pong = ({ players, onGameComplete }: IMiniGameBase) => {
           scores={[t1Score, t2Score]}
           winner={winner}
           controls={[
-            ["w", "a", "s", "d", "Space"],
-            [<>&uarr;</>, <>&uarr;</>, <>&uarr;</>, <>&uarr;</>, "Enter"],
+            ["1", "a", "q", "z", "x"],
+            ["/", "9", "6", "3", ","],
           ]}
         />
       </div>

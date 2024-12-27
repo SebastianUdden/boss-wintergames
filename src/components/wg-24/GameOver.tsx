@@ -28,7 +28,7 @@ Every rhyme be a key, every verse a path. Miss even a single word, an’ ye’ll
     },
     {
       header: "The hunt fer Ivar's treasure",
-      body: `       Ahoy, me hearties! The treasure lies deep,
+      body: `       Ahoy, me hearties! The map lies deep,
 Where secrets be buried and shadows do creep.
 A tangle like seaweed ‘round anchor so tight,
 Only the clever will unravel this plight.
@@ -60,6 +60,15 @@ Maybe if I drum up an answer and put it in song?
 
 Search every rock and find where I roll,
 I will get the blues if you can't find my soul.
+      `,
+    },
+    {
+      header: "The hunt fer Ivar's treasure",
+      body: `     Ok let's be plain and forget about the past
+You'll need to find the red instrument if you want to last.
+
+Every pirate worth their name has a scar, 
+and so the map lies within the ...
       `,
     },
   ];

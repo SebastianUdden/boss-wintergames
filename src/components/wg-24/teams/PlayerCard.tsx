@@ -3,7 +3,12 @@ import { Avatar } from "./Avatar";
 import { IPlayer } from "./players";
 import { useEffect, useState } from "react";
 import { Phase } from "../Layout";
-import { BallChainIcon, CaptainIcon, CutlassIcon } from "./CardIcons";
+import {
+  BallChainIcon,
+  CaptainIcon,
+  CutlassIcon,
+  HelmsmanIcon,
+} from "./CardIcons";
 
 interface IPlayerCard extends IPlayer {
   highlighted?: boolean;
@@ -23,6 +28,7 @@ export const PlayerCard = ({
   highlighted,
   isCaptive,
   isCaptain,
+  isHelmsman,
   phase,
   playerCount,
   wins,
@@ -70,6 +76,8 @@ export const PlayerCard = ({
     isCaptive && (!highlighted || phase !== "playing-game");
   const shouldShowCaptainIcon =
     isCaptain && (!highlighted || phase !== "playing-game");
+  const shouldShowHelmsmanIcon =
+    isHelmsman && (!highlighted || phase !== "playing-game");
   const shouldShowCutlassIcon = highlighted && phase === "showing-combatants";
   return (
     <div
@@ -152,7 +160,7 @@ export const PlayerCard = ({
           <>
             <div
               className={cn(
-                "absolute flex items-center gap-6 top-0 text-white bg-black/70 p-2 2xl:bg-inherit 2xl:static text-sm 2xl:text-2xl font-bold transition-all duration-500",
+                "absolute flex items-center gap-6 top-0 text-white bg-black/70 p-2 2xl:bg-inherit 2xl:static text-sm 2xl:text-4xl font-bold transition-all duration-500",
                 minimized ? "opacity-0" : "opacity-100",
                 minimized && justifyStartApplied ? "hidden" : "",
                 rightAligned ? "left-0 flex-row-reverse" : "right-0"
@@ -161,6 +169,7 @@ export const PlayerCard = ({
               {name}
               {(isCaptain ||
                 isCaptive ||
+                isHelmsman ||
                 (highlighted && phase === "showing-combatants")) && (
                 <div className="relative z-40 bg-black aged-scroll-border rounded-full w-[7vh] h-[7vh] justify-center items-center hidden 2xl:flex">
                   {highlighted && isHighlightPhase && (
@@ -174,6 +183,9 @@ export const PlayerCard = ({
                       {isCaptain && (
                         <CaptainIcon size={size} rightAligned={rightAligned} />
                       )}
+                      {isHelmsman && (
+                        <HelmsmanIcon size={size} rightAligned={rightAligned} />
+                      )}
                       {shouldShowCutlassIcon && (
                         <CutlassIcon size={size} rightAligned={rightAligned} />
                       )}
@@ -185,6 +197,9 @@ export const PlayerCard = ({
                   {shouldShowCaptainIcon && (
                     <CaptainIcon size={size} rightAligned={rightAligned} />
                   )}
+                  {shouldShowHelmsmanIcon && (
+                    <HelmsmanIcon size={size} rightAligned={rightAligned} />
+                  )}
                 </div>
               )}
             </div>
@@ -193,7 +208,7 @@ export const PlayerCard = ({
       </div>
       <p
         className={cn(
-          "hidden 2xl:flex  items-center gap-6 text-md 2xl:text-2xl italic text-orange-400 transition-all duration-500",
+          "hidden 2xl:flex items-center gap-6 text-md 2xl:text-4xl italic text-orange-400 transition-all duration-500",
           minimized ? "opacity-0" : "opacity-100",
           minimized && justifyStartApplied ? "hidden" : "",
           rightAligned ? "" : "flex-row-reverse"
@@ -202,7 +217,7 @@ export const PlayerCard = ({
         {wins} / {losses}
         <span
           className={cn(
-            "text-md 2xl:text-2xl opacity-0 font-pirata transition-all duration-300",
+            "text-md 2xl:text-4xl opacity-0 font-pirata transition-all duration-300",
             rightAligned ? "translate-x-40" : "-translate-x-40",
             showScoreIsPositive ? "text-green-700" : "",
             showScoreIsNegative ? "text-red-700" : "",

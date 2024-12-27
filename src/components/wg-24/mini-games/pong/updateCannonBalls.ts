@@ -1,6 +1,6 @@
 import { log } from "../../log";
 
-const SPEED = 6;
+const SPEED = 10;
 export interface CannonBall {
   x: number;
   y: number;
@@ -50,7 +50,7 @@ export const updateCannonBalls = (
   };
 
   // Handle firing from Player 1
-  if (!keys[" "] && p1Charges === 0 && p1Fired) {
+  if (!keys["x"] && p1Charges === 0 && p1Fired) {
     const newBall = {
       x: p1Paddle.right + 12,
       y: p1Paddle.y + p1Paddle.height / 2,
@@ -72,7 +72,7 @@ export const updateCannonBalls = (
   }
 
   // Handle firing from Player 2
-  if (!keys["Enter"] && p2Charges === 0 && p2Fired) {
+  if (!keys[","] && p2Charges === 0 && p2Fired) {
     const newBall = {
       x: p2Paddle.left - 12,
       y: p2Paddle.y + p2Paddle.height / 2,

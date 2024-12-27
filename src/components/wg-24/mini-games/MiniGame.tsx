@@ -58,7 +58,7 @@ export interface IMiniGame {
 
 export interface MiniGameProps {
   teams: ITeam[];
-  miniGame: IMiniGame;
+  miniGame?: IMiniGame;
   chosenPlayers: IPlayer[][];
   phase: Phase;
   showSelector: boolean;
@@ -108,26 +108,27 @@ export const MiniGame = ({
       {((phase === "explaining-game" && !showSelector) ||
         (phase === "playing-game" &&
           analogGames.some((game) => game.name === name)) ||
-        phase === "transition-to-playing-game") && (
-        <div className="relative flex m-auto">
-          <img
-            src="/backgrounds/maps/pirate-map-background.png"
-            alt="Pirate Map"
-            className="flex flex-grow base-image"
-          />
-          <div className="content-overlay p-[14vw] py-[10vh] 2xl:p-[12vh]">
-            <GameRules
-              teams={teams}
-              players={chosenPlayers}
-              {...miniGame}
-              phase={phase}
-              onFail={onFail}
-              onGameComplete={onGameComplete}
+        phase === "transition-to-playing-game") &&
+        miniGame && (
+          <div className="relative flex m-auto">
+            <img
+              src="/backgrounds/maps/pirate-map-background.png"
+              alt="Pirate Map"
+              className="flex flex-grow base-image"
             />
+            <div className="content-overlay p-[14vw] py-[10vh] 2xl:p-[12vh]">
+              <GameRules
+                teams={teams}
+                players={chosenPlayers}
+                {...miniGame}
+                phase={phase}
+                onFail={onFail}
+                onGameComplete={onGameComplete}
+              />
+            </div>
+            <div className="overlay"></div>
           </div>
-          <div className="overlay"></div>
-        </div>
-      )}
+        )}
       {phase === "playing-game" &&
         chosenPlayers.length !== 0 &&
         chosenPlayers[0].length !== 0 &&
@@ -148,7 +149,7 @@ export const MiniGame = ({
                 onGameComplete={handleGameComplete}
               />
             )}
-            {name === "Cursed coins" && (
+            {name === "Cursed Coins" && (
               <MazeRunner
                 teams={teams}
                 players={chosenPlayers}

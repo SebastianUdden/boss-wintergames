@@ -97,19 +97,19 @@ export const useGameLoop = ({
       });
 
       // Recharge cannons
-      if (keys[" "] && p1Charges > 0 && !p1Fired) {
+      if (keys["x"] && p1Charges > 0 && !p1Fired) {
         setP1Fired(true);
         setP1Charges((prev) => Math.max(prev - 1, 0));
       }
-      if (!keys[" "] && p1Fired) {
+      if (!keys["x"] && p1Fired) {
         setP1Fired(false);
       }
 
-      if (keys["Enter"] && p2Charges > 0 && !p2Fired) {
+      if (keys[","] && p2Charges > 0 && !p2Fired) {
         setP2Fired(true);
         setP2Charges((prev) => Math.max(prev - 1, 0));
       }
-      if (!keys["Enter"] && p2Fired) {
+      if (!keys[","] && p2Fired) {
         setP2Fired(false);
       }
 

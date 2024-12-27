@@ -24,14 +24,32 @@ export const CaptainIcon = ({
   rightAligned: boolean;
 }) => (
   <img
-    className={cn("absolute z-10", rightAligned ? "scale-x-[-1]" : "")}
+    className={cn("absolute z-20", rightAligned ? "scale-x-[-1]" : "")}
     style={{
       width: "50px",
       height: "50px",
-      top: "20%",
-      right: rightAligned ? "25%" : "15%",
+      top: "15%",
+      right: rightAligned ? "19%" : "7%",
     }}
     src="/leaderboard/captain.png"
+  />
+);
+
+export const HelmsmanIcon = ({
+  rightAligned,
+}: {
+  size: number;
+  rightAligned: boolean;
+}) => (
+  <img
+    className={cn("absolute z-50", rightAligned ? "scale-x-[-1]" : "")}
+    style={{
+      width: "50px",
+      height: "50px",
+      top: "13%",
+      right: rightAligned ? "15%" : "12%",
+    }}
+    src="/leaderboard/rudder.png"
   />
 );
 

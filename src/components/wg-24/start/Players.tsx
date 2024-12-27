@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
 import { IPlayer } from "../teams/players";
 
+const size = "16vh";
+
 interface IPlayers {
   players: IPlayer[];
   onSelect: (player: IPlayer) => void;
@@ -13,14 +15,17 @@ export const Players = ({ players, disableSelection, onSelect }: IPlayers) => {
       {players.map((p) => (
         <div
           key={p.name}
-          className="relative overflow-hidden rounded-full aged-scroll-border w-[10vh] h-[10vh] select-none"
+          className={cn(
+            `relative overflow-hidden rounded-full aged-scroll-border select-none`,
+            size ? `w-[${size}] h-[${size}]` : "w-[10vh] h-[10vh]"
+          )}
         >
           <img
             className="object-cover transition-transform origin-center aspect-square"
             src={p.image}
             style={{
-              width: "10vh",
-              height: "10vh",
+              width: size ?? "10vh",
+              height: size ?? "10vh",
               transformOrigin: "center",
             }}
           />

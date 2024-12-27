@@ -92,11 +92,11 @@ export const movePaddles = (
   if (player1Ref.current) {
     const player1Top = parseInt(player1Ref.current.style.top) || 0;
 
-    if (keys["w"]) {
+    if (keys["1"]) {
       player1Ref.current.style.top = `${Math.max(player1Top - step, 0)}px`;
     }
 
-    if (keys["s"]) {
+    if (keys["q"]) {
       const maxTop = gameHeight - step - player1Ref.current.offsetHeight;
       player1Ref.current.style.top = `${Math.min(player1Top + step, maxTop)}px`;
     }
@@ -105,11 +105,11 @@ export const movePaddles = (
   if (player2Ref.current) {
     const player2Top = parseInt(player2Ref.current.style.top) || 0;
 
-    if (keys["ArrowUp"]) {
+    if (keys["/"]) {
       player2Ref.current.style.top = `${Math.max(player2Top - step, 0)}px`;
     }
 
-    if (keys["ArrowDown"]) {
+    if (keys["9"]) {
       const maxTop = gameHeight - step - player2Ref.current.offsetHeight;
       player2Ref.current.style.top = `${Math.min(player2Top + step, maxTop)}px`;
     }

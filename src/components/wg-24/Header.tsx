@@ -167,7 +167,7 @@ export const Header = ({
         <div className="flex h-full m-0 font-fell">
           <Button
             data-testid="ready-state"
-            className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+            className="!text-lg header disabled:bg-white disabled:text-black disabled:opacity-100"
             onClick={() => setShowAdmin(!showAdmin)}
           >
             K<span className="hidden 2xl:inline">raken</span>
@@ -177,7 +177,7 @@ export const Header = ({
               {(showAllHeadings || phase === "ready") && (
                 <Button
                   data-testid="ready-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("ready")}
                   disabled={phase === "ready"}
                 >
@@ -187,7 +187,7 @@ export const Header = ({
               {(showAllHeadings || phase === "waiting-for-spin") && (
                 <Button
                   data-testid="waiting-for-spin-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("waiting-for-spin")}
                   disabled={phase === "waiting-for-spin"}
                 >
@@ -197,7 +197,7 @@ export const Header = ({
               {(showAllHeadings || phase === "spinning-wheel") && (
                 <Button
                   data-testid="spinning-wheel-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("spinning-wheel")}
                   disabled={phase === "spinning-wheel"}
                 >
@@ -207,7 +207,7 @@ export const Header = ({
               {(showAllHeadings || phase === "explaining-game") && (
                 <Button
                   data-testid="explaining-game-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("explaining-game")}
                   disabled={phase === "explaining-game"}
                 >
@@ -217,7 +217,7 @@ export const Header = ({
               {(showAllHeadings || phase === "selecting-players") && (
                 <Button
                   data-testid="selecting-players-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("selecting-players")}
                   disabled={phase === "selecting-players"}
                 >
@@ -227,7 +227,7 @@ export const Header = ({
               {(showAllHeadings || phase === "playing-game") && (
                 <Button
                   data-testid="playing-game-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("playing-game")}
                   disabled={phase === "playing-game"}
                 >
@@ -237,7 +237,7 @@ export const Header = ({
               {(showAllHeadings || phase === "calculating-score") && (
                 <Button
                   data-testid="calculating-score-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("calculating-score")}
                   disabled={phase === "calculating-score"}
                 >
@@ -247,7 +247,7 @@ export const Header = ({
               {(showAllHeadings || phase === "selecting-captive") && (
                 <Button
                   data-testid="selecting-captive-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("selecting-captive")}
                   disabled={phase === "selecting-captive"}
                 >
@@ -257,7 +257,7 @@ export const Header = ({
               {(showAllHeadings || phase === "captains-choice") && (
                 <Button
                   data-testid="captains-choice-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("captains-choice")}
                   disabled={phase === "captains-choice"}
                 >
@@ -267,7 +267,7 @@ export const Header = ({
               {(showAllHeadings || phase === "transitioning-captive") && (
                 <Button
                   data-testid="transitioning-captive-state"
-                  className="header disabled:bg-white disabled:text-black disabled:opacity-100"
+                  className="header !text-lg disabled:bg-white disabled:text-black disabled:opacity-100"
                   onClick={() => onSetPhase("transitioning-captive")}
                   disabled={phase === "transitioning-captive"}
                 >

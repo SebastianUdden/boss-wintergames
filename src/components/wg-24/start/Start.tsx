@@ -2,25 +2,25 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { Players } from "./Players";
 import { IPlayer, players } from "../teams/players";
+import { ITeam } from "../teams/teams";
 
 const LETTER_SPEED = 50;
 
 interface IStart {
   onUpdateTeam: (teamIndex: number, players: IPlayer[]) => void;
   onUpdateShipName: (teamIndex: number, shipName: string) => void;
+  setTeams: (
+    valueOrUpdater: ITeam[] | ((prev: ITeam[] | undefined) => ITeam[])
+  ) => void;
   onComplete?: () => void;
 }
 
 export const Start = ({
   onUpdateTeam,
   onUpdateShipName,
+  setTeams,
   onComplete,
 }: IStart) => {
-  const [shipName, setShipName] = useState("");
-  const [availablePlayers, setAvailablePlayers] = useState(
-    players.filter((p) => p.name !== "Sebbe" && p.name !== "Mattis")
-  );
-  const [disableSelection, setDisableSelection] = useState(false);
   const parts = [
     {
       header: "Welcome to the BOSS Pirate Games!",
@@ -114,7 +114,7 @@ Fight for your glory and claim your prize.`,
     },
     {
       body: `  Thus each ship is readied for the voyage ahead, with patience and virtue all doubts you have shed.
-        Now we revel as each ship leaves the port, bring out the champaign as she now sallies forth.`,
+        Now we revel as each ship leaves the port, bring out the champagne as she now sallies forth.`,
     },
     {
       body: `   With ships and crew ready the voyage begins, helmsmen grab the rudders and follow the winds!
@@ -123,9 +123,34 @@ Fight for your glory and claim your prize.`,
     },
   ];
 
+  const [shipName, setShipName] = useState("");
+  const [updatedShipName, setUpdatedShipName] = useState(false);
+  const [availablePlayers, setAvailablePlayers] = useState(
+    players.filter((p) => p.name !== "Sebbe" && p.name !== "Mattis")
+  );
+  const [disableSelection, setDisableSelection] = useState(false);
   const [currentPart, setCurrentPart] = useState(0); // Tracks the current part being displayed
   const [currentText, setCurrentText] = useState(""); // Tracks the text being typed out
   const [isTypingComplete, setIsTypingComplete] = useState(false); // Indicates when typing is complete
+
+  const handleReset = () => {
+    setShipName("");
+    setAvailablePlayers(
+      players.filter((p) => p.name !== "Sebbe" && p.name !== "Mattis")
+    );
+    setDisableSelection(false);
+    setCurrentText("");
+    setIsTypingComplete(false);
+    setTeams((prev) =>
+      prev.map((t, i) => ({
+        ...t,
+        name: i === 0 ? "Blue" : "Red",
+        players: [],
+      }))
+    );
+    setCurrentPart(0);
+    window.location.reload();
+  };
 
   const handleSelect = (player: IPlayer, type?: string) => {
     if (type === "Blue") {
@@ -187,9 +212,20 @@ Fight for your glory and claim your prize.`,
 
   const fullShipName = `${parts[currentPart].teamName} ${shipName}`;
 
+  const handlePrevPart = () => {
+    if (parts[currentPart].shipName) {
+      setShipName("");
+    }
+    if (currentPart > 0) {
+      setDisableSelection(false);
+      setCurrentPart((prev) => prev - 1);
+    }
+  };
+
   const handleNextPart = () => {
     if (parts[currentPart].shipName) {
       setShipName("");
+      setUpdatedShipName(false);
     }
     if (currentPart < parts.length - 1) {
       setDisableSelection(false);
@@ -204,7 +240,7 @@ Fight for your glory and claim your prize.`,
         alt="Pirate Map"
         className="flex flex-grow base-image"
       />
-      <div className="flex flex-col gap-6 content-overlay p-[14vw] py-[12vh] 2xl:px-[15vh] text-3xl z-50">
+      <div className="flex flex-col gap-6 content-overlay p-[14vw] py-[12vh] 2xl:px-[15vh] text-3xl z-50 relative">
         <>
           {/* {parts[currentPart].img && (
               <img
@@ -232,6 +268,7 @@ Fight for your glory and claim your prize.`,
                 <button
                   className="treasure treasure-color"
                   onClick={() => {
+                    setUpdatedShipName(true);
                     onUpdateShipName(
                       parts[currentPart].teamName === "Blue" ? 0 : 1,
                       fullShipName
@@ -259,6 +296,9 @@ Fight for your glory and claim your prize.`,
                   "treasure treasure-color completed-button !font-pirata"
                 )}
                 onClick={handleNextPart}
+                disabled={
+                  (currentPart === 15 || currentPart === 16) && !updatedShipName
+                }
               >
                 Next Chapter
               </button>
@@ -273,6 +313,34 @@ Fight for your glory and claim your prize.`,
               We're ready to begin our voyage!
             </button>
           )}
+          <div className="absolute bottom-[12vh] right-[10vh] flex gap-2">
+            <button
+              className={cn(
+                "treasure treasure-color completed-button !font-pirata !pt-2"
+              )}
+              onClick={handlePrevPart}
+              disabled={currentPart === 0}
+            >
+              &larr;
+            </button>
+            <button
+              className={cn(
+                "treasure treasure-color completed-button !font-pirata !pt-2"
+              )}
+              onClick={handleReset}
+            >
+              Reset
+            </button>
+            <button
+              className={cn(
+                "treasure treasure-color completed-button !font-pirata !pt-2"
+              )}
+              onClick={handleNextPart}
+              disabled={currentPart === parts.length - 1}
+            >
+              &rarr;
+            </button>
+          </div>
         </>
       </div>
       <div className="overlay"></div>

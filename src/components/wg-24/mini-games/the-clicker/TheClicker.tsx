@@ -7,6 +7,7 @@ import { IMiniGameBase } from "../MiniGame";
 import { ClickTimer } from "./ClickTimer";
 import { GameState } from "../gameState";
 import { ClickButton } from "./ClickButton";
+import { imageRotations } from "./imageRotations";
 
 const getRandomPosition = () => {
   const isTopHalf = Math.random() > 0.5;
@@ -27,6 +28,7 @@ export const TheClicker = ({
   initialTime = 3000,
   onGameComplete,
 }: TheClickerProps) => {
+  const [rotationIndex, setRotationIndex] = useState(0);
   const [turn, setTurn] = useState<0 | 1>(0);
   const [gameState, setGameState] = useState<GameState>("ready");
   const [winner, setWinner] = useState<string | undefined>(); // Track the winner
@@ -47,6 +49,12 @@ export const TheClicker = ({
   };
 
   const handleClick = () => {
+    setRotationIndex((prev) => {
+      if (prev === imageRotations.length - 1) {
+        return 0;
+      }
+      return prev + 1;
+    });
     if (turn === 0) {
       setP1Score((prev) => prev + 1 * multiplier);
     } else {
@@ -131,8 +139,8 @@ export const TheClicker = ({
     <div className="flex flex-col items-center justify-start h-full">
       <h1 className="mb-2">Finger Walz</h1>
 
-      <div className="relative flex flex-col w-full h-full max-h-[70vh] max-w-[70vh] mt-6 bg-gray-800 rounded-xl items-center justify-center gap-6">
-        <ClickTimer timeLeft={timeLeft} />
+      <div className="relative flex flex-col w-full h-full max-h-[70vh] max-w-[70vh] mt-6 bg-gray-800 rounded-xl items-center justify-center gap-6 select-none">
+        {gameState !== "finished" && <ClickTimer timeLeft={timeLeft} />}
         {(gameState === "ready" || gameState === "next") && (
           <Button
             className="p-10 text-3xl text-white bg-blue-500 rounded-full outline-none select-none hover:bg-blue-600"
@@ -143,7 +151,7 @@ export const TheClicker = ({
             {gameState === "next" ? "shortly" : ""}!
           </Button>
         )}
-        {(gameState === "active" || gameState === "finished") && (
+        {gameState === "active" && (
           <ClickButton
             handleClick={handleClick}
             gameState={gameState}
@@ -151,16 +159,19 @@ export const TheClicker = ({
             p1Score={p1Score}
             p2Score={p2Score}
             turn={turn}
+            imageIndex={rotationIndex}
           />
         )}
         {gameState === "finished" && winner && (
-          <p className="absolute text-3xl text-center select-none bottom-28">
-            {winner} triumphed
-            <br />
-            over the waves o’ time
-            <br />
-            and sunk yer scallywag foe!
-            <br /> The sea sings yer name!
+          <p className="text-3xl text-center select-none max-w-[27vw]">
+            {winner === players[0][0].name && (
+              <div className="float-left mr-4 w-[15vh] h-[15vh] bg-[url('games/the-clicker/Attachment-1.png')] bg-right bg-[length:200%]"></div>
+            )}
+            {winner === players[1][0].name && (
+              <div className="float-left mr-4 w-[15vh] h-[15vh] bg-[url('games/the-clicker/Attachment-1.png')] bg-left bg-[length:200%]"></div>
+            )}
+            {winner} triumphed over the waves o’ time and sunk yer scallywag
+            foe! The sea sings yer name!
           </p>
         )}
         {gameState === "active" && (
@@ -173,6 +184,10 @@ export const TheClicker = ({
                 )}
                 onClick={() => handleMultiplierClick(2)}
               >
+                <img
+                  src="games/the-clicker/tombRaider.png"
+                  className="w-[7vh]"
+                />
                 x2
               </Button>
             )}
@@ -184,6 +199,10 @@ export const TheClicker = ({
                 )}
                 onClick={() => handleMultiplierClick(3)}
               >
+                <img
+                  src="games/the-clicker/ultraLeech.png"
+                  className="w-[7vh]"
+                />
                 x3
               </Button>
             )}
@@ -195,6 +214,7 @@ export const TheClicker = ({
                 )}
                 onClick={() => handleMultiplierClick(5)}
               >
+                <img src="games/the-clicker/miniGun.png" className="w-[7vh]" />
                 x5
               </Button>
             )}
@@ -206,6 +226,7 @@ export const TheClicker = ({
                 )}
                 onClick={handleBonusClick}
               >
+                <img src="games/the-clicker/timeLord.png" className="w-[7vh]" />
                 +3s
               </Button>
             )}

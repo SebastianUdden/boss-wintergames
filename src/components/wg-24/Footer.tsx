@@ -32,7 +32,7 @@ export const Footer = ({ phase, setPhase, showEndGame }: IFooter) => (
         }
       }}
       disabled={phase === "selecting-players"}
-      className="!text-lg 2xl:!text-4xl treasure bottom-button"
+      className="!text-lg 2xl:!text-4xl treasure treasure-color bottom-button"
     >
       {phase === "ready" && showEndGame && "I deserve another chance ye hear!"}
       {phase === "ready" && !showEndGame && "Hoist the sails, adventure calls!"}

@@ -7,6 +7,7 @@ export interface IPlayer {
   showScore?: number;
   isCaptive?: boolean;
   isCaptain?: boolean;
+  isHelmsman?: boolean;
 }
 
 export const players = [
@@ -27,15 +28,7 @@ export const players = [
     image: "/profiles/zoomed-dennis.jpeg",
     wins: 0,
     losses: 0,
-    isCaptain: true,
   },
-  // {
-  //   name: "Ivar",
-  //   image: "/profiles/zoomed-ivar.jpeg",
-  //   wins: 0,
-  //   losses: 0,
-  //   isCaptain: true,
-  // },
   {
     name: "Joel",
     image: "/profiles/zoomed-joel.jpeg",
@@ -53,6 +46,7 @@ export const players = [
     image: "/profiles/zoomed-mattis.jpeg",
     wins: 0,
     losses: 0,
+    isHelmsman: true,
   },
   {
     name: "Palmen",
@@ -77,12 +71,12 @@ export const players = [
     image: "/profiles/zoomed-sebbe.jpeg",
     wins: 0,
     losses: 0,
+    isHelmsman: true,
   },
   {
     name: "Virre",
     image: "/profiles/zoomed-virre.jpeg",
     wins: 0,
     losses: 0,
-    isCaptain: true,
   },
 ];

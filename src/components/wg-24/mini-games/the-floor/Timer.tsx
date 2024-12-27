@@ -9,7 +9,7 @@ export const Timer = ({ time }: ITimer) => {
   };
   return (
     <div className="flex items-center justify-center">
-      <h2 className="text-6xl">{formatTime(time)}</h2>
+      <h2 className="text-9xl">{formatTime(time)}</h2>
     </div>
   );
 };

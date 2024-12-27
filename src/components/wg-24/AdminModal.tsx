@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/wg-24/ui/dialog";
-import { ITeam } from "./teams/teams";
+import { ITeam, prefilledTeams } from "./teams/teams";
 import { cn } from "@/lib/utils";
 import { Phase } from "./Layout";
 import { IMiniGame } from "./mini-games/MiniGame";
@@ -33,7 +33,7 @@ const phases = [
 
 interface IModal {
   isOpen?: boolean;
-  onClose?: () => void;
+  onClose: () => void;
   teams: ITeam[];
   setTeams: Dispatch<SetStateAction<ITeam[]>>;
   phase: Phase;
@@ -92,7 +92,7 @@ export const AdminModal = ({
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     setTimeout(() => {
-      if (!isOpen && onClose) {
+      if (!isOpen) {
         onClose();
       }
     }, 100);
@@ -157,12 +157,24 @@ export const AdminModal = ({
                   Fear not, the power o’ the gods flows through yer veins—just
                   don’t go turnin’ us into sea rats, savvy?
                 </p>
-                <button
-                  className="w-full treasure-color font-pirata"
-                  onClick={() => setShowAllHeadings(!showAllHeadings)}
-                >
-                  {showAllHeadings ? "Lose" : "Gain"} clairvoyance
-                </button>
+                <div className="flex gap-4">
+                  <button
+                    className="w-full treasure-color font-pirata"
+                    onClick={() => setShowAllHeadings(!showAllHeadings)}
+                  >
+                    {showAllHeadings ? "Lose" : "Gain"} clairvoyance
+                  </button>
+                  <button
+                    className="w-full treasure-color font-pirata"
+                    onClick={() => {
+                      onSetPhase("ready");
+                      setTeams(prefilledTeams);
+                      handleOpenChange(false);
+                    }}
+                  >
+                    Prefill crew
+                  </button>
+                </div>
                 <div className="flex justify-between gap-10">
                   {teams.map((t, i) => (
                     <ul className="flex flex-col w-full gap-2">

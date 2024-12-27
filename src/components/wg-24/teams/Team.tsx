@@ -61,7 +61,7 @@ export const Team = ({
       data-testid={name}
       className={cn(
         "mt-2 !w-fit 2xl:!w-full flex flex-col h-[94vh] shadow-md z-20 transition-all duration-500 select-none",
-        minimized ? "hidden 2xl:block" : "block",
+        minimized ? "hidden xl:block" : "block",
         rightAligned ? "mr-2" : "ml-2"
       )}
       style={{
@@ -72,7 +72,7 @@ export const Team = ({
     >
       <h3
         className={cn(
-          "flex p-2 2xl:py-8 2xl:px-4 text-black text-lg 2xl:text-2xl border-2 border-black overflow-hidden",
+          "flex p-2 2xl:py-8 2xl:px-4 text-black text-lg 2xl:text-4xl border-2 border-black overflow-hidden",
           color === "red" ? "rusty-red" : "stormy-seas-accent",
           minimized && justifyStartApplied
             ? "justify-start"

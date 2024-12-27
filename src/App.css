@@ -11,9 +11,22 @@
     --radius: 0.5rem;
   }
 }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  cursor: url("/pointers/compass-pointer-cursor.png"), auto !important; /* Replace with your image path */
+}
+
+/* Custom pointer for clickable elements */
+button,
+a {
+  cursor: url("/pointers/skeleton-hand-pointer-cursor.png") 10 10, pointer !important;
 }
 
 /* Apply "Pirata One" to headings */

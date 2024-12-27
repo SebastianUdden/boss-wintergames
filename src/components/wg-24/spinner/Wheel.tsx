@@ -176,7 +176,7 @@ export const Wheel = ({
               (((currentRotation % 360) + 360) % 360) / sliceAngle
             );
             onSpinComplete(slices[finalSliceIndex].name);
-          }, 2000);
+          }, 4000);
 
           setIsSpinning(false);
           setShowSelected(true);

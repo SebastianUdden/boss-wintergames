@@ -51,17 +51,17 @@ export const usePaddleControls = ({
         if (key === "a" && player1PaddleHeight > step) {
           setPlayer1PaddleHeight((prev) => Math.max(prev - step, step));
         }
-        if (key === "d" && player1PaddleHeight < gameBox.height) {
+        if (key === "z" && player1PaddleHeight < gameBox.height) {
           setPlayer1PaddleHeight((prev) =>
             Math.min(prev + step, gameBox.height)
           );
         }
 
         // Player 2 Paddle Height Control
-        if (key === "ArrowLeft" && player2PaddleHeight > step) {
+        if (key === "6" && player2PaddleHeight > step) {
           setPlayer2PaddleHeight((prev) => Math.max(prev - step, step));
         }
-        if (key === "ArrowRight" && player2PaddleHeight < gameBox.height) {
+        if (key === "3" && player2PaddleHeight < gameBox.height) {
           setPlayer2PaddleHeight((prev) =>
             Math.min(prev + step, gameBox.height)
           );
