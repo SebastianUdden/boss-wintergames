@@ -142,11 +142,13 @@ Fight for your glory and claim your prize.`,
     setCurrentText("");
     setIsTypingComplete(false);
     setTeams((prev) =>
-      prev.map((t, i) => ({
-        ...t,
-        name: i === 0 ? "Blue" : "Red",
-        players: [],
-      }))
+      prev
+        ? prev.map((t, i) => ({
+            ...t,
+            name: i === 0 ? "Blue" : "Red",
+            players: [],
+          }))
+        : []
     );
     setCurrentPart(0);
     window.location.reload();
