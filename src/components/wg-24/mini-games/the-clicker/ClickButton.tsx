@@ -38,16 +38,7 @@ export const ClickButton = ({
       )}
       onClick={handleClick}
     >
-      {imageIndex <= 20 && (
-        <div
-          className={cn(
-            "w-[15vh] h-[15vh] bg-[url('games/the-clicker/click-grid.png')] bg-[0%_0%] bg-[length:400%]"
-          )}
-        ></div>
-      )}
-      {imageIndex > 20 && (
-        <img src={imageRotations[imageIndex]} className="w-[8vh] select-none" />
-      )}
+      <img src={imageRotations[imageIndex]} className="w-[8vh] select-none" />
       {turn === 0 ? p1Score : gameState === "next" ? "Get ready!" : p2Score}
       {multiplier === 2 && (
         <img
